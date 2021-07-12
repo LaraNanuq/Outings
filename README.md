@@ -3,4 +3,6 @@
 
 ## Collaborators
 - Ayelen DUMAS
+- Daisy GREENWAY
+- Julien SAIS
 - Marin TAVERNIERS
