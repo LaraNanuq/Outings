@@ -6,55 +6,40 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class OutingController extends AbstractController
-{
+class OutingController extends AbstractController {
+
     /**
      * @Route("/outing/list", name="outing_list")
      */
-    public function list(): Response
-    {
-        return $this->render('outing/list.html.twig', [
-            
-        ]);
+    public function list(): Response {
+        return $this->render('outing/list.html.twig', []);
     }
 
     /**
      * @Route("/outing/create", name="outing_create")
      */
-    public function create(): Response
-    {
-        return $this->render('outing/create.html.twig', [
-
-        ]);
+    public function create(): Response {
+        return $this->render('outing/create.html.twig', []);
     }
 
     /**
-     * @Route("/outing/detail/{id}", name="outing_detail")
+     * @Route("/outing/{id}", name="outing_detail", requirements={"id"="\d+"})
      */
-    public function detail(): Response
-    {
-        return $this->render('outing/detail.html.twig', [
-
-        ]);
+    public function detail(int $id): Response {
+        return $this->render('outing/detail.html.twig', []);
     }
 
     /**
-     * @Route("/outing/edit/{id}", name="outing_edit")
+     * @Route("/outing/edit/{id}", name="outing_edit", requirements={"id"="\d+"})
      */
-    public function edit(): Response
-    {
-        return $this->render('outing/edit.html.twig', [
-
-        ]);
+    public function edit(int $id): Response {
+        return $this->render('outing/edit.html.twig', []);
     }
 
     /**
-     * @Route("/outing/cancel/{id}", name="outing_cancel")
+     * @Route("/outing/cancel/{id}", name="outing_cancel", requirements={"id"="\d+"})
      */
-    public function cancel(): Response
-    {
-        return $this->render('outing/cancel.html.twig', [
-
-        ]);
+    public function cancel(int $id): Response {
+        return $this->render('outing/cancel.html.twig', []);
     }
 }

@@ -1,25 +1,28 @@
 <nav>
     <ul>
-        <li><a href="{{ path('outing_list') }}" title="Accueil">Accueil</a></li>
-        <li><a href="{{ path('user_user') }}" title="Mon profil">Mon profil</a></li>
-        <li><a href="{{ path('auth_logout') }}" title="Se déconnecter">Se déconnecter</a></li>
+        <li>
+            <a href="{{ path('outing_list') }}" title="Accueil">Accueil</a>
+        </li>
+        <li>
+            <a href="{{ path('user_detail', {id: 0}) }}" title="Mon profil">Mon profil</a>
+        </li>
+        <li>
+            <a href="{{ path('auth_logout') }}" title="Se déconnecter">Se déconnecter</a>
+        </li>
 
-        {#  {% if app.user %}
-
-
+        {#
+        {% if app.user %}
             <li><a href="{{ path('serie_create') }}" title="Create a new serie">Create</a></li>
             <li><a href="{{ path('season_create') }}" title="Create a new season">Create season</a></li>
             <li><a href="{{ path('app_logout') }}" title="Logout">Logout {{ app.user.firstname }}</a></li>
 
-
             {% if is_granted("ROLE_ADMIN") %}
                 <li><a href="{{ path('admin_dashboard') }}" title="admin dashboard">Dashboard</a></li>
                 <li><a href="{{ path('admin_dashboard') }}" title="admin dashboard">Dashboard</a></li>
-
             {% endif %}
-            #}
 
-        {#  {% endif %}  #}
+        {% endif %}
+        #}
 
     </ul>
 </nav>

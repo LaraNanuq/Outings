@@ -1,33 +1,39 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Sortir avec l'ENI{% endblock %}</title>
-        <link rel="stylesheet" href="{{ asset('css/normalize.css') }}">
-        <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-
+        <meta charset="UTF-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <link rel="stylesheet" href="{{ asset('style/normalize.css') }}"/>
         {% block stylesheets %}
+            <link rel="stylesheet" href="{{ asset('style/style.css') }}"/>
         {% endblock %}
-
         {% block javascripts %}
+            {# #}
         {% endblock %}
-
+        <title>
+            {% block title %}
+                Sortir avec l'ENI
+            {% endblock %}
+        </title>
     </head>
-    <body>
 
+    <body>
         <header>
             {# todo:  logo + lien #}
-            {% include ('inc/nav.html.twig') %}
+            {% include ('fragment/nav.html.twig') %}
         </header>
 
         <main>
-            {% block body %}{% endblock %}
+            {% block body %}
+                {# #}
+            {% endblock %}
         </main>
 
         <footer>
-            <div>&copy; {{ "now"|date("Y") }}</div>
+            <div>
+                &copy; {{ "now"|date("Y") }} - PoueTeam
+            </div>
         </footer>
-
-
     </body>
 </html>
