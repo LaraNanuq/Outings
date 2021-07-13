@@ -6,25 +6,28 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * @Route("/auth", name="auth_")
+ */
 class AuthController extends AbstractController {
 
     /**
-     * @Route("/auth/login", name="auth_login")
+     * @Route("/login", name="login")
      */
     public function login(): Response {
         return $this->render('auth/login.html.twig', []);
     }
 
     /**
-     * @Route("/auth/logout", name="auth_logout")
+     * @Route("/logout", name="logout")
      */
     public function logout(): Response {
-        // Intercepté par système d'authentification
+        // Managed by the authentication system
         return $this->redirectToRoute('auth_login');
     }
 
     /**
-     * @Route("/auth/forget", name="auth_forget")
+     * @Route("/forget", name="forget")
      */
     public function forget(): Response {
         return $this->render('auth/forget.html.twig', []);

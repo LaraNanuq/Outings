@@ -197,7 +197,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
     }
 
     public function getRoles(): array {
-        $this->roles[] = 'ROLE_USER';
+        $userRoles = $this->roles;
+        if (!in_array("ROLE_USER_DISABLED", $userRoles)) {
+            $userRoles[] = 'ROLE_USER';
+        }
         return array_unique($this->roles);
     }
 
@@ -255,17 +258,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
         return $this;
     }
 
-    /* Auth */
+    /* Generated with "make:user" */
 
     /**
      * A visual identifier that represents this user.
      */
     public function getUserIdentifier(): string {
-        return (string) $this->alias;
-    }
-
-    public function eraseCredentials() {
-        // If you store any temporary, sensitive data on the user, clear it here
+        return (string) $this->email;
     }
 
     /**
@@ -281,5 +280,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
      */
     public function getSalt(): ?string {
         return null;
+    }
+
+    public function eraseCredentials() {
+        // If you store any temporary, sensitive data on the user, clear it here
     }
 }

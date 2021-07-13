@@ -6,40 +6,71 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * @Route("/outing", name="outing_")
+ */
 class OutingController extends AbstractController {
 
     /**
-     * @Route("/outing/list", name="outing_list")
+     * @Route("/list", name="list")
      */
     public function list(): Response {
         return $this->render('outing/list.html.twig', []);
     }
 
     /**
-     * @Route("/outing/create", name="outing_create")
-     */
-    public function create(): Response {
-        return $this->render('outing/create.html.twig', []);
-    }
-
-    /**
-     * @Route("/outing/{id}", name="outing_detail", requirements={"id"="\d+"})
+     * @Route("/{id}", name="detail", requirements={"id"="\d+"})
      */
     public function detail(int $id): Response {
         return $this->render('outing/detail.html.twig', []);
     }
 
     /**
-     * @Route("/outing/edit/{id}", name="outing_edit", requirements={"id"="\d+"})
+     * @Route("/create", name="create")
+     */
+    public function create(): Response {
+        return $this->render('outing/edit.html.twig', []);
+    }
+
+    /**
+     * @Route("/edit/{id}", name="edit", requirements={"id"="\d+"})
      */
     public function edit(int $id): Response {
         return $this->render('outing/edit.html.twig', []);
     }
 
     /**
-     * @Route("/outing/cancel/{id}", name="outing_cancel", requirements={"id"="\d+"})
+     * @Route("/publish/{id}", name="publish", requirements={"id"="\d+"})
+     */
+    public function publish(int $id): Response {
+        return $this->redirectToRoute('outing_list');
+    }
+
+    /**
+     * @Route("/cancel/{id}", name="cancel", requirements={"id"="\d+"})
      */
     public function cancel(int $id): Response {
         return $this->render('outing/cancel.html.twig', []);
+    }
+
+    /**
+     * @Route("/register/{id}", name="register", requirements={"id"="\d+"})
+     */
+    public function register(int $id): Response {
+        return $this->redirectToRoute('outing_list');
+    }
+
+    /**
+     * @Route("/unregister/{id}", name="unregister", requirements={"id"="\d+"})
+     */
+    public function unregister(int $id): Response {
+        return $this->redirectToRoute('outing_list');
+    }
+
+    /**
+     * @Route("/delete/{id}", name="delete", requirements={"id"="\d+"})
+     */
+    public function delete(int $id): Response {
+        return $this->redirectToRoute('outing_list');
     }
 }
