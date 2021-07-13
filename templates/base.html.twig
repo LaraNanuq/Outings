@@ -15,9 +15,19 @@
     </head>
     <body>
 
-        {% include ('inc/nav.html.twig') %}
+        <header>
+            {# todo:  logo + lien #}
+            {% include ('inc/nav.html.twig') %}
+        </header>
+
+        <main>
+            {% block body %}{% endblock %}
+        </main>
+
+        <footer>
+            <div>&copy; {{ "now"|date("Y") }}</div>
+        </footer>
 
 
-        {% block body %}{% endblock %}
     </body>
 </html>
