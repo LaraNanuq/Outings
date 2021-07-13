@@ -103,12 +103,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
     private $pictureUrl;
 
     /**
-     * @ORM\Column(type="boolean")
-     * @Assert\Type(type="bool", message="The disabled value is not valid.")
-     */
-    private $isDisabled;
-
-    /**
      * @ORM\Column(type="json")
      * @Assert\Json(message = "The roles array is not valid.")
      */
@@ -199,15 +193,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
 
     public function setPictureUrl(?string $pictureUrl): self {
         $this->pictureUrl = $pictureUrl;
-        return $this;
-    }
-
-    public function getIsDisabled(): ?bool {
-        return $this->isDisabled;
-    }
-
-    public function setIsDisabled(bool $isDisabled): self {
-        $this->isDisabled = $isDisabled;
         return $this;
     }
 
