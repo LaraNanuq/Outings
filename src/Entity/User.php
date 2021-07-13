@@ -128,11 +128,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
     /**
      * @ORM\ManyToMany(targetEntity=Outing::class, mappedBy="registrants")
      */
-    private $registeredOutings;
+    private $outings;
 
     public function __construct() {
         $this->organizedOutings = new ArrayCollection();
-        $this->registeredOutings = new ArrayCollection();
+        $this->outings = new ArrayCollection();
     }
 
     public function getId(): ?int {
@@ -251,20 +251,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
         return $this;
     }
 
-    public function getRegisteredOutings(): Collection {
-        return $this->registeredOutings;
+    public function getOutings(): Collection {
+        return $this->outings;
     }
 
-    public function addRegisteredOuting(Outing $registeredOuting): self {
-        if (!$this->registeredOutings->contains($registeredOuting)) {
-            $this->registeredOutings[] = $registeredOuting;
+    public function addOuting(Outing $registeredOuting): self {
+        if (!$this->outings->contains($registeredOuting)) {
+            $this->outings[] = $registeredOuting;
             $registeredOuting->addRegistrant($this);
         }
         return $this;
     }
 
-    public function removeRegisteredOuting(Outing $registeredOuting): self {
-        if ($this->registeredOutings->removeElement($registeredOuting)) {
+    public function removeOuting(Outing $registeredOuting): self {
+        if ($this->outings->removeElement($registeredOuting)) {
             $registeredOuting->removeRegistrant($this);
         }
         return $this;

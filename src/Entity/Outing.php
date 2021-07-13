@@ -6,6 +6,7 @@ use App\Repository\OutingRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\JoinTable;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -113,7 +114,8 @@ class Outing {
     private $state;
 
     /**
-     * @ORM\ManyToMany(targetEntity=User::class, inversedBy="registeredOutings")
+     * @ORM\ManyToMany(targetEntity=User::class, inversedBy="outings")
+     * @JoinTable(name="outings_registrants")
      */
     private $registrants;
 
