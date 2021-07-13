@@ -23,9 +23,7 @@ class AuthController extends AbstractController
      */
     public function logout(): Response
     {
-        return $this->render('auth/logout.html.twig', [
-
-        ]);
+        return $this->redirectToRoute('auth_login');
     }
 
     /**
