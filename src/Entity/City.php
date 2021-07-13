@@ -3,7 +3,10 @@
 namespace App\Entity;
 
 use App\Repository\CityRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=CityRepository::class)
@@ -41,6 +44,15 @@ class City {
      */
     private $name;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Location::class, mappedBy="city")
+     */
+    private $locations;
+
+    public function __construct() {
+        $this->locations = new ArrayCollection();
+    }
+
     public function getId(): ?int {
         return $this->id;
     }
@@ -60,6 +72,27 @@ class City {
 
     public function setName(string $name): self {
         $this->name = $name;
+        return $this;
+    }
+
+    public function getLocations(): Collection {
+        return $this->locations;
+    }
+
+    public function addLocation(Location $location): self {
+        if (!$this->locations->contains($location)) {
+            $this->locations[] = $location;
+            $location->setCity($this);
+        }
+        return $this;
+    }
+
+    public function removeLocation(Location $location): self {
+        if ($this->locations->removeElement($location)) {
+            if ($location->getCity() === $this) {
+                $location->setCity(null);
+            }
+        }
         return $this;
     }
 }

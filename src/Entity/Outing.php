@@ -3,7 +3,10 @@
 namespace App\Entity;
 
 use App\Repository\OutingRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=OutingRepository::class)
@@ -85,6 +88,39 @@ class Outing {
      */
     private $cancellationReason;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="organizedOutings")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $organizer;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Campus::class, inversedBy="outings")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $campus;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Location::class, inversedBy="outings")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $location;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=OutingState::class, inversedBy="outings")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $state;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=User::class, inversedBy="registeredOutings")
+     */
+    private $registrants;
+
+    public function __construct() {
+        $this->registrants = new ArrayCollection();
+    }
+
     public function getId(): ?int {
         return $this->id;
     }
@@ -149,6 +185,58 @@ class Outing {
 
     public function setCancellationReason(?string $cancellationReason): self {
         $this->cancellationReason = $cancellationReason;
+        return $this;
+    }
+
+    public function getOrganizer(): ?User {
+        return $this->organizer;
+    }
+
+    public function setOrganizer(?User $organizer): self {
+        $this->organizer = $organizer;
+        return $this;
+    }
+
+    public function getCampus(): ?Campus {
+        return $this->campus;
+    }
+
+    public function setCampus(?Campus $campus): self {
+        $this->campus = $campus;
+        return $this;
+    }
+
+    public function getLocation(): ?Location {
+        return $this->location;
+    }
+
+    public function setLocation(?Location $location): self {
+        $this->location = $location;
+        return $this;
+    }
+
+    public function getState(): ?OutingState {
+        return $this->state;
+    }
+
+    public function setState(?OutingState $state): self {
+        $this->state = $state;
+        return $this;
+    }
+
+    public function getRegistrants(): Collection {
+        return $this->registrants;
+    }
+
+    public function addRegistrant(User $registrant): self {
+        if (!$this->registrants->contains($registrant)) {
+            $this->registrants[] = $registrant;
+        }
+        return $this;
+    }
+
+    public function removeRegistrant(User $registrant): self {
+        $this->registrants->removeElement($registrant);
         return $this;
     }
 }

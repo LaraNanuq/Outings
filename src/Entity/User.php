@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -112,6 +114,27 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
      */
     private $roles = [];
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Campus::class, inversedBy="users")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $campus;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Outing::class, mappedBy="organizer")
+     */
+    private $organizedOutings;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Outing::class, mappedBy="registrants")
+     */
+    private $registeredOutings;
+
+    public function __construct() {
+        $this->organizedOutings = new ArrayCollection();
+        $this->registeredOutings = new ArrayCollection();
+    }
+
     public function getId(): ?int {
         return $this->id;
     }
@@ -197,6 +220,57 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
         $this->roles = $roles;
         return $this;
     }
+
+    public function getCampus(): ?Campus {
+        return $this->campus;
+    }
+
+    public function setCampus(?Campus $campus): self {
+        $this->campus = $campus;
+        return $this;
+    }
+
+    public function getOrganizedOutings(): Collection {
+        return $this->organizedOutings;
+    }
+
+    public function addOrganizedOuting(Outing $organizedOuting): self {
+        if (!$this->organizedOutings->contains($organizedOuting)) {
+            $this->organizedOutings[] = $organizedOuting;
+            $organizedOuting->setOrganizer($this);
+        }
+        return $this;
+    }
+
+    public function removeOrganizedOuting(Outing $organizedOuting): self {
+        if ($this->organizedOutings->removeElement($organizedOuting)) {
+            if ($organizedOuting->getOrganizer() === $this) {
+                $organizedOuting->setOrganizer(null);
+            }
+        }
+        return $this;
+    }
+
+    public function getRegisteredOutings(): Collection {
+        return $this->registeredOutings;
+    }
+
+    public function addRegisteredOuting(Outing $registeredOuting): self {
+        if (!$this->registeredOutings->contains($registeredOuting)) {
+            $this->registeredOutings[] = $registeredOuting;
+            $registeredOuting->addRegistrant($this);
+        }
+        return $this;
+    }
+
+    public function removeRegisteredOuting(Outing $registeredOuting): self {
+        if ($this->registeredOutings->removeElement($registeredOuting)) {
+            $registeredOuting->removeRegistrant($this);
+        }
+        return $this;
+    }
+
+    /* Auth */
 
     /**
      * A visual identifier that represents this user.

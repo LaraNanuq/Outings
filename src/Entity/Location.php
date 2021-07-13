@@ -3,7 +3,10 @@
 namespace App\Entity;
 
 use App\Repository\LocationRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=LocationRepository::class)
@@ -55,6 +58,21 @@ class Location {
      */
     private $street;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=City::class, inversedBy="locations")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $city;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Outing::class, mappedBy="location")
+     */
+    private $outings;
+
+    public function __construct() {
+        $this->outings = new ArrayCollection();
+    }
+
     public function getId(): ?int {
         return $this->id;
     }
@@ -92,6 +110,36 @@ class Location {
 
     public function setStreet(string $street): self {
         $this->street = $street;
+        return $this;
+    }
+
+    public function getCity(): ?City {
+        return $this->city;
+    }
+
+    public function setCity(?City $city): self {
+        $this->city = $city;
+        return $this;
+    }
+
+    public function getOutings(): Collection {
+        return $this->outings;
+    }
+
+    public function addOuting(Outing $outing): self {
+        if (!$this->outings->contains($outing)) {
+            $this->outings[] = $outing;
+            $outing->setLocation($this);
+        }
+        return $this;
+    }
+
+    public function removeOuting(Outing $outing): self {
+        if ($this->outings->removeElement($outing)) {
+            if ($outing->getLocation() === $this) {
+                $outing->setLocation(null);
+            }
+        }
         return $this;
     }
 }
