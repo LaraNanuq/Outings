@@ -73,12 +73,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
     private $email;
 
     /**
-     * @ORM\Column(type="string", length=50)
-     * @Assert\NotBlank(message="The password is required.")
-     * @Assert\Length(
-     *      max=50,
-     *      maxMessage="The password is too long (maximum {{ limit }} characters)."
-     * )
+     * @ORM\Column(type="string")
      */
     private $password;
 
