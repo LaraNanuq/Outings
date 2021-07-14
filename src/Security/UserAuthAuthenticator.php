@@ -28,6 +28,9 @@ class UserAuthAuthenticator extends AbstractLoginFormAuthenticator
     {
         $this->urlGenerator = $urlGenerator;
     }
+    public function supports(Request $request): bool {
+        return $request->isMethod('POST') && self::LOGIN_ROUTE === $request->attributes->get('_route');
+    }
 
     public function authenticate(Request $request): PassportInterface
     {
@@ -50,9 +53,8 @@ class UserAuthAuthenticator extends AbstractLoginFormAuthenticator
             return new RedirectResponse($targetPath);
         }
 
-        // For example:
-        //return new RedirectResponse($this->urlGenerator->generate('some_route'));
-        throw new \Exception('TODO: provide a valid redirect inside '.__FILE__);
+
+        return new RedirectResponse($this->urlGenerator->generate('auth_login'));
     }
 
     protected function getLoginUrl(Request $request): string
