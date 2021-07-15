@@ -2,12 +2,18 @@
 
 namespace App\Controller;
 
+use App\Entity\Outing;
+use App\Form\EditOutingFormType;
+use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route("/outing", name="outing_")
+ * 
+ * @author Marin Taverniers
  */
 class OutingController extends AbstractController {
 
@@ -28,8 +34,21 @@ class OutingController extends AbstractController {
     /**
      * @Route("/create", name="create")
      */
-    public function create(): Response {
-        return $this->render('outing/edit.html.twig', []);
+    public function create(Request $request, UserRepository $userRepository): Response {
+        $outing = new Outing();
+        $form = $this->createForm(EditOutingFormType::class, $outing);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            //
+        }
+
+        //$user = $this->getUser();
+        $user = $userRepository->find('2');
+        return $this->renderForm('outing/edit.html.twig', [
+            'outingForm' => $form,
+            'campus' => $user->getCampus()
+        ]);
     }
 
     /**

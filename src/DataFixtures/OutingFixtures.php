@@ -10,6 +10,9 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 
+/**
+ * @author Marin Taverniers
+ */
 class OutingFixtures extends Fixture implements DependentFixtureInterface {
     private $outingStateRepository;
 

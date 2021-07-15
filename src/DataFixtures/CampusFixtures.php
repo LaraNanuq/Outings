@@ -6,6 +6,9 @@ use App\Entity\Campus;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
+/**
+ * @author Marin Taverniers
+ */
 class CampusFixtures extends Fixture {
 
     public function load(ObjectManager $manager) {

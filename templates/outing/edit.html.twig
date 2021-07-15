@@ -1,9 +1,73 @@
 {% extends 'base.html.twig' %}
 
+{% block javascripts %}
+    <script src="{{ asset('script/outing/edit.js') }}"></script>
+{% endblock %}
+
 {% block title %}
     Créer une sortie | {{ parent() }}
 {% endblock %}
 
 {% block body %}
     <h1>Créer une sortie</h1>
-{% endblock %}
+    {{ form_start(outingForm) }}
+    
+    {# {{ form_row(outingForm.test, {attr: {value: tt}}) }} #}
+
+    {{ form_errors(outingForm) }}
+
+    {{ form_row(outingForm.name) }}
+    {{ form_row(outingForm.date) }}
+    {{ form_row(outingForm.registrationClosingDate) }}
+    {{ form_row(outingForm.maxRegistrants) }}
+    {{ form_row(outingForm.duration) }}
+    {{ form_row(outingForm.description) }}
+    {{ form_row(outingForm.campus) }}
+    {# 
+            <div class="form-group">
+                <label for="campus">Campus</label>
+                <span>{{ campus.name }}</span>
+            </div> #}
+
+    {{ form_row(outingForm.city) }}
+
+    {{ form_row(outingForm.location) }}
+
+    <div class="form-group">
+        <label for="street" class="form-label">Rue</label>
+        <span id="street" class="form-control">?</span>
+    </div>
+
+    <div class="form-group">
+        <label for="postalCode" class="form-label">Code postal</label>
+        <span id="postalCode" class="form-control">?</span>
+    </div>
+
+    <div class="form-group">
+        <label for="latitude" class="form-label">Latitude</label>
+        <span id="latitude" class="form-control">?</span>
+    </div>
+
+    <div class="form-group">
+        <label for="longitude" class="form-label">Longitude</label>
+        <span id="longitude" class="form-control">?</span>
+    </div{{form_widget(outingForm)}}<button> {# {{ form_row(outingForm.location) }}
+
+        <div class="form-group">
+            <label for="campus">Rue</label>
+            <span id="campus">{{ location.street }}</span>
+        </div>
+        <div class="form-group">
+            <label for="street">Code postal</label>
+            <span id="street">{{ city.postalCode }}</span>
+        </div>
+        <div class="form-group">
+            <label for="latitude">Latitude</label>
+            <span id="latitude">{{ location.latitude }}</span>
+        </div>
+        <div class="form-group">
+            <label for="longitude">Longitude</label>
+            <span id="longitude">{{ location.longitude }}</span>
+        </div> #}Valider</button>
+
+{{ form_end(outingForm) }}{% endblock %}

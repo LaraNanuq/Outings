@@ -11,6 +11,8 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Outing|null findOneBy(array $criteria, array $orderBy = null)
  * @method Outing[]    findAll()
  * @method Outing[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * 
+ * @author Marin Taverniers
  */
 class OutingRepository extends ServiceEntityRepository {
 

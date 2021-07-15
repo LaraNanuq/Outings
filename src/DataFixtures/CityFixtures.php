@@ -6,6 +6,9 @@ use App\Entity\City;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
+/**
+ * @author Marin Taverniers
+ */
 class CityFixtures extends Fixture {
 
     public function load(ObjectManager $manager) {

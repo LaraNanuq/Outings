@@ -49,10 +49,17 @@ class Outing {
     /**
      * @ORM\Column(type="datetime")
      * @Assert\NotBlank(message="The date is required.")
-     * @Assert\DateTime(message="The date is not valid.")
      * @Assert\GreaterThanOrEqual(value="today", message="The date is not valid.")
      */
     private $date;
+
+
+
+
+    // @Assert\DateTime(message="The date is not valid.")
+
+
+
 
     /**
      * @ORM\Column(type="integer")
@@ -65,10 +72,15 @@ class Outing {
     /**
      * @ORM\Column(type="date")
      * @Assert\NotBlank(message="The registration closing date is required.")
-     * @Assert\Date(message="The registration closing date is not valid.")
-     * @Assert\GreaterThan(propertyPath="date", message="The registration closing date is not valid.")
+     * @Assert\GreaterThan(value="today", message="The registration closing date is not valid.")
+     * @Assert\LessThan(propertyPath="date", message="The registration closing date is not valid.")
      */
     private $registrationClosingDate;
+
+
+    // @Assert\Date(message="The registration closing date is not valid.")
+
+
 
     /**
      * @ORM\Column(type="integer")
@@ -149,7 +161,7 @@ class Outing {
         return $this->date;
     }
 
-    public function setDate(\DateTimeInterface $date): self {
+    public function setDate(?\DateTimeInterface $date): self {
         $this->date = $date;
         return $this;
     }
@@ -167,7 +179,7 @@ class Outing {
         return $this->registrationClosingDate;
     }
 
-    public function setRegistrationClosingDate(\DateTimeInterface $registrationClosingDate): self {
+    public function setRegistrationClosingDate(?\DateTimeInterface $registrationClosingDate): self {
         $this->registrationClosingDate = $registrationClosingDate;
         return $this;
     }
