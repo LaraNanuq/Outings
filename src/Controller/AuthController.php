@@ -17,7 +17,7 @@ class AuthController extends AbstractController {
      */
     public function login(AuthenticationUtils $authenticationUtils): Response {
         if ($this->getUser()) {
-            return $this->render('auth/login.html.twig');
+            return $this->redirectToRoute('outing_list');
         }
         $lastUsername = $authenticationUtils->getLastUsername();
         $error = $authenticationUtils->getLastAuthenticationError();
