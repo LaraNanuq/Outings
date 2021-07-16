@@ -11,7 +11,7 @@ security:
         app_user_provider:
             entity:
                 class: App\Entity\User
-                property: email
+                property:
 
     firewalls:
         dev:
@@ -27,14 +27,13 @@ security:
                 target: auth_login
             remember_me:
                 secret: '%kernel.secret%'
-                name: 'REMEMBERME'
-                lifetime: 604800 # 1 week in seconds
+                lifetime: 31536000 # 1 week in seconds
                 path: /
-                samesite: 'lax'
-                httponly: true
+                domain: ~
                 secure: true
-                always_remember_me: false
-                remember_me_parameter: '_remember_me'
+                name: REMEMBERME
+                remember_me_parameter: remember_me
+                always_remember_me: true
                 # by default, the feature is enabled by checking a
                 # checkbox in the login form (see below), uncomment the
                 # following line to always enable it.
