@@ -56,20 +56,26 @@ class EditOutingFormType extends AbstractType {
             ->add('campus', EntityType::class, [
                 'label' => 'Campus',
                 'class' => Campus::class,
-                'choice_label' => function ($campus) {
+                'choice_label' => function (Campus $campus) {
                     return $campus->getName();
                 },
+                'placeholder' => '- Sélectionnez un campus -'
             ])
             ->add('city', EntityType::class, [
                 'label' => 'Ville',
                 'class' => City::class,
-                'choice_label' => function ($city) {
+                'choice_label' => function (City $city) {
                     return $city->getName();
                 },
                 'placeholder' => '- Sélectionnez une ville -',
                 'mapped' => false
-            ]);
+            ])
 
+            //->add('city', EditCityFormType::class)
+            //->add('location', EditLocationFormType::class)
+            /*
+            */;
+            
         // Form loaded
         $builder->addEventListener(
             FormEvents::PRE_SET_DATA,
@@ -114,7 +120,7 @@ class EditOutingFormType extends AbstractType {
             'label' => 'Lieu',
             'class' => Location::class,
             'choices' => $locations,
-            'choice_label' => function ($location) {
+            'choice_label' => function (Location $location) {
                 return $location->getName();
             },
             'placeholder' => '- Sélectionnez un lieu -',

@@ -41,13 +41,14 @@ class OutingController extends AbstractController {
 
         if ($form->isSubmitted() && $form->isValid()) {
             //
+            dump($outing);
+            dump($outing->getLocation());
         }
 
         //$user = $this->getUser();
-        $user = $userRepository->find('2');
+        //$user = $userRepository->find('2');
         return $this->renderForm('outing/edit.html.twig', [
-            'outingForm' => $form,
-            'campus' => $user->getCampus()
+            'outingForm' => $form
         ]);
     }
 
