@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity(repositoryClass=CampusRepository::class)
+ * @ORM\Entity(repositoryClass = CampusRepository::class)
  * 
  * @author Marin Taverniers
  */
@@ -18,28 +18,28 @@ class Campus {
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type = "integer")
      */
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=50)
-     * @Assert\NotBlank(message="The name is required.")
+     * @ORM\Column(type = "string", length = 50)
+     * @Assert\NotBlank(message = "The name is required.")
      * @Assert\Length(
-     *      max=50,
-     *      maxMessage="The name is too long (maximum {{ limit }} characters)."
+     *      max = 50,
+     *      maxMessage = "The name is too long (maximum {{ limit }} characters)."
      * )
-     * @Assert\Regex(pattern="/^[-' \w]*$/", message="The name contains illegal characters.")
+     * @Assert\Regex(pattern = "/^[-' \w]*$/", message = "The name contains illegal characters.")
      */
     private $name;
 
     /**
-     * @ORM\OneToMany(targetEntity=User::class, mappedBy="campus")
+     * @ORM\OneToMany(targetEntity = User::class, mappedBy = "campus")
      */
     private $users;
 
     /**
-     * @ORM\OneToMany(targetEntity=Outing::class, mappedBy="campus")
+     * @ORM\OneToMany(targetEntity = Outing::class, mappedBy = "campus")
      */
     private $outings;
 

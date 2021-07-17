@@ -11,81 +11,46 @@
 {% block body %}
     <h1>Créer une sortie</h1>
     {{ form_start(outingForm) }}
+        {{ form_errors(outingForm) }}
 
-    {# {{ form_row(outingForm.test, {attr: {value: tt}}) }} #}
+        <fieldset>
+            <legend>Détails</legend>
+            {{ form_row(outingForm.name) }}
+            {{ form_row(outingForm.date) }}
+            {{ form_row(outingForm.registrationClosingDate) }}
+            {{ form_row(outingForm.maxRegistrants) }}
+            {{ form_row(outingForm.duration) }}
+            {{ form_row(outingForm.description) }}
+            {{ form_row(outingForm.campus) }}
+        </fieldset>
 
-    {{ form_errors(outingForm) }}
-
-    {{ form_row(outingForm.name) }}
-    {{ form_row(outingForm.date) }}
-    {{ form_row(outingForm.registrationClosingDate) }}
-    {{ form_row(outingForm.maxRegistrants) }}
-    {{ form_row(outingForm.duration) }}
-    {{ form_row(outingForm.description) }}
-    {{ form_row(outingForm.campus) }}
-
-        {{ form_row(outingForm.city) }}
-
-        {{ form_row(outingForm.location) }}
-        <input type="button" value="Ajouter">
-{# 
-        {{ form_row(outingForm.location.city) }}
         <fieldset>
             <legend>Lieu</legend>
-            {{ form_row(outingForm.location.name) }}
-            {{ form_row(outingForm.location.street) }}
-            {{ form_row(outingForm.location.latitude) }}
-            {{ form_row(outingForm.location.longitude) }}
-        </fieldset> #}
-    {# 
+
+            {{ form_row(outingForm.newLocation.city) }}
+            <fieldset id="existing-location-form-group">
+                {{ form_row(outingForm.existingLocation) }}
                 <div class="form-group">
-                    <label for="campus">Campus</label>
-                    <span>{{ campus.name }}</span>
-                </div> #}
-    {# 
-        {{ form_row(outingForm.city) }}
-    
-        {{ form_row(outingForm.location) }}
-    
-        <div class="form-group">
-            <label for="street" class="form-label">Rue</label>
-            <span id="street" class="form-control">?</span>
-        </div>
-    
-        <div class="form-group">
-            <label for="postalCode" class="form-label">Code postal</label>
-            <span id="postalCode" class="form-control">?</span>
-        </div>
-    
-        <div class="form-group">
-            <label for="latitude" class="form-label">Latitude</label>
-            <span id="latitude" class="form-control">?</span>
-        </div>
-    
-        <div class="form-group">
-            <label for="longitude" class="form-label">Longitude</label>
-            <span id="longitude" class="form-control">?</span>
-        </div{{form_widget(outingForm)}}  #}
+                    <label for="street">Rue</label>
+                    <span id="street"></span>
+                </div>
+                <div class="form-group">
+                    <label for="latitude">Latitude</label>
+                    <span id="latitude"></span>
+                </div>
+                <div class="form-group">
+                    <label for="longitude">Longitude</label>
+                    <span id="longitude"></span>
+                </div>
+            </fieldset>
 
+            {{ form_row(outingForm.isNewLocation) }}
+            <fieldset id="new-location-form-group">
+                {{ form_errors(outingForm.newLocation) }}
+                {{ form_widget(outingForm.newLocation) }}
+            </fieldset>
+        </fieldset>
 
-    {# {{ form_row(outingForm.location) }}
-    
-            <div class="form-group">
-                <label for="campus">Rue</label>
-                <span id="campus">{{ location.street }}</span>
-            </div>
-            <div class="form-group">
-                <label for="street">Code postal</label>
-                <span id="street">{{ city.postalCode }}</span>
-            </div>
-            <div class="form-group">
-                <label for="latitude">Latitude</label>
-                <span id="latitude">{{ location.latitude }}</span>
-            </div>
-            <div class="form-group">
-                <label for="longitude">Longitude</label>
-                <span id="longitude">{{ location.longitude }}</span>
-            </div> #}
-    <input type="submit" value="Valider">
-    
-{{ form_end(outingForm) }}{% endblock %}
+        <input type="submit" value="Valider">
+    {{ form_end(outingForm) }}
+{% endblock %}

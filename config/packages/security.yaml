@@ -36,4 +36,4 @@ security:
         - { path: ^/dashboard, roles: ROLE_ADMIN }
         # - { path: ^/user, roles: ROLE_USER }
         # - { path: ^/outing, roles: ROLE_USER }
-        - { path: ^/auth, roles: }
+        - { path: ^/auth, roles: PUBLIC_ACCESS }

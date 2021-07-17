@@ -12,8 +12,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity(repositoryClass=UserRepository::class)
- * @UniqueEntity(fields = {"alias, email"}, message="The {{ label }} is already used.")
+ * @ORM\Entity(repositoryClass = UserRepository::class)
+ * @UniqueEntity(fields = {"alias, email"}, message = "The {{ label }} is already used.")
  * 
  * @author Marin Taverniers
  */
@@ -22,100 +22,100 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type = "integer")
      */
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=50, unique=true)
-     * @Assert\NotBlank(message="The username is required.")
+     * @ORM\Column(type = "string", length = 50, unique = true)
+     * @Assert\NotBlank(message = "The username is required.")
      * @Assert\Length(
-     *      min=5,
-     *      max=50,
-     *      minMessage="The username is too short (minimum {{ limit }} characters).",
-     *      maxMessage="The username is too long (maximum {{ limit }} characters)."
+     *      min = 5,
+     *      max = 50,
+     *      minMessage = "The username is too short (minimum {{ limit }} characters).",
+     *      maxMessage = "The username is too long (maximum {{ limit }} characters)."
      * )
-     * @Assert\Regex(pattern="/^[-\w]*$/", message="The username contains illegal characters.")
+     * @Assert\Regex(pattern = "/^[-\w]*$/", message = "The username contains illegal characters.")
      */
     private $alias;
 
     /**
-     * @ORM\Column(type="string", length=50)
-     * @Assert\NotBlank(message="The last name is required.")
+     * @ORM\Column(type = "string", length = 50)
+     * @Assert\NotBlank(message = "The last name is required.")
      * @Assert\Length(
-     *      max=50,
-     *      maxMessage="The last name is too long (maximum {{ limit }} characters)."
+     *      max = 50,
+     *      maxMessage = "The last name is too long (maximum {{ limit }} characters)."
      * )
-     * @Assert\Regex(pattern="/^[-' a-zA-Z]*$/", message="The last name contains illegal characters.")
+     * @Assert\Regex(pattern = "/^[-' a-zA-Z]*$/", message = "The last name contains illegal characters.")
      */
     private $lastName;
 
     /**
-     * @ORM\Column(type="string", length=50)
-     * @Assert\NotBlank(message="The first name is required.")
+     * @ORM\Column(type = "string", length = 50)
+     * @Assert\NotBlank(message = "The first name is required.")
      * @Assert\Length(
-     *      max=50,
-     *      maxMessage="The first name is too long (maximum {{ limit }} characters)."
+     *      max = 50,
+     *      maxMessage = "The first name is too long (maximum {{ limit }} characters)."
      * )
-     * @Assert\Regex(pattern="/^[-' a-zA-Z]*$/", message="The first name contains illegal characters.")
+     * @Assert\Regex(pattern = "/^[-' a-zA-Z]*$/", message = "The first name contains illegal characters.")
      */
     private $firstName;
 
     /**
-     * @ORM\Column(type="string", length=250, unique=true)
-     * @Assert\NotBlank(message="The email is required.")
+     * @ORM\Column(type = "string", length = 250, unique = true)
+     * @Assert\NotBlank(message = "The email is required.")
      * @Assert\Length(
-     *      max=250,
-     *      maxMessage="The email is too long (maximum {{ limit }} characters)."
+     *      max = 250,
+     *      maxMessage = "The email is too long (maximum {{ limit }} characters)."
      * )
-     * @Assert\Email(message="The email is not valid.")
+     * @Assert\Email(message = "The email is not a valid email.")
      */
     private $email;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type = "string")
      */
     private $password;
 
     /**
-     * @ORM\Column(type="string", length=15, nullable=true)
+     * @ORM\Column(type = "string", length = 15, nullable = true)
      * @Assert\Length(
-     *      max=15,
-     *      maxMessage="The phone number is too long (maximum {{ limit }} characters)."
+     *      max = 15,
+     *      maxMessage = "The phone number is too long (maximum {{ limit }} characters)."
      * )
-     * @Assert\Regex(pattern="/^\d*$/", message="The phone number contains illegal characters.")
+     * @Assert\Regex(pattern = "/^\d*$/", message = "The phone number contains illegal characters.")
      */
     private $phone;
 
     /**
-     * @ORM\Column(type="string", length=1000, nullable=true)
+     * @ORM\Column(type = "string", length = 1000, nullable = true)
      * @Assert\Length(
-     *      max=1000,
-     *      maxMessage="The picture url is too long (maximum {{ limit }} characters)."
+     *      max = 1000,
+     *      maxMessage = "The picture url is too long (maximum {{ limit }} characters)."
      * )
-     * @Assert\Url(message="The picture url is not valid.")
+     * @Assert\Url(message = "The picture url is not a valid url.")
      */
     private $pictureUrl;
 
     /**
-     * @ORM\Column(type="json")
-     * @Assert\Json(message = "The roles array is not valid.")
+     * @ORM\Column(type = "json")
+     * @Assert\Json(message = "The roles array is not a valid JSON object.")
      */
     private $roles = [];
 
     /**
-     * @ORM\ManyToOne(targetEntity=Campus::class, inversedBy="users")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\ManyToOne(targetEntity = Campus::class, inversedBy = "users")
+     * @ORM\JoinColumn(nullable = false)
      */
     private $campus;
 
     /**
-     * @ORM\OneToMany(targetEntity=Outing::class, mappedBy="organizer")
+     * @ORM\OneToMany(targetEntity = Outing::class, mappedBy = "organizer")
      */
     private $organizedOutings;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Outing::class, mappedBy="registrants")
+     * @ORM\ManyToMany(targetEntity = Outing::class, mappedBy = "registrants")
      */
     private $outings;
 
@@ -253,7 +253,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
         return $this;
     }
 
-    /* Generated with "make:user" */
+    /* Generated by "make:user" */
 
     /**
      * A visual identifier that represents this user.

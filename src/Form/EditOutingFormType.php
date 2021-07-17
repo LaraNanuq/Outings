@@ -11,6 +11,8 @@ use DateTime;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -22,6 +24,7 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Date;
+use Symfony\Component\Validator\Constraints\Valid;
 
 /**
  * @author Marin Taverniers
@@ -37,18 +40,16 @@ class EditOutingFormType extends AbstractType {
                 'label' => 'Date',
                 'date_widget' => 'single_text',
                 'time_widget' => 'single_text',
-                //'empty_data' => new DateTime()
             ])
             ->add('registrationClosingDate', DateType::class, [
                 'label' => 'Fin des inscriptions',
                 'widget' => 'single_text',
-                //'empty_data' => new Date()
             ])
             ->add('maxRegistrants', IntegerType::class, [
                 'label' => 'Places'
             ])
             ->add('duration', IntegerType::class, [
-                'label' => 'Durée'
+                'label' => 'Durée (min)'
             ])
             ->add('description', TextareaType::class, [
                 'label' => 'Description'
@@ -61,131 +62,147 @@ class EditOutingFormType extends AbstractType {
                 },
                 'placeholder' => '- Sélectionnez un campus -'
             ])
-            ->add('city', EntityType::class, [
-                'label' => 'Ville',
-                'class' => City::class,
-                'choice_label' => function (City $city) {
-                    return $city->getName();
-                },
-                'placeholder' => '- Sélectionnez une ville -',
+            ->add('isNewLocation', CheckboxType::class, [
+                'label' => 'Ajouter',
+                'required' => false,
                 'mapped' => false
             ])
+            ->add('newLocation', EditLocationFormType::class, [
+                'label' => 'Nouveau lieu',
+                //'constraints' => array(new Valid()),
+                //'disabled' => !$isNewLocation,
+                'mapped' => false
+            ]);
 
-            //->add('city', EditCityFormType::class)
-            //->add('location', EditLocationFormType::class)
-            /*
-            */;
-            
-        // Form loaded
-        $builder->addEventListener(
+        //$this->addNewLocationField($builder->getForm());
+        
+            /* ->add('newLocation', EditLocationFormType::class, [
+                'label' => 'Nouveau lieu',
+                'mapped' => false
+            ]) */
+
+        // On form load
+        /*$builder->addEventListener(
             FormEvents::PRE_SET_DATA,
             function (FormEvent $event) {
                 $form = $event->getForm();
-                //$outing = $event->getData();
-                //$city = $form->get('city')->getData();
-                $this->addLocationField($form, null);
+                $outing = $event->getData();
+            //    $city = $form->get('newLocation')->get('city')->getData();
+                //$isNewLocation = $form->get('isNewLocation')->getData();
+                $this->addExistingLocationField($form, null);
+                $this->addNewLocationField($form);
+            }
+        );*/
+
+        $builder->get('isNewLocation')->addEventListener(
+            FormEvents::POST_SET_DATA,
+            function (FormEvent $event) {
+                $field = $event->getForm();
+                $form = $field->getParent();
+                $isNewLocationValue = $event->getData();
+                $isNewLocation = $field->getData();
+
+
+                $this->addNewLocationField($form);
+
+                $city = $form->get('newLocation')->get('city')->getData();
+                //$this->addExistingLocationField($form, null);
+                
+                
+                $this->addExistingLocationField($form, $city);
             }
         );
 
-        // Form submitted
-        $builder->get('city')->addEventListener(
+        // On form submitted (used for ajax request)
+        $builder->get('newLocation')->get('city')->addEventListener(
             FormEvents::POST_SUBMIT,
             function (FormEvent $event) {
                 $field = $event->getForm();
-                $cityId = $event->getData();
+                $form = $field->getParent()->getParent();
+                $cityValue = $event->getData();
                 $city = $field->getData();
-                $this->addLocationField($field->getParent(), $city);
+                $this->addExistingLocationField($form, $city);
             }
         );
+/* 
+        $builder->addEventListener(
+            FormEvents::POST_SUBMIT,
+            function (FormEvent $event) {
+                $form = $event->getForm();
+                $field = $form->get('newLocation')->get('city');
+                //$cityValue = $event->getData();
+                $city = $field->getData();
+                
+                $this->addExistingLocationField($form->getParent(), $city);
+            }
+        ); */
     }
 
     /**
-     * Adds the location field with locations related to the specified city.
+     * Adds the existing location field with locations related to the specified city.
      *
      * @param FormInterface $form
      * @param City|null $city
      * @return void
      */
-    private function addLocationField(FormInterface $form, ?City $city): void {
+    private function addExistingLocationField(FormInterface $form, ?City $city): void {
+        /* $isNewLocation = $form->get('isNewLocation')->getData();
+        dump($isNewLocation); */
+
         if (!$city) {
             $locations = [];
-            $disabled = true;
-            $required = false;
+            $placeholder = "Aucune ville sélectionnée";
         } else {
-            $locations = $city->getLocations();
-            $disabled = false;
-            $required = true;
+            $locations = $city->getLocations()->getValues();
+            sort($locations);
+            if (count($locations) > 0) {
+                $placeholder = "Sélectionnez un lieu";
+            } else {
+                $placeholder = "Aucun lieu trouvé";
+            }
         }
-        $form->add('location', EntityType::class, [
+        $form->add('existingLocation', EntityType::class, [
             'label' => 'Lieu',
             'class' => Location::class,
             'choices' => $locations,
             'choice_label' => function (Location $location) {
                 return $location->getName();
             },
-            'placeholder' => '- Sélectionnez un lieu -',
-            'disabled' => $disabled,
-            'required' => $required
+            'choice_attr' => function (Location $location) {
+                return [
+                    'street' => $location->getStreet(),
+                    'latitude' => $location->getLatitude(),
+                    'longitude' => $location->getLongitude()
+                ];
+            },
+            'placeholder' => '- ' . $placeholder . ' -',
+            //'disabled' => $isNewLocation,
+            'mapped' => false
         ]);
     }
 
+    private function addNewLocationField(FormInterface $form): void {
+        $isNewLocation = $form->get('isNewLocation')->getData();
+        dump($isNewLocation);
 
-    /*
+        /* $form->add('newLocation', EditLocationFormType::class, [
+            'label' => 'Nouveau lieu',
+            'constraints' => $isNewLocation ? array(new Valid()) : null,
+            //'disabled' => !$isNewLocation,
+            'mapped' => false
+        ]); */
+        /*$subform = $form->get('newLocation');
+        $field = $subform->get('city');
+        $options = $field->getConfig()->getOptions();
+        $type = $field->getConfig()->getType()->;
+        $options['disabled'] = false;
+        $subform->add('city', $type, $options);*/
 
-            //->add('campus')
-            //->add('city')
-            ->add('location', EntityType::class, [
-                'label' => 'Lieu',
-                'class' => Location::class,
-                /*'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('l')
-                        ->join('l.city', 'c')
-                        ->where('c.id = :cityId')
-                        ->setParameter('cityId', 1);
-                'choices' => $city ? $city->getLocations() : [],
-                },
-
-                'choices' => [],
-                'choice_label' => 'name',
-                'placeholder' => '--Sélectionnez une ville--'
-            ]);
-        //->add('street')
-        //->add('postalCode')
-        //->add('latitude')
-        //->add('longitude')
-
-
-        $builder->addEventListener(
-            FormEvents::POST_SET_DATA,
-            function (FormEvent $event) {
-                $form = $event->getForm();
-                $data = $event->getData();
-
-
-                $city = $form->get('city')->getData();
-
-                
-                dump($form);
-                dump($data);
-                dump($city);
-
-                if (!$city) {
-                    return;
-                }
-
-                $form->add('location', EntityType::class, [
-                    'label' => 'Lieu',
-                    'class' => Location::class,
-                    'choices' => $city->getLocations(),
-                    'choice_label' => 'name',
-                    'mapped' => false
-                ]);
-            }
-        );*/
+    }
 
     public function configureOptions(OptionsResolver $resolver) {
         $resolver->setDefaults([
-            'data_class' => Outing::class,
+            'data_class' => Outing::class
         ]);
     }
 }

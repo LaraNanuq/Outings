@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity(repositoryClass=CityRepository::class)
+ * @ORM\Entity(repositoryClass = CityRepository::class)
  * 
  * @author Marin Taverniers
  */
@@ -18,34 +18,34 @@ class City {
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type = "integer")
      */
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=15)
-     * @Assert\NotBlank(message="The postal code is required.")
+     * @ORM\Column(type = "string", length = 15)
+     * @Assert\NotBlank(message = "The postal code is required.")
      * @Assert\Length(
-     *      max=15,
-     *      maxMessage="The postal code is too long (maximum {{ limit }} characters)."
+     *      max = 15,
+     *      maxMessage = "The postal code is too long (maximum {{ limit }} characters)."
      * )
-     * @Assert\Regex(pattern="/^\d*$/", message="The postal code contains illegal characters.")
+     * @Assert\Regex(pattern = "/^\d*$/", message = "The postal code contains illegal characters.")
      */
     private $postalCode;
 
     /**
-     * @ORM\Column(type="string", length=50)
-     * @Assert\NotBlank(message="The name is required.")
+     * @ORM\Column(type = "string", length = 50)
+     * @Assert\NotBlank(message = "The name is required.")
      * @Assert\Length(
-     *      max=50,
-     *      maxMessage="The name is too long (maximum {{ limit }} characters)."
+     *      max = 50,
+     *      maxMessage = "The name is too long (maximum {{ limit }} characters)."
      * )
-     * @Assert\Regex(pattern="/^[-' \w]*$/", message="The name contains illegal characters.")
+     * @Assert\Regex(pattern = "/^[-' \w]*$/", message = "The name contains illegal characters.")
      */
     private $name;
 
     /**
-     * @ORM\OneToMany(targetEntity=Location::class, mappedBy="city")
+     * @ORM\OneToMany(targetEntity = Location::class, mappedBy = "city")
      */
     private $locations;
 

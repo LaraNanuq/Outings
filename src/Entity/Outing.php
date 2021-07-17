@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping\JoinTable;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity(repositoryClass=OutingRepository::class)
+ * @ORM\Entity(repositoryClass = OutingRepository::class)
  * 
  * @author Marin Taverniers
  */
@@ -19,115 +19,121 @@ class Outing {
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type = "integer")
      */
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=50)
-     * @Assert\NotBlank(message="The name is required.")
+     * @ORM\Column(type = "string", length = 50)
+     * @Assert\NotBlank(message = "The name is required.")
      * @Assert\Length(
-     *      max=50,
-     *      maxMessage="The name is too long (maximum {{ limit }} characters)."
+     *      max = 50,
+     *      maxMessage = "The name is too long (maximum {{ limit }} characters)."
      * )
-     * @Assert\Regex(pattern="/^[-' \w]*$/", message="The name contains illegal characters.")
+     * @Assert\Regex(pattern = "/^[-' \w]*$/", message = "The name contains illegal characters.")
      */
     private $name;
 
     /**
-     * @ORM\Column(type="string", length=1000)
-     * @Assert\NotBlank(message="The description is required.")
+     * @ORM\Column(type = "string", length = 1000)
+     * @Assert\NotBlank(message = "The description is required.")
      * @Assert\Length(
-     *      min=5,
-     *      max=1000,
-     *      minMessage="The description is too short (minimum {{ limit }} characters).",
-     *      maxMessage="The description is too long (maximum {{ limit }} characters)."
+     *      min = 5,
+     *      max = 1000,
+     *      minMessage = "The description is too short (minimum {{ limit }} characters).",
+     *      maxMessage = "The description is too long (maximum {{ limit }} characters)."
      * )
      */
     private $description;
 
+    // TODO: @Assert\DateTime(message = "The date is not a valid date.")
     /**
-     * @ORM\Column(type="datetime")
-     * @Assert\NotBlank(message="The date is required.")
-     * @Assert\GreaterThanOrEqual(value="today", message="The date is not valid.")
+     * @ORM\Column(type = "datetime")
+     * @Assert\NotBlank(message = "The date is required.")
+     * @Assert\Range(
+     *      invalidDateTimeMessage = "The date is not a valid date.",
+     *      min = "now + 6 hours",
+     *      max = "now + 2 years",
+     *      notInRangeMessage = "The date is not between the next 6 hours and the next 2 years.",
+     * )
      */
     private $date;
 
-
-
-
-    // @Assert\DateTime(message="The date is not valid.")
-
-
-
-
     /**
-     * @ORM\Column(type="integer")
-     * @Assert\NotBlank(message="The duration is required.")
-     * @Assert\Type(type="int", message="The duration is not valid.")
-     * @Assert\Positive(message="The duration is not valid.")
+     * @ORM\Column(type = "integer")
+     * @Assert\NotBlank(message = "The duration is required.")
+     * @Assert\Type(type = "int", message = "The duration is not a valid number.")
+     * @Assert\Range(
+     *      min = 15,
+     *      max = 10080,
+     *      notInRangeMessage = "The duration is not between {{ min }} and {{ max }}."
+     * )
      */
     private $duration;
 
+    // TODO: @Assert\Date(message = "The registration closing date is not a valid date.")
     /**
-     * @ORM\Column(type="date")
-     * @Assert\NotBlank(message="The registration closing date is required.")
-     * @Assert\GreaterThan(value="today", message="The registration closing date is not valid.")
-     * @Assert\LessThan(propertyPath="date", message="The registration closing date is not valid.")
+     * @ORM\Column(type = "date")
+     * @Assert\NotBlank(message = "The registration closing date is required.")
+     * @Assert\Range(
+     *      invalidDateTimeMessage = "The registration closing date is not a valid date.",
+     *      min = "now + 1 day",
+     *      maxPropertyPath = "date",
+     *      notInRangeMessage = "The registration closing date is not between tomorrow and the outing date.",
+     * )
      */
     private $registrationClosingDate;
 
-
-    // @Assert\Date(message="The registration closing date is not valid.")
-
-
-
     /**
-     * @ORM\Column(type="integer")
-     * @Assert\NotBlank(message="The maximum registrants number is required.")
-     * @Assert\Type(type="int", message="The maximum registrants number is not valid.")
-     * @Assert\Positive(message="The maximum registrants number is not valid.")
+     * @ORM\Column(type = "integer")
+     * @Assert\NotBlank(message = "The maximum registrants number is required.")
+     * @Assert\Type(type = "int", message = "The maximum registrants number is not a valid number.")
+     * @Assert\Range(
+     *      min = 1,
+     *      max = 10000,
+     *      notInRangeMessage = "The maximum registrants number is not between {{ min }} and {{ max }}."
+     * )
      */
     private $maxRegistrants;
 
     /**
-     * @ORM\Column(type="string", length=1000, nullable=true)
+     * @ORM\Column(type = "string", length = 1000, nullable = true)
      * @Assert\Length(
-     *      min=5,
-     *      max=1000,
-     *      minMessage="The cancellation reason is too short (minimum {{ limit }} characters).",
-     *      maxMessage="The cancellation reason is too long (maximum {{ limit }} characters)."
+     *      min = 5,
+     *      max = 1000,
+     *      minMessage = "The cancellation reason is too short (minimum {{ limit }} characters).",
+     *      maxMessage = "The cancellation reason is too long (maximum {{ limit }} characters)."
      * )
      */
     private $cancellationReason;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="organizedOutings")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\ManyToOne(targetEntity = User::class, inversedBy = "organizedOutings")
+     * @ORM\JoinColumn(nullable = false)
      */
     private $organizer;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Campus::class, inversedBy="outings")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\ManyToOne(targetEntity = Campus::class, inversedBy = "outings")
+     * @ORM\JoinColumn(nullable = false)
      */
     private $campus;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Location::class, inversedBy="outings")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\ManyToOne(targetEntity = Location::class, inversedBy = "outings")
+     * @ORM\JoinColumn(nullable = false)
      */
     private $location;
 
     /**
-     * @ORM\ManyToOne(targetEntity=OutingState::class, inversedBy="outings")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\ManyToOne(targetEntity = OutingState::class, inversedBy = "outings")
+     * @ORM\JoinColumn(nullable = false)
      */
     private $state;
 
     /**
-     * @ORM\ManyToMany(targetEntity=User::class, inversedBy="outings")
-     * @JoinTable(name="outings_registrants")
+     * @ORM\ManyToMany(targetEntity = User::class, inversedBy = "outings")
+     * @JoinTable(name = "outings_registrants")
      */
     private $registrants;
 

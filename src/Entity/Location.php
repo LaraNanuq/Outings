@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity(repositoryClass=LocationRepository::class)
+ * @ORM\Entity(repositoryClass = LocationRepository::class)
  * 
  * @author Marin Taverniers
  */
@@ -18,54 +18,64 @@ class Location {
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type = "integer")
      */
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=50)
-     * @Assert\NotBlank(message="The name is required.")
+     * @ORM\Column(type = "string", length = 50)
+     * @Assert\NotBlank(message = "The name is required.")
      * @Assert\Length(
-     *      max=50,
-     *      maxMessage="The name is too long (maximum {{ limit }} characters)."
+     *      max = 50,
+     *      maxMessage = "The name is too long (maximum {{ limit }} characters)."
      * )
-     * @Assert\Regex(pattern="/^[-' \w]*$/", message="The name contains illegal characters.")
+     * @Assert\Regex(pattern = "/^[-' \w]*$/", message = "The name contains illegal characters.")
      */
     private $name;
 
     /**
-     * @ORM\Column(type="float")
-     * @Assert\NotBlank(message="The latitude is required.")
-     * @Assert\Type(type="float", message="The latitude is not valid.")
+     * @ORM\Column(type = "float")
+     * @Assert\NotBlank(message = "The latitude is required.")
+     * @Assert\Range(
+     *      invalidMessage = "The latitude is not a valid number.",
+     *      min = -90,
+     *      max = 90,
+     *      notInRangeMessage = "The latitude is not between {{ min }} and {{ max }}."
+     * )
      */
     private $latitude;
 
     /**
-     * @ORM\Column(type="float")
-     * @Assert\NotBlank(message="The longitude is required.")
-     * @Assert\Type(type="float", message="The longitude is not valid.")
+     * @ORM\Column(type = "float")
+     * @Assert\NotBlank(message = "The longitude is required.")
+     * @Assert\Range(
+     *      invalidMessage = "The longitude is not a valid number.",
+     *      min = -180,
+     *      max = 180,
+     *      notInRangeMessage = "The longitude is not between {{ min }} and {{ max }}."
+     * )
      */
     private $longitude;
 
     /**
-     * @ORM\Column(type="string", length=50)
-     * @Assert\NotBlank(message="The street is required.")
+     * @ORM\Column(type = "string", length = 50)
+     * @Assert\NotBlank(message = "The street is required.")
      * @Assert\Length(
-     *      max=50,
-     *      maxMessage="The street is too long (maximum {{ limit }} characters)."
+     *      max = 50,
+     *      maxMessage = "The street is too long (maximum {{ limit }} characters)."
      * )
-     * @Assert\Regex(pattern="/^[-' \w]*$/", message="The street contains illegal characters.")
+     * @Assert\Regex(pattern = "/^[-' \w]*$/", message = "The street contains illegal characters.")
      */
     private $street;
 
     /**
-     * @ORM\ManyToOne(targetEntity=City::class, inversedBy="locations")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\ManyToOne(targetEntity = City::class, inversedBy = "locations")
+     * @ORM\JoinColumn(nullable = false)
      */
     private $city;
 
     /**
-     * @ORM\OneToMany(targetEntity=Outing::class, mappedBy="location")
+     * @ORM\OneToMany(targetEntity = Outing::class, mappedBy = "location")
      */
     private $outings;
 

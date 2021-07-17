@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity(repositoryClass=OutingStateRepository::class)
+ * @ORM\Entity(repositoryClass = OutingStateRepository::class)
  * 
  * @author Marin Taverniers
  */
@@ -18,23 +18,23 @@ class OutingState {
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type = "integer")
      */
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=50)
-     * @Assert\NotBlank(message="The label is required.")
+     * @ORM\Column(type = "string", length = 50)
+     * @Assert\NotBlank(message = "The label is required.")
      * @Assert\Length(
-     *      max=50,
-     *      maxMessage="The label is too long (maximum {{ limit }} characters)."
+     *      max = 50,
+     *      maxMessage = "The label is too long (maximum {{ limit }} characters)."
      * )
-     * @Assert\Regex(pattern="/^[- a-zA-Z]*$/", message="The label contains illegal characters.")
+     * @Assert\Regex(pattern = "/^[- a-zA-Z]*$/", message = "The label contains illegal characters.")
      */
     private $label;
 
     /**
-     * @ORM\OneToMany(targetEntity=Outing::class, mappedBy="state")
+     * @ORM\OneToMany(targetEntity = Outing::class, mappedBy = "state")
      */
     private $outings;
 
