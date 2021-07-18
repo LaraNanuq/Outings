@@ -38,7 +38,7 @@ class OutingController extends AbstractController {
         $outing = new Outing();
         $form = $this->createForm(EditOutingFormType::class, $outing);
         $form->handleRequest($request);
-
+/*
         $isNewLocation = $form->get('isNewLocation')->getData();
         if ($isNewLocation) {
             $location = $form->get('newLocation')->getData();
@@ -49,6 +49,7 @@ class OutingController extends AbstractController {
             $location = $form->get('existingLocation')->getData();
         }
         $outing->setLocation($location);
+*/
         dump($outing->getLocation());
 
         if ($form->isSubmitted() && $form->isValid()) {

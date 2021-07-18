@@ -52,9 +52,9 @@ class Outing {
      * @Assert\NotBlank(message = "The date is required.")
      * @Assert\Range(
      *      invalidDateTimeMessage = "The date is not a valid date.",
-     *      min = "now + 6 hours",
+     *      min = "now + 1 day",
      *      max = "now + 2 years",
-     *      notInRangeMessage = "The date is not between the next 6 hours and the next 2 years.",
+     *      notInRangeMessage = "The date is not between tomorrow and the next 2 years.",
      * )
      */
     private $date;
