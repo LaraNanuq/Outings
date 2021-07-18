@@ -40,7 +40,6 @@ class EditLocationFormType extends AbstractType {
                         ->orderBy('c.postalCode', 'ASC');
                 },
                 'placeholder' => '- Sélectionnez une ville -',
-                //'mapped' => false
             ])
             ->add('latitude', NumberType::class, [
                 'label' => 'Latitude',

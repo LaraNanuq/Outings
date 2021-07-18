@@ -2,11 +2,10 @@
  * @author Marin Taverniers
  */
 
-if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", init);
-} else {
-    init();
-}
+import { Ajax } from "../util/Ajax.js";
+import { Document } from "../util/Document.js";
+
+Document.onDocumentReady(init);
 
 let streetText;
 let latitudeText;
@@ -28,14 +27,14 @@ function init() {
     updateExistingLocationTexts();
 
     // New location update
-    newLocationFormGroup = document.querySelector("#new-location-form-group");
+    newLocationFormGroup = document.querySelector("#location-form-group");
     newLocationCheckbox = document.querySelector("#edit_outing_form_isNewLocation");
     newLocationCheckbox.addEventListener("change", updateLocationGroups);
     updateLocationGroups();
 
     // City update
     let form = document.querySelector("form[name='edit_outing_form']");
-    let cityInput = document.querySelector("#edit_outing_form_newLocation_city");
+    let cityInput = document.querySelector("#edit_outing_form_location_city");
     //cityInput.disabled = false;
     cityInput.addEventListener("change", function () {
         existingLocationInput.innerHTML = "<option>- CHARGEMENT -</option>";
@@ -43,8 +42,8 @@ function init() {
 
         // Get new locations
         let formData = new FormData(form);
-        ajax(form.action, form.method, formData, (data) => {
-            replaceElement("#edit_outing_form_existingLocation", data);
+        Ajax.fetch(form.action, form.method, formData, (data) => {
+            Document.replaceElement("#edit_outing_form_existingLocation", data);
         });
     });
 }
@@ -69,33 +68,4 @@ function updateExistingLocationTexts() {
 function updateLocationGroups() {
     existingLocationFormGroup.disabled = newLocationCheckbox.checked;
     newLocationFormGroup.disabled = !newLocationCheckbox.checked;
-}
-
-function replaceElement(selector, htmlContent) {
-    let oldElement = document.querySelector(selector);
-    let tempElement = document.createElement("div");
-    tempElement.innerHTML = htmlContent;
-    let newElement = tempElement.querySelector(selector);
-    oldElement.innerHTML = newElement.innerHTML;
-    tempElement.remove();
-    //oldElement.replaceWith(newElement);
-}
-
-function ajax(url, method, body, success, error = null) {
-    fetch(url, { method: method, body: body })
-        .then((response) => {
-            //    if (response.ok) {
-            return Promise.resolve(response.text());
-            //    }
-            //    return Promise.reject(response.statusText);
-        })
-        .then((data) => {
-            success(data);
-        })
-        .catch((e) => {
-            console.error(e);
-            if (error) {
-                error(e);
-            }
-        });
 }

@@ -38,24 +38,10 @@ class OutingController extends AbstractController {
         $outing = new Outing();
         $form = $this->createForm(EditOutingFormType::class, $outing);
         $form->handleRequest($request);
-/*
-        $isNewLocation = $form->get('isNewLocation')->getData();
-        if ($isNewLocation) {
-            $location = $form->get('newLocation')->getData();
-            if ($location) {
-                $location->setCity($form->get('newLocation')->get('city')->getData());
-            }
-        } else {
-            $location = $form->get('existingLocation')->getData();
-        }
-        $outing->setLocation($location);
-*/
-        dump($outing->getLocation());
-
         if ($form->isSubmitted() && $form->isValid()) {
+            dump($outing->getLocation());
             dump("VALID");
         }
-        
         //$user = $this->getUser();
         //$user = $userRepository->find('2');
         return $this->renderForm('outing/edit.html.twig', [

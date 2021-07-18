@@ -27,7 +27,7 @@
         <fieldset>
             <legend>Lieu</legend>
 
-            {{ form_row(outingForm.newLocation.city) }}
+            {{ form_row(outingForm.location.city) }}
             <fieldset id="existing-location-form-group">
                 {{ form_row(outingForm.existingLocation) }}
                 <div class="form-group">
@@ -45,9 +45,9 @@
             </fieldset>
 
             {{ form_row(outingForm.isNewLocation) }}
-            <fieldset id="new-location-form-group">
-                {{ form_errors(outingForm.newLocation) }}
-                {{ form_widget(outingForm.newLocation) }}
+            <fieldset id="location-form-group">
+                {{ form_errors(outingForm.location) }}
+                {{ form_widget(outingForm.location) }}
             </fieldset>
         </fieldset>
 
