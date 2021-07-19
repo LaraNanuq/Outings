@@ -5,6 +5,7 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 /**
  * @Route("/auth", name = "auth_")
@@ -14,8 +15,13 @@ class AuthController extends AbstractController {
     /**
      * @Route("/login", name = "login")
      */
-    public function login(): Response {
-        return $this->render('auth/login.html.twig', []);
+    public function login(AuthenticationUtils $authenticationUtils): Response {
+        if ($this->getUser()) {
+            return $this->redirectToRoute('outing_list');
+        }
+        $lastUsername = $authenticationUtils->getLastUsername();
+        $error = $authenticationUtils->getLastAuthenticationError();
+        return $this->render('auth/login.html.twig', ['lastUsername' => $lastUsername, 'error' => $error]);
     }
 
     /**
@@ -23,7 +29,8 @@ class AuthController extends AbstractController {
      */
     public function logout(): Response {
         // Managed by the authentication system
-        return $this->redirectToRoute('auth_login');
+        throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
+
     }
 
     /**
