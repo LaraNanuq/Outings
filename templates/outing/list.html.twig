@@ -6,4 +6,87 @@
 
 {% block body %}
     <h1>Liste des sorties</h1>
+
+    <fieldset>
+        <legend>Filtres</legend>
+        {{ form_start(filterForm) }}
+            {{ form_widget(filterForm) }}
+            <button type="submit">Rechercher</button>
+        {{ form_end(filterForm) }}
+    </fieldset>
+
+    <table style="text-align: center; border-collapse: true; border: 1px solid black;">
+        <tr>
+            <th>Nom</th>
+            <th>Date</th>
+            <th>Clôture des inscriptions</th>
+            <th>Inscrits / Places</th>
+            <th>État</th>
+            <th>Inscrit</th>
+            <th>Organisateur</th>
+            <th>Actions</th>
+        </tr>
+        {% for outing in outings %}
+            <tr>
+                <td>{{ outing.name }}</td>
+                <td>{{ outing.date|date() }}</td>
+                <td>{{ outing.registrationClosingDate|date() }}</td>
+                <td>{{ outing.registrants|length }} / {{ outing.maxRegistrants }}</td>
+                <td>{{ outing.state.label }}</td>
+                <td>{{ app.user in outing.registrants ? "X" : "-" }}</td>
+                <td>
+                    <a href="{{ path('user_detail', {id: outing.organizer.id}) }}">
+                        {{ outing.organizer.firstName }}
+                        {{ outing.organizer.lastName|slice(0, 1) }}.
+                    </a>
+                    {% if (app.user == outing.organizer) %}
+                        <span>(vous)</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <ul>
+                        {% if (app.user == outing.organizer) %}
+                            {% if (outing.state.label == "DRAFT") %}
+                                <li>
+                                    <a href="{{ path('outing_edit', {id: outing.id}) }}">Modifier</a>
+                                </li>
+                                <li>
+                                    <a href="{{ path('outing_publish', {id: outing.id}) }}">Publier</a>
+                                </li>
+                            {% else %}
+                                <li>
+                                    <a href="{{ path('outing_detail', {id: outing.id}) }}">Afficher</a>
+                                </li>
+                            {% endif %}
+                            {% if (outing.state.label in ["OPEN", "PENDING"]) %}
+                                <li>
+                                    <a href="{{ path('outing_cancel', {id: outing.id}) }}">Annuler</a>
+                                </li>
+                            {% endif %}
+
+                        {% else %}
+                            <li>
+                                <a href="{{ path('outing_detail', {id: outing.id}) }}">Afficher</a>
+                            </li>
+                            {% if (app.user in outing.registrants) %}
+                                {% if (outing.state.label in ["OPEN", "PENDING"]) %}
+                                    <li>
+                                        <a href="{{ path('outing_unregister', {id: outing.id}) }}">Se désister</a>
+                                    </li>
+                                {% endif %}
+                            {% else %}
+                                {% if (outing.state.label == "OPEN") %}
+                                    <li>
+                                        <a href="{{ path('outing_register', {id: outing.id}) }}">S'inscrire</a>
+                                    </li>
+                                {% endif %}
+                            {% endif %}
+                        {% endif %}
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+
+    <a href="{{ path('outing_create') }}">Créer une sortie</a>
 {% endblock %}

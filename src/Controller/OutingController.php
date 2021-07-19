@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Outing;
 use App\Form\EditOutingFormType;
+use App\Form\FilterOutingsFormType;
+use App\Repository\OutingRepository;
 use App\Repository\OutingStateRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -23,8 +25,20 @@ class OutingController extends AbstractController {
     /**
      * @Route("/list", name = "list")
      */
-    public function list(): Response {
-        return $this->render('outing/list.html.twig', []);
+    public function list(
+        Request $request,
+        OutingRepository $outingRepository
+    ): Response {
+        $form = $this->createForm(FilterOutingsFormType::class);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            //$outings = $outingRepository->
+        }
+        $outings = $outingRepository->findAll();
+        return $this->renderForm('outing/list.html.twig', [
+            'filterForm' => $form,
+            'outings' => $outings
+        ]);
     }
 
     /**

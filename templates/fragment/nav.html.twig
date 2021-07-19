@@ -1,28 +1,23 @@
-<nav>
-    <ul>
-        <li>
-            <a href="{{ path('outing_list') }}" title="Accueil">Accueil</a>
-        </li>
-        <li>
-            <a href="{{ path('user_edit') }}" title="Mon profil">Mon profil</a>
-        </li>
-        <li>
-            <a href="{{ path('auth_logout') }}" title="Se déconnecter">Se déconnecter</a>
-        </li>
-
-        {#
-        {% if app.user %}
-            <li><a href="{{ path('serie_create') }}" title="Create a new serie">Create</a></li>
-            <li><a href="{{ path('season_create') }}" title="Create a new season">Create season</a></li>
-            <li><a href="{{ path('app_logout') }}" title="Logout">Logout {{ app.user.firstname }}</a></li>
-
-            {% if is_granted("ROLE_ADMIN") %}
-                <li><a href="{{ path('admin_dashboard') }}" title="admin dashboard">Dashboard</a></li>
-                <li><a href="{{ path('admin_dashboard') }}" title="admin dashboard">Dashboard</a></li>
+{% if (app.user) %}
+    <nav>
+        <ul>
+            <li>
+                <a href="{{ path('main_home') }}">Accueil</a>
+            </li>
+            <li>
+                <a href="{{ path('user_edit') }}">Mon profil</a>
+            </li>
+            {% if (is_granted("ROLE_ADMIN")) %}
+                <li>
+                    <a href="{{ path('dashboard_city_list') }}">Villes</a>
+                </li>
+                <li>
+                    <a href="{{ path('dashboard_campus_list') }}">Campus</a>
+                </li>
             {% endif %}
-
-        {% endif %}
-        #}
-
-    </ul>
-</nav>
+            <li>
+                <a href="{{ path('auth_logout') }}">Se déconnecter</a>
+            </li>
+        </ul>
+    </nav>
+{% endif %}

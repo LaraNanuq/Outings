@@ -33,11 +33,11 @@ class EditOutingFormType extends AbstractType {
             ->add('date', DateTimeType::class, [
                 'label' => 'Date',
                 'date_widget' => 'single_text',
-                'time_widget' => 'single_text',
+                'time_widget' => 'single_text'
             ])
             ->add('registrationClosingDate', DateType::class, [
                 'label' => 'Fin des inscriptions',
-                'widget' => 'single_text',
+                'widget' => 'single_text'
             ])
             ->add('maxRegistrants', IntegerType::class, [
                 'label' => 'Places'
