@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Outing;
 use App\Form\EditOutingFormType;
+use App\Repository\OutingRepository;
 use App\Repository\OutingStateRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -30,8 +31,16 @@ class OutingController extends AbstractController {
     /**
      * @Route("/{id}", name = "detail", requirements = {"id"="\d+"})
      */
-    public function detail(int $id): Response {
-        return $this->render('outing/detail.html.twig', []);
+    public function detail(int $id, OutingRepository $outingRepository): Response {
+
+        $outing = $outingRepository -> find($id);
+
+        if(!$outing) {
+            throw $this->createNotFoundException("La sortie n'existe pas.");
+        }
+        return $this->render('outing/detail.html.twig', [
+            "outing"=>$outing
+        ]);
     }
 
     /**
