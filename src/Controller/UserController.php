@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Form\EditProfileType;
+use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -21,7 +23,13 @@ class UserController extends AbstractController {
     /**
      * @Route("/edit", name = "edit")
      */
-    public function edit(): Response {
-        return $this->render('user/edit.html.twig', []);
+    public function edit(UserRepository $userRepository): Response {
+       $user=$userRepository->find(2);
+       $form=$this->createForm(EditProfileType::class,$user);
+   //     return $this->render('user/edit.html.twig', ["user"=>$user]);
+        return  $this->renderForm('user/edit.html.twig',["form"=>$form]);
+
+        
     }
+
 }
