@@ -5,8 +5,6 @@ namespace App\Controller;
 use App\Entity\Outing;
 use App\Form\EditOutingFormType;
 use App\Repository\OutingStateRepository;
-use App\Repository\UserRepository;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -42,7 +40,6 @@ class OutingController extends AbstractController {
     public function create(
         Request $request,
         EntityManagerInterface $entityManager,
-        UserRepository $userRepository,
         OutingStateRepository $outingStateRepository
     ): Response {
         $outing = new Outing();
@@ -57,11 +54,8 @@ class OutingController extends AbstractController {
 
         // Do not validate the form on Ajax requests
         if (!$request->isXmlHttpRequest()) {
-
-            //$user = $this->getUser();
-            $user = $userRepository->find('2');
-
             if ($form->isSubmitted() && $form->isValid()) {
+                $user = $this->getUser();
                 $outing->setOrganizer($user);
 
                 if ($form instanceof Form) {
@@ -73,7 +67,7 @@ class OutingController extends AbstractController {
                         $successText = 'La sortie a été enregistrée.';
                     }
                 }
-                
+
                 $location = $outing->getLocation();
                 if (!$location->getId()) {
                     $entityManager->persist($location);
@@ -89,7 +83,7 @@ class OutingController extends AbstractController {
             'outing' => $outing
         ]);
     }
-    
+
     /**
      * @Route("/edit/{id}", name = "edit", requirements = {"id"="\d+"})
      */
@@ -101,7 +95,7 @@ class OutingController extends AbstractController {
      * @Route("/publish/{id}", name = "publish", requirements = {"id"="\d+"})
      */
     public function publish(int $id): Response {
-        
+
         return $this->redirectToRoute('outing_list');
     }
 

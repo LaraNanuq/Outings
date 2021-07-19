@@ -19,32 +19,24 @@ security:
         main:
             lazy: true
             provider: app_user_provider
-            custom_authenticator: App\Security\UserAuthAuthenticator
+            custom_authenticator: App\Security\UserAuthenticator
             logout:
                 path: auth_logout
-                # where to redirect after logout
                 target: auth_login
             remember_me:
-                secret: '%kernel.secret%'
-                lifetime: 31536000 # 1 week in seconds
+                secret: "%kernel.secret%"
+                name: REMEMBER_ME
+                lifetime: 31536000
                 path: /
-                domain: ~
                 secure: true
-                name: REMEMBERME
                 remember_me_parameter: remember_me
-                always_remember_me: true
-                # by default, the feature is enabled by checking a
-                # checkbox in the login form (see below), uncomment the
-                # following line to always enable it.
-                #always_remember_me: true
-
-
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication
 
             # https://symfony.com/doc/current/security/impersonating_user.html
             # switch_user: true
+
     role_hierarchy:
         ROLE_ADMIN: ROLE_USER
 
@@ -52,6 +44,6 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
         - { path: ^/dashboard, roles: ROLE_ADMIN }
-        # - { path: ^/user, roles: ROLE_USER }
-        # - { path: ^/outing, roles: ROLE_USER }
+        - { path: ^/user, roles: ROLE_USER }
+        - { path: ^/outing, roles: ROLE_USER }
         - { path: ^/auth, roles: PUBLIC_ACCESS }

@@ -8,7 +8,6 @@ use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @method User|null find($id, $lockMode = null, $lockVersion = null)
@@ -34,25 +33,18 @@ class UserRepository extends ServiceEntityRepository implements UserLoaderInterf
         $this->_em->flush();
     }
 
-
-    public function loadUserByIdentifier(string $usernameOrEmail): ?User
-    {
-        dump("coucou Marin");
-        $entityManager = $this->getEntityManager();
-
-        return $entityManager->createQuery(
-            'SELECT u
-                FROM App\Entity\User u
-                WHERE u.alias = :query
-                OR u.email = :query'
-        )
-            ->setParameter('query', $usernameOrEmail)
-            ->getOneOrNullResult();
+    public function loadUserByIdentifier(string $aliasOrEmail): ?User {
+        $query = $this->createQueryBuilder('u')
+            ->andWhere('u.alias = :aliasOrEmail')
+            ->orWhere('u.email = :aliasOrEmail')
+            ->setParameter('aliasOrEmail', $aliasOrEmail)
+            ->getQuery();
+        return $query->getOneOrNullResult();
     }
 
-    public function loadUserByUsername(string $username)
-    {
-        // depreciated
-        // Overridden by loadUserByIdentifier
+    /**
+     * @deprecated since Symfony 5.3, use loadUserByIdentifier() instead
+     */
+    public function loadUserByUsername(string $username) {
     }
 }

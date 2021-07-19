@@ -17,48 +17,41 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Authenticator\Passport\PassportInterface;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
 
-class UserAuthAuthenticator extends AbstractLoginFormAuthenticator
-{
+class UserAuthenticator extends AbstractLoginFormAuthenticator {
     use TargetPathTrait;
 
     public const LOGIN_ROUTE = 'auth_login';
-
     private UrlGeneratorInterface $urlGenerator;
 
-    public function __construct(UrlGeneratorInterface $urlGenerator)
-    {
+    public function __construct(UrlGeneratorInterface $urlGenerator) {
         $this->urlGenerator = $urlGenerator;
     }
+
     public function supports(Request $request): bool {
         return $request->isMethod('POST') && self::LOGIN_ROUTE === $request->attributes->get('_route');
     }
 
-    public function authenticate(Request $request): PassportInterface
-    {
-        $email = $request->request->get('email', '');
-
-        $request->getSession()->set(Security::LAST_USERNAME, $email);
-
+    public function authenticate(Request $request): PassportInterface {
+        $aliasOrEmail = $request->request->get('alias_or_email', '');
+        $request->getSession()->set(Security::LAST_USERNAME, $aliasOrEmail);
         return new Passport(
-            new UserBadge($email),
+            new UserBadge($aliasOrEmail),
             new PasswordCredentials($request->request->get('password', '')),
             [
-                new CsrfTokenBadge('authenticate', $request->get('_csrf_token')),
+                new CsrfTokenBadge('authenticate', $request->get('csrf_token')),
                 new RememberMeBadge()
             ]
         );
     }
 
-    public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
-    {
+    public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response {
         if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
             return new RedirectResponse($targetPath);
         }
         return new RedirectResponse($this->urlGenerator->generate('main_home'));
     }
 
-    protected function getLoginUrl(Request $request): string
-    {
+    protected function getLoginUrl(Request $request): string {
         return $this->urlGenerator->generate(self::LOGIN_ROUTE);
     }
 }

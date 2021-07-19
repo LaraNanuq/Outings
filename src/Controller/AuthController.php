@@ -17,20 +17,21 @@ class AuthController extends AbstractController {
      */
     public function login(AuthenticationUtils $authenticationUtils): Response {
         if ($this->getUser()) {
-            return $this->redirectToRoute('outing_list');
+            return $this->redirectToRoute('main_home');
         }
         $lastUsername = $authenticationUtils->getLastUsername();
         $error = $authenticationUtils->getLastAuthenticationError();
-        return $this->render('auth/login.html.twig', ['lastUsername' => $lastUsername, 'error' => $error]);
+        return $this->render('auth/login.html.twig', [
+            'lastUsername' => $lastUsername,
+            'error' => $error
+        ]);
     }
 
     /**
      * @Route("/logout", name = "logout")
      */
     public function logout(): Response {
-        // Managed by the authentication system
-        throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
-
+        throw new \LogicException('Intercepted by the logout key on the firewall');
     }
 
     /**
