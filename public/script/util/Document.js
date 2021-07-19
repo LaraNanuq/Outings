@@ -5,7 +5,7 @@
 export { Document };
 
 class Document {
-    static onDocumentReady(callback) {
+    static onReady(callback) {
         if (document.readyState === "loading") {
             document.addEventListener("DOMContentLoaded", callback);
         } else {
@@ -13,10 +13,10 @@ class Document {
         }
     }
 
-    static replaceElement(selector, htmlContent) {
+    static replaceElement(selector, newHtml) {
         let oldElement = document.querySelector(selector);
         let tempElement = document.createElement("div");
-        tempElement.innerHTML = htmlContent;
+        tempElement.innerHTML = newHtml;
         let newElement = tempElement.querySelector(selector);
         oldElement.innerHTML = newElement.innerHTML;
         tempElement.remove();

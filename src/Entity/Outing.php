@@ -122,7 +122,7 @@ class Outing {
     /**
      * @ORM\ManyToOne(targetEntity = Location::class, inversedBy = "outings")
      * @ORM\JoinColumn(nullable = false)
-     * // Needed for the embed form in the outing creation form
+     * // Validates the embed location form in the outing creation form
      * @Assert\Valid()
      */
     private $location;

@@ -4,8 +4,13 @@ namespace App\Controller;
 
 use App\Entity\Outing;
 use App\Form\EditOutingFormType;
+use App\Repository\OutingStateRepository;
 use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -34,21 +39,57 @@ class OutingController extends AbstractController {
     /**
      * @Route("/create", name = "create")
      */
-    public function create(Request $request, UserRepository $userRepository): Response {
+    public function create(
+        Request $request,
+        EntityManagerInterface $entityManager,
+        UserRepository $userRepository,
+        OutingStateRepository $outingStateRepository
+    ): Response {
         $outing = new Outing();
-        $form = $this->createForm(EditOutingFormType::class, $outing);
+        $form = $this->createForm(EditOutingFormType::class, $outing)
+            ->add('save', SubmitType::class, [
+                'label' => 'Enregistrer comme brouillon'
+            ])
+            ->add('saveAndPublish', SubmitType::class, [
+                'label' => 'Enregistrer et publier'
+            ]);
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            dump($outing->getLocation());
-            dump("VALID");
+
+        // Do not validate the form on Ajax requests
+        if (!$request->isXmlHttpRequest()) {
+
+            //$user = $this->getUser();
+            $user = $userRepository->find('2');
+
+            if ($form->isSubmitted() && $form->isValid()) {
+                $outing->setOrganizer($user);
+
+                if ($form instanceof Form) {
+                    if ($form->getClickedButton() === $form->get('saveAndPublish')) {
+                        $outing->setState($outingStateRepository->findOneBy(['label' => 'OPEN']));
+                        $successText = 'La sortie a été enregistrée et publiée.';
+                    } else {
+                        $outing->setState($outingStateRepository->findOneBy(['label' => 'DRAFT']));
+                        $successText = 'La sortie a été enregistrée.';
+                    }
+                }
+                
+                $location = $outing->getLocation();
+                if (!$location->getId()) {
+                    $entityManager->persist($location);
+                }
+                $entityManager->persist($outing);
+                $entityManager->flush();
+                $this->addFlash('success', $successText);
+                return $this->redirectToRoute('main_home');
+            }
         }
-        //$user = $this->getUser();
-        //$user = $userRepository->find('2');
         return $this->renderForm('outing/edit.html.twig', [
-            'outingForm' => $form
+            'outingForm' => $form,
+            'outing' => $outing
         ]);
     }
-
+    
     /**
      * @Route("/edit/{id}", name = "edit", requirements = {"id"="\d+"})
      */
@@ -60,6 +101,7 @@ class OutingController extends AbstractController {
      * @Route("/publish/{id}", name = "publish", requirements = {"id"="\d+"})
      */
     public function publish(int $id): Response {
+        
         return $this->redirectToRoute('outing_list');
     }
 

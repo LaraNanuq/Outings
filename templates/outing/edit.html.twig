@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block javascripts %}
-    <script src="{{ asset('script/outing/edit.js') }}"></script>
+    <script src="{{ asset('script/outing/edit.js') }}" type="module"></script>
 {% endblock %}
 
 {% block title %}
@@ -50,7 +50,18 @@
                 {{ form_widget(outingForm.location) }}
             </fieldset>
         </fieldset>
-
-        <input type="submit" value="Valider">
+{# 
+        {% if ((not outing.state) or (outing.state.label == "DRAFT")) %}
+            <input type="submit" value="Enregistrer comme brouillon">
+            {% if outing.id %}
+                <a href="{{ path('outing_publish', {id: outingForm.id}) }}">Publier</a>
+            {% else %}
+                <a href="{{ path('outing_publish', {id: 0}) }}">Enregistrer et publier</a>
+            {% endif %}
+        {% else %}
+            <input type="submit" value="Enregistrer">
+        {% endif %} #}
+        
     {{ form_end(outingForm) }}
+    <a href="{{ path('main_home') }}">Retour</a>
 {% endblock %}

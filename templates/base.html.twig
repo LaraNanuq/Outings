@@ -25,6 +25,16 @@
         </header>
 
         <main>
+            {% for label, messages in app.flashes %}
+                <div class="flash flash-{{ label }}">
+                    {% for message in messages %}
+                        <p class="flash-message">
+                            {{ message }}
+                        </p>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+            
             {% block body %}
                 {# #}
             {% endblock %}

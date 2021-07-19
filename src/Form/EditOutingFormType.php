@@ -6,13 +6,9 @@ use App\Entity\Campus;
 use App\Entity\City;
 use App\Entity\Location;
 use App\Entity\Outing;
-use App\Repository\LocationRepository;
-use DateTime;
-use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -23,8 +19,6 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\Date;
-use Symfony\Component\Validator\Constraints\Valid;
 
 /**
  * @author Marin Taverniers
@@ -68,43 +62,35 @@ class EditOutingFormType extends AbstractType {
                 'mapped' => false
             ])
             ->add('location', EditLocationFormType::class, [
-                'label' => 'Nouveau lieu',
-                'setter' => function (Outing &$outing, ?Location $location, FormInterface $field): void {
+                'label' => 'Lieu',
+                'setter' => function (Outing &$outing, Location $location, FormInterface $field): void {
                     $form = $field->getParent();
                     $isNewLocation = $form->get('isNewLocation')->getData();
-                    if ($isNewLocation) {
-                        $loc = $form->get('location')->getData();
-                        if ($loc) {
-                            $loc->setCity($form->get('location')->get('city')->getData());
-                        }
-                    } else {
-                        $loc = $form->get('existingLocation')->getData();
+                    if (!$isNewLocation) {
+                        $location = $form->get('existingLocation')->getData();
                     }
-                    $outing->setLocation($loc);
+                    $outing->setLocation($location);
                 }
             ]);
 
-//TODO:
-/*
-Activer la validation uniquement si la case est cochée.
-Maintenir le rechargement des lieux en fonction de la ville.
-Remplir indirectement l'attribut "location" ici
-*/
-
         // On form load
         $builder->addEventListener(
-            FormEvents::PRE_SET_DATA,
+            FormEvents::POST_SET_DATA,
             function (FormEvent $event) {
                 $form = $event->getForm();
-                //$outing = $event->getData();
-            //    $city = $form->get('newLocation')->get('city')->getData();
-                //$isNewLocation = $form->get('isNewLocation')->getData();
-                $this->addExistingLocationField($form, null);
-                //$this->addNewLocationField($form);
+                $outing = $event->getData();
+                $location = $outing->getLocation();
+                if ($location) {
+                    $city = $location->getCity();
+                } else {
+                    $city = null;
+                }
+                $this->addExistingLocationField($form, $city);
+                // TODO: Tester si l'édition fonctionne si cette fonction est inutile.
             }
         );
 
-        // On form submitted (used for ajax request)
+        // On form submit (used on Ajax requests)
         $builder->get('location')->get('city')->addEventListener(
             FormEvents::POST_SUBMIT,
             function (FormEvent $event) {
@@ -117,6 +103,8 @@ Remplir indirectement l'attribut "location" ici
         );
     }
 
+    // TODO: Gérer l'activation des champs au chargement
+
     /**
      * Adds the existing location field with locations related to the specified city.
      *
@@ -125,6 +113,7 @@ Remplir indirectement l'attribut "location" ici
      * @return void
      */
     private function addExistingLocationField(FormInterface $form, ?City $city): void {
+        //$isNewLocation = $form->get('isNewLocation')->getData();
         if (!$city) {
             $locations = [];
             $placeholder = "Aucune ville sélectionnée";
@@ -155,25 +144,6 @@ Remplir indirectement l'attribut "location" ici
             //'disabled' => $isNewLocation,
             'mapped' => false
         ]);
-    }
-
-    private function addNewLocationField(FormInterface $form): void {
-        $isNewLocation = $form->get('isNewLocation')->getData();
-        dump($isNewLocation);
-
-        /* $form->add('newLocation', EditLocationFormType::class, [
-            'label' => 'Nouveau lieu',
-            'constraints' => $isNewLocation ? array(new Valid()) : null,
-            //'disabled' => !$isNewLocation,
-            'mapped' => false
-        ]); */
-        /*$subform = $form->get('newLocation');
-        $field = $subform->get('city');
-        $options = $field->getConfig()->getOptions();
-        $type = $field->getConfig()->getType()->;
-        $options['disabled'] = false;
-        $subform->add('city', $type, $options);*/
-
     }
 
     public function configureOptions(OptionsResolver $resolver) {
