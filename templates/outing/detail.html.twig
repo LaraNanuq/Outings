@@ -5,5 +5,20 @@
 {% endblock %}
 
 {% block body %}
-    <h1 class="h3">Détails d'une sortie</h1>
+    <h1>Détails d'une sortie</h1>
+
+    <h2>{{ outing.name }}</h2>
+    <div>{{ outing.description }}</div>
+    <div>Date de début de la sortie : {{ outing.date | date("Y-m-d")  }}</div>
+    <div>Durée de la sortie : {{ outing.duration | date("Y-m-d")  }}</div>
+
+    {#
+    <div>{{ outing.campus_id }}</div>
+    <div>{{ outing.location_id }}</div>
+    <div>{{ outing.state_id }}</div>
+    <div>{{ outing.registration_closing_date }}</div>
+    <div>{{ outing.max_registrants }}</div>
+    <div>{{ outing.cancellation_reason }}</div>
+    #}
+    
 {% endblock %}

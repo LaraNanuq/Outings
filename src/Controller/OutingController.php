@@ -3,9 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Outing;
-use App\Form\SearchOutingFilter;
 use App\Form\EditOutingFormType;
-use App\Form\SearchOutingFormType;
 use App\Repository\OutingRepository;
 use App\Repository\OutingStateRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -26,29 +24,23 @@ class OutingController extends AbstractController {
     /**
      * @Route("/list", name = "list")
      */
-    public function list(
-        Request $request,
-        OutingRepository $outingRepository
-    ): Response {
-        $searchFilter = new SearchOutingFilter();
-        $searchFilter->setPage($request->get('page', 1));
-        $searchForm = $this->createForm(SearchOutingFormType::class, $searchFilter);
-        $searchForm->handleRequest($request);
-        //if ($outingFilterForm->isSubmitted() && $outingFilterForm->isValid()) {
-            //$outings = $outingRepository->
-        //}
-        $outings = $outingRepository->findWithSearchFilter($searchFilter, $this->getUser());
-        return $this->renderForm('outing/list.html.twig', [
-            'searchForm' => $searchForm,
-            'outings' => $outings
-        ]);
+    public function list(): Response {
+        return $this->render('outing/list.html.twig', []);
     }
 
     /**
      * @Route("/{id}", name = "detail", requirements = {"id"="\d+"})
      */
-    public function detail(int $id): Response {
-        return $this->render('outing/detail.html.twig', []);
+    public function detail(int $id, OutingRepository $outingRepository): Response {
+
+        $outing = $outingRepository -> find($id);
+
+        if(!$outing) {
+            throw $this->createNotFoundException("La sortie n'existe pas.");
+        }
+        return $this->render('outing/detail.html.twig', [
+            "outing"=>$outing
+        ]);
     }
 
     /**
@@ -62,12 +54,10 @@ class OutingController extends AbstractController {
         $outing = new Outing();
         $form = $this->createForm(EditOutingFormType::class, $outing)
             ->add('save', SubmitType::class, [
-                'label' => 'Enregistrer comme brouillon',
-                'attr' => ['class' => 'btn-sm btn-primary']
+                'label' => 'Enregistrer comme brouillon'
             ])
             ->add('saveAndPublish', SubmitType::class, [
-                'label' => 'Enregistrer et publier',
-                'attr' => ['class' => 'btn-sm btn-success mx-1']
+                'label' => 'Enregistrer et publier'
             ]);
         $form->handleRequest($request);
 
