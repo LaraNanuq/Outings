@@ -10,7 +10,7 @@
     <h2>{{ outing.name }}</h2>
     <div>{{ outing.description }}</div>
     <div>Date de début de la sortie : {{ outing.date | date("Y-m-d")  }}</div>
-    <div>Durée de la sortie : {{ outing.duration | date("Y-m-d")  }}</div>
+    <div>Durée de la sortie : {{ outing.duration }} minutes </div>
 
     {#
     <div>{{ outing.campus_id }}</div>
@@ -20,5 +20,7 @@
     <div>{{ outing.max_registrants }}</div>
     <div>{{ outing.cancellation_reason }}</div>
     #}
-    
+
+    <div>Modifier la sortie</div>
+
 {% endblock %}
