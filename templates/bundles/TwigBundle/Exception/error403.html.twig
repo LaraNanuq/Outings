@@ -1,10 +1,13 @@
 {% extends "base.html.twig" %}
 
 {% block title %}
-    Accès interdit | {{ parent() }}
+    Accès non autorisé | {{ parent() }}
 {% endblock %}
 
 {% block body %}
-    <h1 class="h3">Accès interdit</h1>
-    <p>L'accès à cette page est interdit.</p>
+    <h1 class="h3">Accès non autorisé</h1>
+
+    <div class="alert alert-danger">
+        L'accès à cette page n'est pas autorisé.
+    </div>
 {% endblock %}

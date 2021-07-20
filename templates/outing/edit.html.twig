@@ -5,57 +5,60 @@
 {% endblock %}
 
 {% block title %}
-    Créer une sortie | {{ parent() }}
+    Nouvelle sortie | {{ parent() }}
 {% endblock %}
 
 {% block body %}
-    <h1 class="h3">Créer une sortie</h1>
+    <h1 class="h3">Nouvelle sortie</h1>
     {{ form_start(outingForm) }}
         {{ form_errors(outingForm) }}
 
-        <fieldset>
-            <legend>Détails</legend>
-            {{ form_row(outingForm.name) }}
-            {{ form_row(outingForm.date) }}
-            {{ form_row(outingForm.registrationClosingDate) }}
-            {{ form_row(outingForm.maxRegistrants) }}
-            {{ form_row(outingForm.duration) }}
-            {{ form_row(outingForm.description) }}
-            {{ form_row(outingForm.campus) }}
-        </fieldset>
+        <div class="row">
+            <div class="col d-flex">
+                <fieldset class="w-100">
+                    <legend>Détails</legend>
+                    {{ form_row(outingForm.name) }}
+                    {{ form_row(outingForm.date) }}
+                    {{ form_row(outingForm.registrationClosingDate) }}
+                    {{ form_row(outingForm.maxRegistrants) }}
+                    {{ form_row(outingForm.duration) }}
+                    {{ form_row(outingForm.description) }}
+                    {{ form_row(outingForm.campus) }}
+                </fieldset>
+            </div>
 
-        <fieldset>
-            <legend>Lieu</legend>
+            <div class="col d-flex">
+                <fieldset class="w-100">
+                    <legend>Lieu</legend>
 
-            {{ form_row(outingForm.location.city) }}
-            <fieldset id="existing-location-form-group">
-                {{ form_row(outingForm.existingLocation) }}
-                <div class="form-group">
-                    <label for="street" class="form-label">Rue : </label>
-                    <span id="street" class="text-secondary"></span>
-                </div>
-                <div class="form-group">
-                    <label for="latitude" class="form-label">Latitude : </label>
-                    <span id="latitude" class="text-secondary"></span>
-                </div>
-                <div class="form-group">
-                    <label for="longitude" class="form-label">Longitude : </label>
-                    <span id="longitude" class="text-secondary"></span>
-                </div>
-            </fieldset>
+                    {{ form_row(outingForm.location.city) }}
+                    <fieldset id="existing-location-form-group">
+                        {{ form_row(outingForm.existingLocation) }}
+                        <div class="form-group row">
+                            <label for="street" class="form-label col-3">Rue</label>
+                            <span id="street" class="text-secondary col"></span>
+                        </div>
+                        <div class="form-group row">
+                            <label for="latitude" class="form-label col-3">Latitude</label>
+                            <span id="latitude" class="text-secondary col"></span>
+                        </div>
+                        <div class="form-group row">
+                            <label for="longitude" class="form-label col-3">Longitude</label>
+                            <span id="longitude" class="text-secondary col"></span>
+                        </div>
+                    </fieldset>
 
-            {{ form_row(outingForm.isNewLocation) }}
-            <fieldset id="location-form-group">
-                {{ form_errors(outingForm.location) }}
-                {{ form_widget(outingForm.location) }}
-            </fieldset>
-        </fieldset>
+                    {{ form_row(outingForm.isNewLocation) }}
+                    <fieldset id="location-form-group">
+                        {{ form_errors(outingForm.location) }}
+                        {{ form_widget(outingForm.location) }}
+                    </fieldset>
+                </fieldset>
+            </div>
+        </div>
 
         <div class="btn-group">
             {{ form_rest(outingForm) }}
         </div>
-        
     {{ form_end(outingForm) }}
-    
-    <a href="{{ path('main_home') }}" class="btn btn-sm btn-secondary">Accueil</a>
 {% endblock %}

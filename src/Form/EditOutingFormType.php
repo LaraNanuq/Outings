@@ -31,7 +31,7 @@ class EditOutingFormType extends AbstractType {
                 'label' => 'Nom'
             ])
             ->add('date', DateTimeType::class, [
-                'label' => 'Date',
+                'label' => 'Date et heure',
                 'date_widget' => 'single_text',
                 'time_widget' => 'single_text'
             ])
@@ -43,7 +43,7 @@ class EditOutingFormType extends AbstractType {
                 'label' => 'Places'
             ])
             ->add('duration', IntegerType::class, [
-                'label' => 'Durée (min)'
+                'label' => 'Durée (minutes)'
             ])
             ->add('description', TextareaType::class, [
                 'label' => 'Description'
@@ -127,7 +127,7 @@ class EditOutingFormType extends AbstractType {
             }
         }
         $form->add('existingLocation', EntityType::class, [
-            'label' => 'Lieu existant',
+            'label' => 'Lieu enregistré',
             'class' => Location::class,
             'choices' => $locations,
             'choice_label' => function (Location $location) {

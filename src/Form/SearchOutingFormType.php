@@ -22,7 +22,7 @@ class SearchOutingFormType extends AbstractType {
                 'choice_label' => function (Campus $campus) {
                     return $campus->getName();
                 },
-                'placeholder' => '- Sélectionnez un campus -',
+                'placeholder' => '- Tous -',
                 'required' => false
             ])
             ->add('name', SearchType::class, [
@@ -41,14 +41,17 @@ class SearchOutingFormType extends AbstractType {
             ])
             ->add('isUserOrganizer', CheckboxType::class, [
                 'label' => "Sorties que j'organise",
+                //'data' => true,
                 'required' => false
             ])
             ->add('isUserRegistrant', CheckboxType::class, [
                 'label' => "Sorties auxquelles je participe",
+                //'data' => true,
                 'required' => false
             ])
             ->add('isUserNotRegistrant', CheckboxType::class, [
                 'label' => "Sorties auxquelles je ne participe pas",
+                //'data' => true,
                 'required' => false
             ])
             ->add('isFinished', CheckboxType::class, [

@@ -34,8 +34,8 @@ let edit = (function () {
         let form = document.querySelector("form[name='edit_outing_form']");
         let cityInput = document.querySelector("#edit_outing_form_location_city");
         cityInput.addEventListener("change", function () {
-            existingLocationFormGroup.disabled = true;
             newLocationCheckbox.disabled = true;
+            existingLocationInput.disabled = true;
             existingLocationInput.innerHTML = "<option value>- CHARGEMENT -</option>";
             resetExistingLocationTexts();
 
@@ -51,6 +51,7 @@ let edit = (function () {
                 .finally(() => {
                     updateLocationGroupsState();
                     newLocationCheckbox.disabled = false;
+                    existingLocationInput.disabled = false;
                 });
         });
     });

@@ -18,7 +18,7 @@ use Doctrine\Persistence\ManagerRegistry;
  * @author Marin Taverniers
  */
 class OutingRepository extends ServiceEntityRepository {
-    private const ITEMS_PER_PAGE = 10;
+    private const ITEMS_PER_PAGE = 100;
 
     public function __construct(ManagerRegistry $registry) {
         parent::__construct($registry, Outing::class);

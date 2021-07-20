@@ -1,23 +1,45 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-    Liste des sorties | {{ parent() }}
+    Sorties | {{ parent() }}
 {% endblock %}
 
 {% block body %}
-    <h1 class="h3">Liste des sorties</h1>
+    <h1 class="h3">Sorties</h1>
 
     <div class="text-end">
         <h6>Date : {{ "now"|date("d/m/Y") }}</h6>
-        <h6>Utilisateur : {{ app.user.shortName }}</h6>
+        <h6>Utilisateur : {{ app.user.fullName }}</h6>
     </div>
 
     <fieldset>
         <legend>Filtres</legend>
         {{ form_start(searchForm) }}
             {{ form_errors(searchForm) }}
-            {{ form_widget(searchForm) }}
-            <button type="submit" class="btn btn-sm btn-secondary">Rechercher</button>
+            <div class="row align-items-center">
+                <div class="col">
+                    {{ form_row(searchForm.campus) }}
+                    {{ form_row(searchForm.name) }}
+                    <div class="row">
+                        <div class="col">
+                            {{ form_row(searchForm.minDate) }}
+                        </div>
+                        <div class="col">
+                            {{ form_row(searchForm.maxDate) }}
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    {{ form_row(searchForm.isUserOrganizer) }}
+                    {{ form_row(searchForm.isUserRegistrant) }}
+                    {{ form_row(searchForm.isUserNotRegistrant) }}
+                    {{ form_row(searchForm.isFinished) }}
+                </div>
+            </div>
+
+            <div class="text-end">
+                <button type="submit" class="btn btn-sm btn-secondary">Rechercher</button>
+            </div>
         {{ form_end(searchForm) }}
     </fieldset>
 
@@ -25,7 +47,7 @@
         <tr>
             <th scope="col">Nom</th>
             <th scope="col">Date</th>
-            <th scope="col">Clôture des inscriptions</th>
+            <th scope="col">Fin des inscriptions</th>
             <th scope="col">Inscrits / Places</th>
             <th scope="col">État</th>
             <th scope="col">Inscrit</th>
@@ -58,14 +80,14 @@
                                 <a href="{{ path('outing_edit', {id: outing.id}) }}" class="btn btn-sm btn-primary">Modifier</a>
                                 <a href="{{ path('outing_publish', {id: outing.id}) }}" class="btn btn-sm btn-success">Publier</a>
                             {% else %}
-                                <a href="{{ path('outing_detail', {id: outing.id}) }}" class="btn btn-sm btn-secondary">Afficher</a>
+                                <a href="{{ path('outing_detail', {id: outing.id}) }}" class="btn btn-sm btn-secondary">Voir</a>
                             {% endif %}
                             {% if (outing.state.label in ["OPEN", "PENDING"]) %}
                                 <a href="{{ path('outing_cancel', {id: outing.id}) }}" class="btn btn-sm btn-danger">Annuler</a>
                             {% endif %}
 
                         {% else %}
-                            <a href="{{ path('outing_detail', {id: outing.id}) }}" class="btn btn-sm btn-secondary">Afficher</a>
+                            <a href="{{ path('outing_detail', {id: outing.id}) }}" class="btn btn-sm btn-secondary">Voir</a>
                             {% if (app.user in outing.registrants) %}
                                 {% if (outing.state.label in ["OPEN", "PENDING"]) %}
                                     <a href="{{ path('outing_unregister', {id: outing.id}) }}" class="btn btn-sm btn-danger">Se désister</a>
@@ -82,5 +104,7 @@
         {% endfor %}
     </table>
 
-    <a href="{{ path('outing_create') }}" class="btn btn-sm btn-primary">Créer une sortie</a>
+    <div class="btn-group">
+        <a href="{{ path('outing_create') }}" class="btn btn-sm btn-primary">Nouvelle sortie</a>
+    </div>
 {% endblock %}

@@ -1,6 +1,6 @@
-<nav class="navbar navbar-expand-lg justify-content-end navbar-light">
+<nav class="navbar navbar-expand-sm navbar-light">
     <div class="container-fluid">
-        <a href="{{ path('main_home') }}" class="navbar-brand">Sortir.com</a>
+        <a href="{{ path('main_home') }}" class="navbar-brand">Sortir à l'ENI</a>
         
         {% if (app.user) %}
             <ul class="navbar-nav">
@@ -19,7 +19,7 @@
                     </li>
                 {% endif %}
                 <li class="nav-item">
-                    <a href="{{ path('auth_logout') }}" class="nav-link text-danger">Se déconnecter</a>
+                    <a href="{{ path('auth_logout') }}" class="nav-link text-danger">Déconnexion</a>
                 </li>
             </ul>
         {% endif %}
