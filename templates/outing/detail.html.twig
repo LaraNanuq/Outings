@@ -22,12 +22,9 @@
 
     {#
     <div>Nombre de place restantes : {{ outing.registrants }}</div>
-
-
     #}
 
+    <a href="{{ asset('outing/edit/' ~ outing.id) }}" class="btn btn-sm btn-secondary">Modifier</a>
 
-
-    <div>Modifier la sortie</div>
 
 {% endblock %}
