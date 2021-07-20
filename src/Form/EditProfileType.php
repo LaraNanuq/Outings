@@ -24,7 +24,8 @@ class EditProfileType extends AbstractType
             ->add('lastName')
             ->add('firstName')
             ->add('email')
-            ->add('password')
+            ->add('plainPassword',PasswordType::class,["mapped"=>false])
+            ->add('checkPassword',PasswordType::class,["mapped"=>false])
             ->add('phone')
             ->add('campus',EntityType::class,["class"=>Campus::class,"choice_label"=>"name","disabled"=>true])
             

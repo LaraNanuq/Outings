@@ -24,7 +24,7 @@ class UserController extends AbstractController {
      * @Route("/edit", name = "edit")
      */
     public function edit(UserRepository $userRepository): Response {
-       $user=$userRepository->find(2);
+       $user=$this->getUser();
        $form=$this->createForm(EditProfileType::class,$user);
    //     return $this->render('user/edit.html.twig', ["user"=>$user]);
         return  $this->renderForm('user/edit.html.twig',["form"=>$form]);
