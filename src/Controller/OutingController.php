@@ -5,10 +5,7 @@ namespace App\Controller;
 use App\Entity\Outing;
 use App\Form\SearchOutingFilter;
 use App\Form\EditOutingFormType;
-<<<<<<< HEAD
-=======
 use App\Form\SearchOutingFormType;
->>>>>>> main
 use App\Repository\OutingRepository;
 use App\Repository\OutingStateRepository;
 use Doctrine\ORM\EntityManagerInterface;

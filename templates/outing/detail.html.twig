@@ -8,18 +8,25 @@
     <h1>Détails d'une sortie</h1>
 
     <h2>{{ outing.name }}</h2>
-    <div>{{ outing.description }}</div>
+    <div>Description: {{ outing.description }}</div>
     <div>Date de début de la sortie : {{ outing.date | date("Y-m-d")  }}</div>
     <div>Durée de la sortie : {{ outing.duration }} minutes </div>
+    <div>Lieu : {{ outing.campus.name }}</div>
+    <div>Adresse:</div>
+    <div>Lieu : {{ outing.location.name }}</div>
+    <div>Rue : {{ outing.location.street }}</div>
+    <div>Latitude : {{ outing.location.latitude }}</div>
+    <div>Longitude : {{ outing.location.longitude }}</div>
+    <div>Statut : {{ outing.state.label }}</div>
+    <div>Date de fermeture des inscriptions : {{ outing.registrationClosingDate | date("Y-m-d")  }}</div>
 
     {#
-    <div>{{ outing.campus_id }}</div>
-    <div>{{ outing.location_id }}</div>
-    <div>{{ outing.state_id }}</div>
-    <div>{{ outing.registration_closing_date }}</div>
-    <div>{{ outing.max_registrants }}</div>
-    <div>{{ outing.cancellation_reason }}</div>
+    <div>Nombre de place restantes : {{ outing.registrants }}</div>
+
+
     #}
+
+
 
     <div>Modifier la sortie</div>
 
