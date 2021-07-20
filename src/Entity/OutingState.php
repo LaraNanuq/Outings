@@ -75,4 +75,33 @@ class OutingState {
         }
         return $this;
     }
+
+    public function getFriendlyName(): string {
+        switch ($this->label) {
+            case 'DRAFT':
+                $friendlyName = 'Brouillon';
+                break;
+            case 'OPEN':
+                $friendlyName = 'Ouverte';
+                break;
+            case 'PENDING':
+                $friendlyName = 'En attente';
+                break;
+            case 'ONGOING':
+                $friendlyName = 'En cours';
+                break;
+            case 'FINISHED':
+                $friendlyName = 'Terminée';
+                break;
+            case 'CANCELED':
+                $friendlyName = 'Annulée';
+                break;
+            case 'ARCHIVED':
+                $friendlyName = 'Archivée';
+                break;
+            default:
+                $friendlyName = null;
+        }
+        return $friendlyName;
+    }
 }

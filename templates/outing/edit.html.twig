@@ -9,7 +9,7 @@
 {% endblock %}
 
 {% block body %}
-    <h1>Créer une sortie</h1>
+    <h1 class="h3">Créer une sortie</h1>
     {{ form_start(outingForm) }}
         {{ form_errors(outingForm) }}
 
@@ -31,16 +31,16 @@
             <fieldset id="existing-location-form-group">
                 {{ form_row(outingForm.existingLocation) }}
                 <div class="form-group">
-                    <label for="street">Rue</label>
-                    <span id="street"></span>
+                    <label for="street" class="form-label">Rue : </label>
+                    <span id="street" class="text-secondary"></span>
                 </div>
                 <div class="form-group">
-                    <label for="latitude">Latitude</label>
-                    <span id="latitude"></span>
+                    <label for="latitude" class="form-label">Latitude : </label>
+                    <span id="latitude" class="text-secondary"></span>
                 </div>
                 <div class="form-group">
-                    <label for="longitude">Longitude</label>
-                    <span id="longitude"></span>
+                    <label for="longitude" class="form-label">Longitude : </label>
+                    <span id="longitude" class="text-secondary"></span>
                 </div>
             </fieldset>
 
@@ -50,18 +50,12 @@
                 {{ form_widget(outingForm.location) }}
             </fieldset>
         </fieldset>
-{# 
-        {% if ((not outing.state) or (outing.state.label == "DRAFT")) %}
-            <input type="submit" value="Enregistrer comme brouillon">
-            {% if outing.id %}
-                <a href="{{ path('outing_publish', {id: outingForm.id}) }}">Publier</a>
-            {% else %}
-                <a href="{{ path('outing_publish', {id: 0}) }}">Enregistrer et publier</a>
-            {% endif %}
-        {% else %}
-            <input type="submit" value="Enregistrer">
-        {% endif %} #}
+
+        <div class="btn-group">
+            {{ form_rest(outingForm) }}
+        </div>
         
     {{ form_end(outingForm) }}
-    <a href="{{ path('main_home') }}">Retour</a>
+    
+    <a href="{{ path('main_home') }}" class="btn btn-sm btn-secondary">Accueil</a>
 {% endblock %}

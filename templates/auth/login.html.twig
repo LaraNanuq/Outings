@@ -5,30 +5,30 @@
 {% endblock %}
 
 {% block body %}
-    <h1 class="section-title">Connexion</h1>
+    <h1 class="h3">Connexion</h1>
 
     <form method="post">
-        <div>
-            <label for="alias-or-email" class="form-label">Pseudo ou email</label>
-            <input type="text" value="{{ lastUsername }}" name="alias_or_email" id="alias-or-email" class="form-control" required autofocus>
-        </div>
-        <div>
-            <label for="password" class="form-label">Mot de passe</label>
-            <input type="password" name="password" id="password" class="form-control" required>
-        </div>
-        <div>
-            <input type="checkbox" name="remember_me" id="remember-me" class="form-control">
-            <label for="remember-me" class="form-label">Se souvenir de moi</label>
-        </div>
         {% if error %}
-            <div class="invalid-feedback">
+            <div class="alert alert-danger">
                 {{ error.messageKey|trans(error.messageData, 'security') }}
             </div>
         {% endif %}
+        <div class="mb-3">
+            <label for="alias-or-email" class="form-label">Pseudo ou email</label>
+            <input type="text" value="{{ lastUsername }}" name="alias_or_email" id="alias-or-email" class="form-control" required autofocus>
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">Mot de passe</label>
+            <input type="password" name="password" id="password" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <input type="checkbox" name="remember_me" id="remember-me" class="checkbox">
+            <label for="remember-me" class="form-label">Se souvenir de moi</label>
+        </div>
         <input type="hidden" name="csrf_token" value="{{ csrf_token('authenticate') }}">
 
-        <button type="submit" class="form-button">
-            Valider
+        <button type="submit" class="btn btn-sm btn-primary">
+            Connexion
         </button>
     </form>
 {% endblock %}

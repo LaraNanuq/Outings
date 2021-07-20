@@ -3,8 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\Outing;
+use App\Form\SearchOutingFilter;
 use App\Form\EditOutingFormType;
-use App\Form\FilterOutingsFormType;
+use App\Form\SearchOutingFormType;
 use App\Repository\OutingRepository;
 use App\Repository\OutingStateRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -29,14 +30,16 @@ class OutingController extends AbstractController {
         Request $request,
         OutingRepository $outingRepository
     ): Response {
-        $form = $this->createForm(FilterOutingsFormType::class);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
+        $searchFilter = new SearchOutingFilter();
+        $searchFilter->setPage($request->get('page', 1));
+        $searchForm = $this->createForm(SearchOutingFormType::class, $searchFilter);
+        $searchForm->handleRequest($request);
+        //if ($outingFilterForm->isSubmitted() && $outingFilterForm->isValid()) {
             //$outings = $outingRepository->
-        }
-        $outings = $outingRepository->findAll();
+        //}
+        $outings = $outingRepository->findWithSearchFilter($searchFilter, $this->getUser());
         return $this->renderForm('outing/list.html.twig', [
-            'filterForm' => $form,
+            'searchForm' => $searchForm,
             'outings' => $outings
         ]);
     }
@@ -59,10 +62,12 @@ class OutingController extends AbstractController {
         $outing = new Outing();
         $form = $this->createForm(EditOutingFormType::class, $outing)
             ->add('save', SubmitType::class, [
-                'label' => 'Enregistrer comme brouillon'
+                'label' => 'Enregistrer comme brouillon',
+                'attr' => ['class' => 'btn-sm btn-primary']
             ])
             ->add('saveAndPublish', SubmitType::class, [
-                'label' => 'Enregistrer et publier'
+                'label' => 'Enregistrer et publier',
+                'attr' => ['class' => 'btn-sm btn-success mx-1']
             ]);
         $form->handleRequest($request);
 

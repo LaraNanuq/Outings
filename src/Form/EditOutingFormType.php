@@ -57,12 +57,12 @@ class EditOutingFormType extends AbstractType {
                 'placeholder' => '- Sélectionnez un campus -'
             ])
             ->add('isNewLocation', CheckboxType::class, [
-                'label' => 'Ajouter',
+                'label' => 'Nouveau lieu',
                 'required' => false,
                 'mapped' => false
             ])
             ->add('location', EditLocationFormType::class, [
-                'label' => 'Lieu',
+                'label' => 'Nouveau lieu',
                 'setter' => function (Outing &$outing, Location $location, FormInterface $field): void {
                     $form = $field->getParent();
                     $isNewLocation = $form->get('isNewLocation')->getData();
@@ -127,7 +127,7 @@ class EditOutingFormType extends AbstractType {
             }
         }
         $form->add('existingLocation', EntityType::class, [
-            'label' => 'Lieu',
+            'label' => 'Lieu existant',
             'class' => Location::class,
             'choices' => $locations,
             'choice_label' => function (Location $location) {

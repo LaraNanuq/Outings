@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Entity\Campus;
+use App\Form\SearchOutingFilter;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -11,7 +12,7 @@ use Symfony\Component\Form\Extension\Core\Type\SearchType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class FilterOutingsFormType extends AbstractType {
+class SearchOutingFormType extends AbstractType {
 
     public function buildForm(FormBuilderInterface $builder, array $options) {
         $builder
@@ -20,34 +21,51 @@ class FilterOutingsFormType extends AbstractType {
                 'class' => Campus::class,
                 'choice_label' => function (Campus $campus) {
                     return $campus->getName();
-                }
+                },
+                'placeholder' => '- Sélectionnez un campus -',
+                'required' => false
             ])
             ->add('name', SearchType::class, [
-                'label' => 'Le nom de la sortie contient'
+                'label' => 'Nom contenant',
+                'required' => false
             ])
             ->add('minDate', DateType::class, [
-                'label' => 'Entre',
-                'widget' => 'single_text'
+                'label' => 'Date minimum',
+                'widget' => 'single_text',
+                'required' => false
             ])
             ->add('maxDate', DateType::class, [
-                'label' => 'et',
-                'widget' => 'single_text'
+                'label' => 'Date maximum',
+                'widget' => 'single_text',
+                'required' => false
             ])
             ->add('isUserOrganizer', CheckboxType::class, [
-                'label' => "Sorties dont je suis l'organisateur/trice"
+                'label' => "Sorties que j'organise",
+                'required' => false
             ])
             ->add('isUserRegistrant', CheckboxType::class, [
-                'label' => "Sorties auxquelles je suis inscrit/e"
+                'label' => "Sorties auxquelles je participe",
+                'required' => false
             ])
             ->add('isUserNotRegistrant', CheckboxType::class, [
-                'label' => "Sorties auxquelles je ne suis pas inscrit/e"
+                'label' => "Sorties auxquelles je ne participe pas",
+                'required' => false
             ])
             ->add('isFinished', CheckboxType::class, [
-                'label' => "Sorties passées"
+                'label' => "Sorties terminées",
+                'required' => false
             ]);
     }
 
     public function configureOptions(OptionsResolver $resolver) {
-        $resolver->setDefaults([]);
+        $resolver->setDefaults([
+            'data_class' => SearchOutingFilter::class,
+            'method' => 'GET',
+            'csrf_protection' => false
+        ]);
+    }
+
+    public function getBlockPrefix() {
+        return '';
     }
 }
