@@ -128,7 +128,7 @@ class OutingController extends AbstractController {
                 if ($form instanceof Form) {
                     if ($form->getClickedButton() === $form->get('saveAndPublish')) {
                         $outing->setState($outingStateRepository->findOneBy(['label' => 'OPEN']));
-                        $successText = 'Les modifiations ont été enregistrées.';
+                        $successText = 'Les modifications ont été enregistrées.';
                     } else {
                         $outing->setState($outingStateRepository->findOneBy(['label' => 'DRAFT']));
                         $successText = 'La sortie a été enregistrée.';
