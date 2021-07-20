@@ -9,8 +9,8 @@
 
     <h2>{{ outing.name }}</h2>
     <div>Description: {{ outing.description }}</div>
-    <div>Date de début de la sortie : {{ outing.date | date("Y-m-d")  }}</div>
-    <div>Durée de la sortie : {{ outing.duration }} minutes </div>
+    <div>Date de début de la sortie : {{ outing.date | date("Y-m-d") }}</div>
+    <div>Durée de la sortie : {{ outing.duration }} minutes</div>
     <div>Lieu : {{ outing.campus.name }}</div>
     <div>Adresse:</div>
     <div>Lieu : {{ outing.location.name }}</div>
@@ -18,13 +18,14 @@
     <div>Latitude : {{ outing.location.latitude }}</div>
     <div>Longitude : {{ outing.location.longitude }}</div>
     <div>Statut : {{ outing.state.label }}</div>
-    <div>Date de fermeture des inscriptions : {{ outing.registrationClosingDate | date("Y-m-d")  }}</div>
+    <div>Date de fermeture des inscriptions : {{ outing.registrationClosingDate | date("Y-m-d") }}</div>
 
-    {#
-    <div>Nombre de place restantes : {{ outing.registrants }}</div>
-    #}
 
-    <a href="{{ asset('outing/edit/' ~ outing.id) }}" class="btn btn-sm btn-secondary">Modifier</a>
+    <div>Nombre de place : {{ outing.registrants|length }} / {{ outing.maxRegistrants }}</div>
+    {# todo: tableau avec liste des participants #}
 
+    {% if app.user == outing.organizer %}
+        <a href="{{ asset('outing/edit/' ~ outing.id) }}" class="btn btn-sm btn-secondary">Modifier</a>
+    {% endif %}
 
 {% endblock %}
