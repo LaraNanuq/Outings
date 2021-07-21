@@ -38,79 +38,78 @@
             </div>
 
             <div class="text-end">
-                <div class="btn-group">
-                    <button type="submit" class="btn btn-sm btn-secondary">Rechercher</button>
-                </div>
+                <button type="submit" class="btn btn-sm btn-secondary">Rechercher</button>
             </div>
         {{ form_end(searchForm) }}
     </fieldset>
 
-    {% if (outings) %}
-        <table class="table table-bordered table-striped table-secondary table-sm align-middle text-center my-3">
+    <table class="table table-bordered table-striped table-secondary table-sm align-middle text-center my-3">
+        <tr>
+            <th scope="col">Nom</th>
+            <th scope="col">Date</th>
+            <th scope="col">Fin des inscriptions</th>
+            <th scope="col">Inscrits / Places</th>
+            <th scope="col">État</th>
+            <th scope="col">Inscrit</th>
+            <th scope="col">Organisateur</th>
+            <th scope="col">Actions</th>
+        </tr>
+        {% for outing in outings %}
             <tr>
-                <th scope="col">Nom</th>
-                <th scope="col">Date</th>
-                <th scope="col">Fin des inscriptions</th>
-                <th scope="col">Inscrits / Places</th>
-                <th scope="col">État</th>
-                <th scope="col">Inscrit</th>
-                <th scope="col">Organisateur</th>
-                <th scope="col">Actions</th>
-            </tr>
-            {% for outing in outings %}
-                <tr>
-                    <td>{{ outing.name }}</td>
-                    <td>
-                        {{ outing.date|date("d/m/Y") }}
+                <td>{{ outing.name }}</td>
+                <td>
+                    {{ outing.date|date("d/m/Y") }}
+                    <br />
+                    {{ outing.date|date("H:i") }}
+                </td>
+                <td>{{ outing.registrationClosingDate|date("d/m/Y") }}</td>
+                <td>{{ outing.registrants|length }} / {{ outing.maxRegistrants }}</td>
+                <td>{{ outing.state.friendlyName }}</td>
+                <td>{{ app.user in outing.registrants ? "X" : "-" }}</td>
+                <td>
+                    <a href="{{ path('user_detail', {id: outing.organizer.id}) }}">{{ outing.organizer.shortName }}</a>
+                    {% if (app.user == outing.organizer) %}
                         <br />
-                        {{ outing.date|date("H:i") }}
-                    </td>
-                    <td>{{ outing.registrationClosingDate|date("d/m/Y") }}</td>
-                    <td>{{ outing.registrants|length }} / {{ outing.maxRegistrants }}</td>
-                    <td>{{ outing.state.friendlyName }}</td>
-                    <td>{{ app.user in outing.registrants ? "X" : "-" }}</td>
-                    <td>
-                        <a href="{{ path('user_detail', {id: outing.organizer.id}) }}">{{ outing.organizer.shortName }}</a>
+                        <span>(vous)</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <div class="btn-group"></div>
                         {% if (app.user == outing.organizer) %}
-                            <br />
-                            <span>(vous)</span>
-                        {% endif %}
-                    </td>
-                    <td>
-                        <div class="btn-group">
-                            {% if (app.user == outing.organizer) %}
-                                {% if (outing.state.label == "DRAFT") %}
-                                    <a href="{{ path('outing_edit', {id: outing.id}) }}" class="btn btn-sm btn-primary">Modifier</a>
-                                    <a href="{{ path('outing_publish', {id: outing.id}) }}" class="mx-1 btn btn-sm btn-success">Publier</a>
-                                {% else %}
-                                    <a href="{{ path('outing_detail', {id: outing.id}) }}" class="btn btn-sm btn-secondary">Voir</a>
-                                {% endif %}
-                                {% if (outing.state.label in ["OPEN", "PENDING"]) %}
-                                    <a href="{{ path('outing_cancel', {id: outing.id}) }}" class="mx-1 btn btn-sm btn-danger">Annuler</a>
-                                {% endif %}
-
+                            {% if (outing.state.label == "DRAFT") %}
+                                <a href="{{ path('outing_edit', {id: outing.id}) }}" class="btn btn-sm btn-primary">Modifier</a>
+                                <a href="{{ path('outing_publish', {id: outing.id}) }}" class="btn btn-sm btn-success">Publier</a>
                             {% else %}
                                 <a href="{{ path('outing_detail', {id: outing.id}) }}" class="btn btn-sm btn-secondary">Voir</a>
-                                {% if (app.user in outing.registrants) %}
-                                    {% if (outing.state.label in ["OPEN", "PENDING"]) %}
-                                        <a href="{{ path('outing_unregister', {id: outing.id}) }}" class="mx-1 btn btn-sm btn-danger">Se désister</a>
-                                    {% endif %}
-                                {% else %}
-                                    {% if (outing.state.label == "OPEN") %}
-                                        <a href="{{ path('outing_register', {id: outing.id}) }}" class="mx-1 btn btn-sm btn-success">S'inscrire</a>
-                                    {% endif %}
+                            {% endif %}
+                            {% if (outing.state.label in ["OPEN", "PENDING"]) %}
+                                <a href="{{ path('outing_cancel', {id: outing.id}) }}" class="btn btn-sm btn-danger">Annuler</a>
+                            {% endif %}
+
+                            {% if (outing.state.label in ["DRAFT", "PENDING"]) %}
+                                <form method="POST" action="{{ path('outing_delete', {id: outing.id}) }}"/>
+                                <input type="hidden" name="_method" value="DELETE">
+                                <button class="btn btn-sm btn-primary">Supprimer</button>
+                            {% endif %}
+
+
+                        {% else %}
+                            <a href="{{ path('outing_detail', {id: outing.id}) }}" class="btn btn-sm btn-secondary">Voir</a>
+                            {% if (app.user in outing.registrants) %}
+                                {% if (outing.state.label in ["OPEN", "PENDING"]) %}
+                                    <a href="{{ path('outing_unregister', {id: outing.id}) }}" class="btn btn-sm btn-danger">Se désister</a>
+                                {% endif %}
+                            {% else %}
+                                {% if (outing.state.label == "OPEN") %}
+                                    <a href="{{ path('outing_register', {id: outing.id}) }}" class="btn btn-sm btn-success">S'inscrire</a>
                                 {% endif %}
                             {% endif %}
-                        </div>
-                    </td>
-                </tr>
-            {% endfor %}
-        </table>
-    {% else %}
-        <div class="alert alert-danger">
-            Aucune sortie n'a été trouvée.
-        </div>
-    {% endif %}
+                        {% endif %}
+                    </div>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
 
     <div class="btn-group">
         <a href="{{ path('outing_create') }}" class="btn btn-sm btn-primary">Nouvelle sortie</a>

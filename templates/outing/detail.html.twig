@@ -11,21 +11,28 @@
         <div>Description : {{ outing.description }}</div>
         <div>Date : {{ outing.date|date("d/m/Y - H:i") }}</div>
         <div>Durée : {{ outing.duration }} minutes</div>
-        <div>Campus : {{ outing.campus.name }}</div>
-        <br />
+        <div>Lieu : {{ outing.campus.name }}</div>
         <div>Adresse</div>
         <div>Lieu : {{ outing.location.name }}</div>
         <div>Rue : {{ outing.location.street }}</div>
         <div>Latitude : {{ outing.location.latitude }}</div>
         <div>Longitude : {{ outing.location.longitude }}</div>
-        <br />
+        <div>Statut : {{ outing.state.friendlyName }}</div>
         <div>Fin des inscriptions : {{ outing.registrationClosingDate|date("d/m/Y") }}</div>
         <div>Inscrits : {{ outing.registrants|length }} / {{ outing.maxRegistrants }}</div>
-        <br />
-        <div>Statut : {{ outing.state.friendlyName }}</div>
-        {% if (outing.cancellationReason) %}
-            <div>Motif : {{ outing.cancellationReason }}</div>
-        {% endif %}
         {# TODO: tableau avec liste des participants #}
     </fieldset>
+    
+    {% if (app.user == outing.organizer) %}
+        <div class="btn-group">
+            <a href="{{ path('outing_edit', {id: outing.id}) }}" class="btn btn-sm btn-primary">Modifier</a>
+
+            {% if (outing.state.label in ["DRAFT", "PENDING"]) %}
+                <form method="POST" action="{{ path('outing_delete', {id: outing.id}) }}"/>
+                <input type="hidden" name="_method" value="DELETE">
+                <button class="btn btn-sm btn-primary">Supprimer</button>
+            {% endif %}
+
+        </div>
+    {% endif %}
 {% endblock %}
