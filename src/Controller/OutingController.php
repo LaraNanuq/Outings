@@ -189,8 +189,12 @@ class OutingController extends AbstractController {
     /**
      * @Route("/cancel/{id}", name = "cancel", requirements = {"id"="\d+"})
      */
-    public function cancel(int $id): Response {
-        return $this->render('outing/cancel.html.twig', []);
+    public function cancel(int $id,
+                           OutingRepository $outingRepository): Response {
+        $outing = $outingRepository->find($id);
+        return $this->render('outing/cancel.html.twig', [
+            'outing' => $outing
+        ]);
     }
 
     /**
