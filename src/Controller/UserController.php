@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Form\EditProfileType;
 
+use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,8 +20,14 @@ class UserController extends AbstractController {
     /**
      * @Route("/{id}", name = "detail", requirements = {"id"="\d+"})
      */
-    public function detail(int $id): Response {
-        return $this->render('user/detail.html.twig', []);
+    public function detail(int $id,UserRepository $userRepository): Response {
+        $user=$userRepository->find($id);
+        if (!$user){
+        throw $this->createNotFoundException("Utilisateur exsiste pas")    ;
+
+        }
+        return $this->render('user/detail.html.twig', ["user"=>$user]);
+
     }
 
     /**
@@ -49,12 +56,14 @@ class UserController extends AbstractController {
    //     return $this->render('user/edit.html.twig', ["user"=>$user]);
         return  $this->renderForm('user/edit.html.twig',["form"=>$form]);
 
-      /*   if 'plainPassword' == checkPassword' {
 
-    }else {
-            $this->addFlash('error','deux mot de passe non identique');
-        }
-*/
+
+
+
+
+
+
+
 
 
 }

@@ -1,12 +1,24 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-    Profil de | {{ parent() }}
+    Profil de {{ user.alias}} | {{ parent() }}
 {% endblock %}
 
 {% block body %}
-    <h1 class="h3">Profil de </h1>
+    <h1 class="h3">Profil de {{ user.alias}} </h1>
+<p>
+    <ul>
+    <li>Pseudo :{{ user.alias}}</li>
+    <li>Prenom :{{ user.firstName}}</li>
+    <li>Nom :{{user.lastName}}</li>
+    <li>Telephone :{{user.phone }}</li>
+    <li>Email :{{user.email }}</li>
+    <li>Campus :{{user.campus.name}}</li>
+
+</ul>
+</p>
+    <a href="{{ path("main_home") }}" class="btn btn-sm btn-primary">
+     Accueil
+    </a>
 {% endblock %}
-{#  public function detail(int $id): Response {
-return $this->render('user/detail.html.twig', []);
-}#}
+
