@@ -1,9 +1,27 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-    Sortie | {{ parent() }}
+    {{ outing.name }} | {{ parent() }}
 {% endblock %}
 
 {% block body %}
-    <h1 class="h3">Sortie</h1>
+    <h1 class="h3">{{ outing.name }}</h1>
+
+    <div>Description : {{ outing.description }}</div>
+    <div>Date : {{ outing.date|date("d/m/Y - H:i") }}</div>
+    <div>Durée : {{ outing.duration }} minutes</div>
+    <div>Lieu : {{ outing.campus.name }}</div>
+    <div>Adresse</div>
+    <div>Lieu : {{ outing.location.name }}</div>
+    <div>Rue : {{ outing.location.street }}</div>
+    <div>Latitude : {{ outing.location.latitude }}</div>
+    <div>Longitude : {{ outing.location.longitude }}</div>
+    <div>Statut : {{ outing.state.label.friendlyName }}</div>
+    <div>Fin des inscriptions : {{ outing.registrationClosingDate|date("d/m/Y") }}</div>
+    <div>Inscrits : {{ outing.registrants|length }} / {{ outing.maxRegistrants }}</div>
+    {# TODO: tableau avec liste des participants #}
+
+    {% if (app.user == outing.organizer) %}
+        <a href="{{ path('outing_edit', {id: outing.id}) }}" class="btn btn-sm btn-secondary">Modifier</a>
+    {% endif %}
 {% endblock %}

@@ -55,8 +55,16 @@ class OutingController extends AbstractController {
     /**
      * @Route("/{id}", name = "detail", requirements = {"id"="\d+"})
      */
-    public function detail(int $id): Response {
-        return $this->render('outing/detail.html.twig', []);
+    public function detail(int $id, OutingRepository $outingRepository): Response {
+
+        $outing = $outingRepository -> find($id);
+
+        if(!$outing) {
+            throw $this->createNotFoundException("La sortie n'existe pas.");
+        }
+        return $this->render('outing/detail.html.twig', [
+            "outing"=>$outing
+        ]);
     }
 
     /**
@@ -113,9 +121,63 @@ class OutingController extends AbstractController {
 
     /**
      * @Route("/edit/{id}", name = "edit", requirements = {"id"="\d+"})
+     * @param int $id
+     * @param OutingRepository $outingRepository
+     * @param OutingStateRepository $outingStateRepository
+     * @param Request $request
+     * @param $entityManager
+     * @return Response
      */
-    public function edit(int $id): Response {
-        return $this->render('outing/edit.html.twig', []);
+    public function edit(int $id,
+                         OutingRepository $outingRepository,
+                         OutingStateRepository $outingStateRepository,
+                         Request $request,
+                         EntityManagerInterface $entityManager
+    ): Response {
+        $outing = $outingRepository ->find($id);
+        $form = $this->createForm(EditOutingFormType::class,$outing)
+
+        ->add('save', SubmitType::class, [
+            'label' => 'Enregistrer comme brouillon'
+        ])
+            ->add('saveAndPublish', SubmitType::class, [
+                'label' => 'Enregistrer et publier'
+            ]);
+        $form->handleRequest($request);
+
+        // Do not validate the form on Ajax requests
+        if (!$request->isXmlHttpRequest()) {
+            if ($form->isSubmitted() && $form->isValid()) {
+                $user = $this->getUser();
+                $outing->setOrganizer($user);
+
+                if ($form instanceof Form) {
+                    if ($form->getClickedButton() === $form->get('saveAndPublish')) {
+                        $outing->setState($outingStateRepository->findOneBy(['label' => 'OPEN']));
+                        $successText = 'Les modifications ont été enregistrées.';
+                    } else {
+                        $outing->setState($outingStateRepository->findOneBy(['label' => 'DRAFT']));
+                        $successText = 'La sortie a été enregistrée.';
+                    }
+                }
+
+                $location = $outing->getLocation();
+                if (!$location->getId()) {
+                    $entityManager->persist($location);
+                }
+                $entityManager->persist($outing);
+                $entityManager->flush();
+                $this->addFlash('success', $successText);
+                return $this->redirectToRoute('main_home');
+            }
+        }
+
+
+        return $this->renderForm('outing/edit.html.twig', [
+            'outingForm' => $form,
+            'outing' => $outing
+        ]);
+        //return $this->render('outing/edit.html.twig', []);
     }
 
     /**
