@@ -39,10 +39,12 @@
             <div class="col d-flex">
                 <fieldset class="w-100">
                     <legend>Lieu</legend>
+                    {{ form_row(outingForm.newLocation.city) }}
 
-                    {{ form_row(outingForm.location.city) }}
-                    <fieldset id="existing-location-form-group">
-                        {{ form_row(outingForm.existingLocation) }}
+                    <fieldset id="location-form-group">
+                        <div class="text-center">
+                            {{ form_row(outingForm.location) }}
+                        </div>
                         <div class="form-group row">
                             <label for="street" class="form-label col-3">Rue</label>
                             <span id="street" class="text-secondary col"></span>
@@ -58,9 +60,12 @@
                     </fieldset>
 
                     {{ form_row(outingForm.isNewLocation) }}
-                    <fieldset id="location-form-group">
-                        {{ form_errors(outingForm.location) }}
-                        {{ form_widget(outingForm.location) }}
+                    <fieldset id="new-location-form-group">
+                        <div class="text-center">
+                            {{ form_label(outingForm.newLocation) }}
+                        </div>
+                        {{ form_errors(outingForm.newLocation) }}
+                        {{ form_widget(outingForm.newLocation) }}
                     </fieldset>
                 </fieldset>
             </div>

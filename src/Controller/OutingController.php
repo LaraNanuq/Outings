@@ -109,7 +109,7 @@ class OutingController extends AbstractController {
                 $entityManager->persist($outing);
                 $entityManager->flush();
                 $this->addFlash('success', $successText);
-                return $this->redirectToRoute('main_home');
+                return $this->redirectToRoute('outing_list');
             }
         }
         return $this->renderForm('outing/edit.html.twig', [
@@ -128,10 +128,22 @@ class OutingController extends AbstractController {
         Request $request,
         EntityManagerInterface $entityManager
     ): Response {
+        
+        // Check outing, user and outing state
         $outing = $outingRepository->find($id);
         if (!$outing) {
             throw $this->createNotFoundException("La sortie n'existe pas ou a été supprimée.");
         }
+        if ($this->getUser() !== $outing->getOrganizer()) {
+            throw $this->createAccessDeniedException("La sortie ne peut pas être modifiée car vous n'êtes pas son organisateur.");
+        }
+        $state = $outingStateRepository->findOneBy(['label' => 'DRAFT']);
+        if ($outing->getState() !== $state) {
+            $this->addFlash('danger', "La sortie ne peut pas être modifiée car elle a été publiée.");
+            return $this->redirectToRoute('outing_list');
+        }
+
+        // Handle form
         $form = $this->createForm(EditOutingFormType::class, $outing)
             ->add('save', SubmitType::class, [
                 'label' => 'Enregistrer comme brouillon',
@@ -156,23 +168,29 @@ class OutingController extends AbstractController {
                     $entityManager->remove($outing);
                 } else {
                     if ($form->getClickedButton() === $form->get('save')) {
-                        $successText = 'La sortie a été enregistrée.';
+                        $successText = 'La sortie a été mise à jour.';
                     } else {
                         // TODO: Publication via url, avec l'id
                         $outing->setState($outingStateRepository->findOneBy(['label' => 'OPEN']));
-                        $successText = 'La sortie a été enregistrée et publiée.';
+                        $successText = 'La sortie a été mise à jour et publiée.';
                     }
 
                     $location = $outing->getLocation();
-                    dump($location);
+
                     if (!$location->getId()) {
+                        dump("PERSIST LOCATION");
                         $entityManager->persist($location);
                     }
                     $entityManager->persist($outing);
+
+                    
+                    dump($outing);
                 }
+
+
                 $entityManager->flush();
                 $this->addFlash('success', $successText);
-                return $this->redirectToRoute('main_home');
+                return $this->redirectToRoute('outing_list');
             }
         }
         return $this->renderForm('outing/edit.html.twig', [

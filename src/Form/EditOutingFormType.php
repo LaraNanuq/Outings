@@ -58,20 +58,13 @@ class EditOutingFormType extends AbstractType {
                 'placeholder' => '- Sélectionnez un campus -'
             ])
             ->add('isNewLocation', CheckboxType::class, [
-                'label' => 'Nouveau lieu',
+                'label' => 'Ajouter un lieu',
                 'required' => false,
                 'mapped' => false
             ])
-            ->add('location', EditLocationFormType::class, [
+            ->add('newLocation', EditLocationFormType::class, [
                 'label' => 'Nouveau lieu',
-                'setter' => function (Outing &$outing, Location $location, FormInterface $field): void {
-                    $form = $field->getParent();
-                    $isNewLocation = $form->get('isNewLocation')->getData();
-                    if (!$isNewLocation) {
-                        $location = $form->get('existingLocation')->getData();
-                    }
-                    $outing->setLocation($location);
-                }
+                'mapped' => false
             ]);
 
         // On form load
@@ -81,59 +74,52 @@ class EditOutingFormType extends AbstractType {
                 $form = $event->getForm();
                 $outing = $event->getData();
                 $location = $outing->getLocation();
-                if ($location) {
+
+                // Edit
+                if ($location && $location instanceof Location) {
                     $city = $location->getCity();
+                    $form->get('newLocation')->get('city')->setData($city);
+
+                    // Create
                 } else {
                     $city = null;
                 }
-                $this->addExistingLocationField($form, $city, $location);
-                // TODO: Tester si l'édition fonctionne si cette fonction est inutile.
+                $this->addSavedLocationField($form, $city);
+
+                // TODO: Gérer l'activation des champs au chargement
             }
         );
 
-        // On form submit (used on Ajax requests)
-        $builder->get('location')->get('city')->addEventListener(
+        // On Ajax request
+        // TODO: Appeler seulement lors d'une requête Ajax
+        $builder->get('newLocation')->get('city')->addEventListener(
             FormEvents::POST_SUBMIT,
             function (FormEvent $event) {
-                
-                // TODO: CAUSE ERREUR 500 pour Edit ?
                 $field = $event->getForm();
                 $form = $field->getParent()->getParent();
-                //$outing = $form->getData();
-                //$location = $outing->getLocation();
-                //if (!$location) {
-                    $cityValue = $event->getData();
-                    $city = $field->getData();
-                    $this->addExistingLocationField($form, $city, null);
-                //}
+                $city = $field->getData();
+                $this->addSavedLocationField($form, $city);
             }
         );
     }
 
-    // TODO: Gérer l'activation des champs au chargement
-
     /**
-     * Adds the existing location field with locations related to the specified city.
-     *
-     * @param FormInterface $form
-     * @param City|null $city
-     * @return void
+     * Adds the saved locations field from the specified city.
      */
-    private function addExistingLocationField(FormInterface $form, ?City $city, ?Location $location): void {
-        //$isNewLocation = $form->get('isNewLocation')->getData();
+    private function addSavedLocationField(FormInterface $form, ?City $city): void {
         if (!$city) {
             $locations = [];
             $placeholder = "Aucune ville sélectionnée";
         } else {
             $locations = $city->getLocations()->getValues();
-            sort($locations);
             if (count($locations) > 0) {
+                sort($locations);
                 $placeholder = "Sélectionnez un lieu";
             } else {
                 $placeholder = "Aucun lieu trouvé";
             }
         }
-        $form->add('existingLocation', EntityType::class, [
+        $form->add('location', EntityType::class, [
             'label' => 'Lieu enregistré',
             'class' => Location::class,
             'choices' => $locations,
@@ -147,17 +133,22 @@ class EditOutingFormType extends AbstractType {
                     'longitude' => $location->getLongitude()
                 ];
             },
-            'placeholder' => '- ' . $placeholder . ' -',
-            //'disabled' => $isNewLocation,
-            // TODO: A revoir
-            //'data' => $location ? $location : null,
-            'mapped' => false
+            'setter' => function (Outing &$outing, ?Location $location, FormInterface $field): void {
+                $form = $field->getParent();
+                $isNewLocation = $form->get('isNewLocation')->getData();
+                if ($isNewLocation) {
+                    $location = $form->get('newLocation')->getData();
+                }
+                $outing->setLocation($location);
+            },
+            'placeholder' => '- ' . $placeholder . ' -'
         ]);
     }
 
     public function configureOptions(OptionsResolver $resolver) {
         $resolver->setDefaults([
-            'data_class' => Outing::class
+            'data_class' => Outing::class,
+            'error_mapping' => ['location' => 'newLocation']
         ]);
     }
 }
