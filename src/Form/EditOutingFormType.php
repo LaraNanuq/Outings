@@ -150,7 +150,7 @@ class EditOutingFormType extends AbstractType {
             'placeholder' => '- ' . $placeholder . ' -',
             //'disabled' => $isNewLocation,
             // TODO: A revoir
-            'data' => $location ? $location : null,
+            //'data' => $location ? $location : null,
             'mapped' => false
         ]);
     }

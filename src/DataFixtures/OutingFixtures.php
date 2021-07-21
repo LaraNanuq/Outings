@@ -22,8 +22,8 @@ class OutingFixtures extends Fixture implements DependentFixtureInterface {
 
     public function load(ObjectManager $manager) {
         $outing1 = new Outing();
-        $outing1->setName('Randonnée');
-        $outing1->setDescription("La randonnée c'est chouette.");
+        $outing1->setName('Ski alpin');
+        $outing1->setDescription("Le ski alpin c'est chouette.");
         $outing1->setDate(new DateTime('now +1 year'));
         $outing1->setDuration(240);
         $outing1->setRegistrationClosingDate(new DateTime('now +6 month'));

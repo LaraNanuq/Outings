@@ -31,11 +31,11 @@ class UserFixtures extends Fixture implements DependentFixtureInterface {
         $this->addReference(self::class . '1', $admin);
 
         $user = new User();
-        $user->setAlias('user');
+        $user->setAlias('user1');
         $user->setLastName('Doe');
         $user->setFirstName('John');
-        $user->setEmail('user@gmail.com');
-        $user->setPassword($this->passwordHasher->hashPassword($user, 'user'));
+        $user->setEmail('user1@gmail.com');
+        $user->setPassword($this->passwordHasher->hashPassword($user, 'user1'));
         $user->setRoles(['ROLE_USER']);
         $user->setCampus($this->getReference(CampusFixtures::class . '2'));
         $manager->persist($user);

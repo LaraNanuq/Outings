@@ -11,15 +11,21 @@
         <div>Description : {{ outing.description }}</div>
         <div>Date : {{ outing.date|date("d/m/Y - H:i") }}</div>
         <div>Durée : {{ outing.duration }} minutes</div>
-        <div>Lieu : {{ outing.campus.name }}</div>
+        <div>Campus : {{ outing.campus.name }}</div>
+        <br />
         <div>Adresse</div>
         <div>Lieu : {{ outing.location.name }}</div>
         <div>Rue : {{ outing.location.street }}</div>
         <div>Latitude : {{ outing.location.latitude }}</div>
         <div>Longitude : {{ outing.location.longitude }}</div>
-        <div>Statut : {{ outing.state.friendlyName }}</div>
+        <br />
         <div>Fin des inscriptions : {{ outing.registrationClosingDate|date("d/m/Y") }}</div>
         <div>Inscrits : {{ outing.registrants|length }} / {{ outing.maxRegistrants }}</div>
+        <br />
+        <div>Statut : {{ outing.state.friendlyName }}</div>
+        {% if (outing.cancellationReason) %}
+            <div>Motif : {{ outing.cancellationReason }}</div>
+        {% endif %}
         {# TODO: tableau avec liste des participants #}
     </fieldset>
     

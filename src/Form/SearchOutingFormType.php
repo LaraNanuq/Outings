@@ -42,7 +42,7 @@ class SearchOutingFormType extends AbstractType {
                 'required' => false
             ])
 
-            // TODO: Au moins une case cochée, enlever choix 3 ?
+            // TODO: Au moins une case cochée ?
             ->add('isUserOrganizer', CheckboxType::class, [
                 'label' => "Sorties que j'organise",
                 'required' => false
