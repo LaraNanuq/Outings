@@ -5,11 +5,20 @@
 {% endblock %}
 
 {% block title %}
-    Nouvelle sortie | {{ parent() }}
+    {% if (outing.id) %}
+        Modification de {{ outing.name }} | {{ parent() }}
+    {% else %}
+        Nouvelle sortie | {{ parent() }}
+    {% endif %}
 {% endblock %}
 
 {% block body %}
-    <h1 class="h3">Nouvelle sortie</h1>
+    {% if (outing.id) %}
+        <h1 class="h3">Modification de {{ outing.name }}</h1>
+    {% else %}
+        <h1 class="h3">Nouvelle sortie</h1>
+    {% endif %}
+
     {{ form_start(outingForm) }}
         {{ form_errors(outingForm) }}
 

@@ -86,7 +86,7 @@ class EditOutingFormType extends AbstractType {
                 } else {
                     $city = null;
                 }
-                $this->addExistingLocationField($form, $city);
+                $this->addExistingLocationField($form, $city, $location);
                 // TODO: Tester si l'édition fonctionne si cette fonction est inutile.
             }
         );
@@ -95,11 +95,17 @@ class EditOutingFormType extends AbstractType {
         $builder->get('location')->get('city')->addEventListener(
             FormEvents::POST_SUBMIT,
             function (FormEvent $event) {
+                
+                // TODO: CAUSE ERREUR 500 pour Edit ?
                 $field = $event->getForm();
                 $form = $field->getParent()->getParent();
-                $cityValue = $event->getData();
-                $city = $field->getData();
-                $this->addExistingLocationField($form, $city);
+                //$outing = $form->getData();
+                //$location = $outing->getLocation();
+                //if (!$location) {
+                    $cityValue = $event->getData();
+                    $city = $field->getData();
+                    $this->addExistingLocationField($form, $city, null);
+                //}
             }
         );
     }
@@ -113,7 +119,7 @@ class EditOutingFormType extends AbstractType {
      * @param City|null $city
      * @return void
      */
-    private function addExistingLocationField(FormInterface $form, ?City $city): void {
+    private function addExistingLocationField(FormInterface $form, ?City $city, ?Location $location): void {
         //$isNewLocation = $form->get('isNewLocation')->getData();
         if (!$city) {
             $locations = [];
@@ -143,6 +149,8 @@ class EditOutingFormType extends AbstractType {
             },
             'placeholder' => '- ' . $placeholder . ' -',
             //'disabled' => $isNewLocation,
+            // TODO: A revoir
+            'data' => $location ? $location : null,
             'mapped' => false
         ]);
     }
