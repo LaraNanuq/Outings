@@ -18,6 +18,7 @@ class SearchOutingFilter {
     private $isUserNotRegistrant;
     private $isFinished;
     private $page;
+    private $itemsPerPage;
 
     public function getCampus(): ?Campus {
         return $this->campus;
@@ -91,12 +92,21 @@ class SearchOutingFilter {
         return $this;
     }
 
-    public function getPage(): int {
+    public function getPage(): ?int {
         return $this->page;
     }
 
     public function setPage(int $page): self {
         $this->page = $page;
+        return $this;
+    }
+
+    public function getItemsPerPage(): ?int {
+        return $this->itemsPerPage;
+    }
+
+    public function setItemsPerPage(int $itemsPerPage): self {
+        $this->itemsPerPage = $itemsPerPage;
         return $this;
     }
 }

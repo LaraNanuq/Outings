@@ -35,7 +35,7 @@ let edit = (function () {
         let cityInput = document.querySelector("#edit_outing_form_location_city");
         cityInput.addEventListener("change", function () {
             newLocationCheckbox.disabled = true;
-            existingLocationInput.disabled = true;
+            // Do not disable the field or the form group, to prevent a form submission while loading
             existingLocationInput.innerHTML = "<option value>- CHARGEMENT -</option>";
             resetExistingLocationTexts();
 
@@ -51,7 +51,6 @@ let edit = (function () {
                 .finally(() => {
                     updateLocationGroupsState();
                     newLocationCheckbox.disabled = false;
-                    existingLocationInput.disabled = false;
                 });
         });
     });

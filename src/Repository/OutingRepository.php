@@ -18,7 +18,6 @@ use Doctrine\Persistence\ManagerRegistry;
  * @author Marin Taverniers
  */
 class OutingRepository extends ServiceEntityRepository {
-    private const ITEMS_PER_PAGE = 100;
 
     public function __construct(ManagerRegistry $registry) {
         parent::__construct($registry, Outing::class);
@@ -26,59 +25,82 @@ class OutingRepository extends ServiceEntityRepository {
 
     public function findWithSearchFilter(SearchOutingFilter $searchFilter, User $relatedUser) {
         $builder = $this
-            ->createQueryBuilder('o');
+            ->createQueryBuilder('o')
+            ->addSelect('u')
+            ->addSelect('s')
+            ->addSelect('r')
+            ->join('o.organizer', 'u')
+            ->join('o.state', 's')
+            ->leftJoin('o.registrants', 'r');
+
+        // Input fields
         if ($searchFilter->getCampus()) {
-            $builder = $builder
-                //->join('o.campus', 'c')
+            $builder
+                ->addSelect('ca')
+                ->join('o.campus', 'ca')
                 ->andWhere('o.campus = :campus')
                 ->setParameter('campus', $searchFilter->getCampus());
         }
         if ($searchFilter->getName()) {
-            $builder = $builder
+            $builder
                 ->andWhere('o.name LIKE :name')
                 ->setParameter('name', "%{$searchFilter->getName()}%");
         }
         if ($searchFilter->getMinDate()) {
-            $builder = $builder
+            $builder
                 ->andWhere('o.date >= :minDate')
                 ->setParameter('minDate', $searchFilter->getMinDate());
         }
         if ($searchFilter->getMaxDate()) {
-            $builder = $builder
+            $builder
                 ->andWhere('o.date <= :maxDate')
                 ->setParameter('maxDate', $searchFilter->getMaxDate());
         }
-        if ($searchFilter->isUserOrganizer()) {
-            $builder = $builder
-                ->andWhere('o.organizer = :organizer')
-                ->setParameter('organizer', $relatedUser);
+
+        // Checkboxes
+        if (!($searchFilter->isUserOrganizer() && $searchFilter->isUserRegistrant() && $searchFilter->isUserNotRegistrant())) {
+            if ($searchFilter->isUserOrganizer()) {
+                $builder->andWhere('o.organizer = :organizer');
+            } else {
+                $builder->andWhere('o.organizer != :organizer');
+            }
+            $builder->setParameter('organizer', $relatedUser);
+            if ($searchFilter->isUserRegistrant() XOR $searchFilter->isUserNotRegistrant()) {
+                if ($searchFilter->isUserRegistrant()) {
+                    $part = ':registrant MEMBER OF o.registrants';
+                }
+                if ($searchFilter->isUserNotRegistrant()) {
+                    $part = ':registrant NOT MEMBER OF o.registrants';
+                }
+                if ($searchFilter->isUserOrganizer()) {
+                    $builder->orWhere($part);
+                } else {
+                    $builder->andWhere($part);
+                }
+                $builder->setParameter('registrant', $relatedUser);
+            }
         }
-        if ($searchFilter->isUserRegistrant()) {
-            $builder = $builder
-                ->andWhere(':registrant MEMBER OF o.registrants')
-                ->setParameter('registrant', $relatedUser);
-        }
-        if ($searchFilter->isUserNotRegistrant()) {
-            $builder = $builder
-                ->andWhere(':excludedRegistrant NOT MEMBER OF o.registrants')
-                ->setParameter('excludedRegistrant', $relatedUser);
-        }
-        $builder
-            ->join('o.state', 's');
         if ($searchFilter->isFinished()) {
-            $builder = $builder
-                ->andWhere("s.label = 'FINISHED'");
+            $builder->andWhere("UPPER(s.label) = 'FINISHED'");
         } else {
-            $builder
-                ->andWhere("s.label != 'ARCHIVED'");
+            $builder->andWhere("UPPER(s.label) != 'FINISHED'");
         }
+
+        // Sorting
         $builder
+            ->andWhere("UPPER(s.label) != 'ARCHIVED'")
             ->addOrderBy('o.date', 'ASC');
-        
-        $query = $builder
-            ->getQuery()
-            ->setFirstResult(($searchFilter->getPage() - 1) * self::ITEMS_PER_PAGE)
-            ->setMaxResults(self::ITEMS_PER_PAGE);
+
+        // Without pagination
+        $query = $builder->getQuery();
+        if ((!$searchFilter->getPage()) || (!$searchFilter->getItemsPerPage())) {
+            return $query->getResult();
+        }
+
+        // With pagination
+        $query
+            ->setFirstResult(($searchFilter->getPage() - 1) * $searchFilter->getItemsPerPage())
+            ->setMaxResults($searchFilter->getItemsPerPage());
         return new Paginator($query);
     }
 }

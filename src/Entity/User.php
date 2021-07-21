@@ -13,7 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass = UserRepository::class)
- * @UniqueEntity(fields = {"alias, email"}, message = "The {{ label }} is already used.")
+ * @UniqueEntity(fields = {"alias", "email"}, message = "The {{ label }} is already used.")
  * 
  * @author Marin Taverniers
  */
@@ -99,9 +99,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
 
     /**
      * @ORM\Column(type = "json")
-     * @Assert\Json(message = "The roles array is not a valid JSON object.")
      */
     private $roles = [];
+
+    // TODO: @Assert\Json(message = "The roles array is not a valid JSON object.")
 
     /**
      * @ORM\ManyToOne(targetEntity = Campus::class, inversedBy = "users")

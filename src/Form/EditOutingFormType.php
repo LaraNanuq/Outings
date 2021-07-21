@@ -46,7 +46,8 @@ class EditOutingFormType extends AbstractType {
                 'label' => 'Durée (minutes)'
             ])
             ->add('description', TextareaType::class, [
-                'label' => 'Description'
+                'label' => 'Description',
+                'attr' => ['rows' => '5', 'style' => 'resize: none;']
             ])
             ->add('campus', EntityType::class, [
                 'label' => 'Campus',

@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\Outing;
-use App\Form\SearchOutingFilter;
 use App\Form\EditOutingFormType;
 use App\Form\SearchOutingFormType;
 use App\Repository\OutingRepository;
@@ -30,13 +29,22 @@ class OutingController extends AbstractController {
         Request $request,
         OutingRepository $outingRepository
     ): Response {
+
+        /*
+        // Default values
         $searchFilter = new SearchOutingFilter();
-        $searchFilter->setPage($request->get('page', 1));
+        $searchFilter->setIsUserOrganizer($request->query->getBoolean('isUserOrganizer', true));
+        $searchFilter->setIsUserRegistrant($request->query->getBoolean('isUserRegistrant', true));
+        $searchFilter->setIsUserNotRegistrant($request->query->getBoolean('isUserNotRegistrant', true));
+        // TODO: Pagination
+        $searchFilter->setPage($request->query->getInt('page', 1));
+        $searchFilter->setItemsPerPage($request->query->getInt('itemsPerPage', 50));
         $searchForm = $this->createForm(SearchOutingFormType::class, $searchFilter);
+        */
+
+        $searchForm = $this->createForm(SearchOutingFormType::class);
         $searchForm->handleRequest($request);
-        //if ($outingFilterForm->isSubmitted() && $outingFilterForm->isValid()) {
-            //$outings = $outingRepository->
-        //}
+        $searchFilter = $searchForm->getData();
         $outings = $outingRepository->findWithSearchFilter($searchFilter, $this->getUser());
         return $this->renderForm('outing/list.html.twig', [
             'searchForm' => $searchForm,
