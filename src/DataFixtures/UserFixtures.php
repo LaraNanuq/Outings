@@ -21,8 +21,8 @@ class UserFixtures extends Fixture implements DependentFixtureInterface {
     public function load(ObjectManager $manager) {
         $admin = new User();
         $admin->setAlias('admin');
-        $admin->setLastName('Dupont');
-        $admin->setFirstName('Jean');
+        $admin->setLastName('Doe');
+        $admin->setFirstName('John');
         $admin->setEmail('admin@outings.com');
         $admin->setPassword($this->passwordHasher->hashPassword($admin, 'admin'));
         $admin->setRoles(['ROLE_ADMIN']);
@@ -30,27 +30,49 @@ class UserFixtures extends Fixture implements DependentFixtureInterface {
         $manager->persist($admin);
         $this->addReference(self::class . '1', $admin);
 
-        $user = new User();
-        $user->setAlias('user1');
-        $user->setLastName('Doe');
-        $user->setFirstName('John');
-        $user->setEmail('user1@gmail.com');
-        $user->setPassword($this->passwordHasher->hashPassword($user, 'user1'));
-        $user->setRoles(['ROLE_USER']);
-        $user->setCampus($this->getReference(CampusFixtures::class . '2'));
-        $manager->persist($user);
-        $this->addReference(self::class . '2', $user);
+        $user1 = new User();
+        $user1->setAlias('user1');
+        $user1->setLastName('Legrand');
+        $user1->setFirstName('Michel');
+        $user1->setEmail('user1@gmail.com');
+        $user1->setPassword($this->passwordHasher->hashPassword($user1, 'user1'));
+        $user1->setRoles(['ROLE_USER']);
+        $user1->setCampus($this->getReference(CampusFixtures::class . '2'));
+        $manager->persist($user1);
+        $this->addReference(self::class . '2', $user1);
+
+        $user2 = new User();
+        $user2->setAlias('user2');
+        $user2->setLastName('Petit');
+        $user2->setFirstName('Louis');
+        $user2->setEmail('user2@gmail.com');
+        $user2->setPassword($this->passwordHasher->hashPassword($user2, 'user2'));
+        $user2->setRoles(['ROLE_USER']);
+        $user2->setCampus($this->getReference(CampusFixtures::class . '3'));
+        $manager->persist($user2);
+        $this->addReference(self::class . '3', $user2);
+
+        $user3 = new User();
+        $user3->setAlias('user3');
+        $user3->setLastName('Times');
+        $user3->setFirstName('Vincent');
+        $user3->setEmail('user3@gmail.com');
+        $user3->setPassword($this->passwordHasher->hashPassword($user3, 'user3'));
+        $user3->setRoles(['ROLE_USER']);
+        $user3->setCampus($this->getReference(CampusFixtures::class . '1'));
+        $manager->persist($user3);
+        $this->addReference(self::class . '4', $user3);
 
         $disabled = new User();
         $disabled->setAlias('disabled');
-        $disabled->setLastName('Disabled');
-        $disabled->setFirstName('Jane');
+        $disabled->setLastName('Dupont');
+        $disabled->setFirstName('Jean');
         $disabled->setEmail('disabled@gmail.com');
         $disabled->setPassword($this->passwordHasher->hashPassword($disabled, 'disabled'));
         $disabled->setRoles(['ROLE_USER_DISABLED']);
-        $disabled->setCampus($this->getReference(CampusFixtures::class . '3'));
+        $disabled->setCampus($this->getReference(CampusFixtures::class . '2'));
         $manager->persist($disabled);
-        $this->addReference(self::class . '3', $disabled);
+        $this->addReference(self::class . '5', $disabled);
 
         $manager->flush();
     }

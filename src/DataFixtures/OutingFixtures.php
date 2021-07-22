@@ -21,20 +21,49 @@ class OutingFixtures extends Fixture implements DependentFixtureInterface {
     }
 
     public function load(ObjectManager $manager) {
+        /* @var $user User */
+
         $outing1 = new Outing();
         $outing1->setName('Ski alpin');
         $outing1->setDescription("Le ski alpin c'est chouette.");
         $outing1->setDate(new DateTime('now +1 year'));
         $outing1->setDuration(240);
         $outing1->setRegistrationClosingDate(new DateTime('now +6 month'));
-        $outing1->setMaxRegistrants(10);
-        /* @var $user User */
+        $outing1->setMaxRegistrants(100);
         $user = $this->getReference(UserFixtures::class . '2');
         $outing1->setOrganizer($user);
         $outing1->setCampus($user->getCampus());
         $outing1->setLocation($this->getReference(LocationFixtures::class . '1'));
         $outing1->setState($this->outingStateRepository->findOneBy(['label' => 'OPEN']));
         $manager->persist($outing1);
+
+        $outing2 = new Outing();
+        $outing2->setName('Randonnée');
+        $outing2->setDescription("La randonnée c'est chouette.");
+        $outing2->setDate(new DateTime('now -5 day'));
+        $outing2->setDuration(120);
+        $outing2->setRegistrationClosingDate(new DateTime('now -10 day'));
+        $outing2->setMaxRegistrants(50);
+        $user = $this->getReference(UserFixtures::class . '3');
+        $outing2->setOrganizer($user);
+        $outing2->setCampus($user->getCampus());
+        $outing2->setLocation($this->getReference(LocationFixtures::class . '2'));
+        $outing2->setState($this->outingStateRepository->findOneBy(['label' => 'FINISHED']));
+        $manager->persist($outing2);
+
+        $outing3 = new Outing();
+        $outing3->setName('Vélo');
+        $outing3->setDescription("Le vélo c'est chouette.");
+        $outing3->setDate(new DateTime('now +6 month'));
+        $outing3->setDuration(60);
+        $outing3->setRegistrationClosingDate(new DateTime('now -1 month'));
+        $outing3->setMaxRegistrants(25);
+        $user = $this->getReference(UserFixtures::class . '4');
+        $outing3->setOrganizer($user);
+        $outing3->setCampus($user->getCampus());
+        $outing3->setLocation($this->getReference(LocationFixtures::class . '3'));
+        $outing3->setState($this->outingStateRepository->findOneBy(['label' => 'PENDING']));
+        $manager->persist($outing3);
 
         $manager->flush();
     }
