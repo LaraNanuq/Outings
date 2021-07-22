@@ -35,19 +35,18 @@
     </div>
 {% endif %}
 
-        {% if (app.user in outing.registrants) %}
-           {% for registrant in outing.registrants %}
-                <table class="table table-bordered table-striped table-secondary table-sm align-middle text-center my-3">
-                    <tr>
-                        <th scope="col">Pseudo</th>
-                        <th scope="col">Nom</th>
-                    </tr>
-                    <tr>
-                        <td><a href="{{ path('user_detail', {id: registrant.id}) }}">{{ registrant.alias }}</a></td>
-                        <td>{{ registrant.fullName }} </td>
-            {% endfor %}
+
+        <table class="table table-bordered table-striped table-secondary table-sm align-middle text-center my-3">
+            <tr>
+                <th scope="col">Pseudo</th>
+                <th scope="col">Nom</th>
+            </tr>
+             {% for registrant in outing.registrants %}
+            <tr>
+                <td><a href="{{ path('user_detail', {id: registrant.id}) }}">{{ registrant.alias }}</a></td>
+                <td>{{ registrant.fullName }} </td>
         {% else %}
             <div>Aucun participants</div>
-        {% endif %}
+        {% endfor %}
     </tr>
     {% endblock %}
