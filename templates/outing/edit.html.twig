@@ -74,7 +74,11 @@
         </div>
 
         <div class="btn-group">
-            {{ form_rest(outingForm) }}
+            {{ form_row(outingForm.save) }}
+            {{ form_row(outingForm.saveAndPublish) }}
+            {% if (outing.id) %}
+                <a href="{{ path('outing_delete', {id: outing.id}) }}" class="mb-3 btn btn-sm btn-danger">Supprimer</a>
+            {% endif %}
         </div>
     {{ form_end(outingForm) }}
 {% endblock %}

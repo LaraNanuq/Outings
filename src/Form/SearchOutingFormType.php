@@ -10,8 +10,6 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SearchType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class SearchOutingFormType extends AbstractType {
@@ -60,13 +58,12 @@ class SearchOutingFormType extends AbstractType {
                 'required' => false
             ]);
 
-        $builder->addEventListener(
+        // Default values on form load
+        /*$builder->addEventListener(
             FormEvents::PRE_SET_DATA,
             function (FormEvent $event) {
                 $form = $event->getForm();
                 $search = $event->getData();
-
-                // Default values
                 if (is_null($search)) {
                     $search = new SearchOutingFilter();
                     $search->setIsUserOrganizer(true);
@@ -75,7 +72,7 @@ class SearchOutingFormType extends AbstractType {
                     $event->setData($search);
                 }
             }
-        );
+        );*/
     }
 
     public function configureOptions(OptionsResolver $resolver) {
@@ -86,6 +83,7 @@ class SearchOutingFormType extends AbstractType {
         ]);
     }
 
+    // Remove prefix for parameters
     public function getBlockPrefix() {
         return '';
     }

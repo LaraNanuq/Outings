@@ -28,10 +28,4 @@
         {% endif %}
         {# TODO: tableau avec liste des participants #}
     </fieldset>
-    
-    {% if (app.user == outing.organizer) %}
-        <div class="btn-group">
-            <a href="{{ path('outing_edit', {id: outing.id}) }}" class="btn btn-sm btn-primary">Modifier</a>
-        </div>
-    {% endif %}
 {% endblock %}
