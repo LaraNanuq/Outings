@@ -27,8 +27,10 @@
         </div>
         <input type="hidden" name="csrf_token" value="{{ csrf_token('authenticate') }}">
 
-        <button type="submit" class="btn btn-sm btn-primary">
-            Connexion
-        </button>
+        <div class="btn-group">
+            <button type="submit" class="btn btn-sm btn-primary">
+                Connexion
+            </button>
+        </div>
     </form>
 {% endblock %}

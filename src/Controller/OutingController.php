@@ -103,7 +103,7 @@ class OutingController extends AbstractController {
             ])
             ->add('saveAndPublish', SubmitType::class, [
                 'label' => 'Enregistrer et publier',
-                'attr' => ['class' => 'btn-sm btn-success mx-1']
+                'attr' => ['class' => 'mx-1 btn-sm btn-success']
             ]);
         $form->handleRequest($request);
 

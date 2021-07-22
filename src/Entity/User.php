@@ -14,11 +14,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity(repositoryClass = UserRepository::class)
  * @UniqueEntity(fields = {"alias", "email"}, message = "The {{ label }} is already used.")
-
- *
-
- *
-
+ * 
  * @author Marin Taverniers
  */
 class User implements UserInterface, PasswordAuthenticatedUserInterface {
@@ -31,7 +27,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
     private $id;
 
     /**
-     * @ORM\Column(name="alias",type = "string", length = 50, unique = true)
+     * @ORM\Column(type = "string", length = 50, unique = true)
      * @Assert\NotBlank(message = "The username is required.")
      * @Assert\Length(
      *      min = 5,
@@ -66,7 +62,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
     private $firstName;
 
     /**
-     * @ORM\Column(name="email",type = "string", length = 250, unique = true)
+     * @ORM\Column(type = "string", length = 250, unique = true)
      * @Assert\NotBlank(message = "The email is required.")
      * @Assert\Length(
      *      max = 250,
