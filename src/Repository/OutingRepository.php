@@ -58,26 +58,26 @@ class OutingRepository extends ServiceEntityRepository {
         }
 
         // Checkboxes
-        if (!($searchFilter->isUserOrganizer() && $searchFilter->isUserRegistrant() && $searchFilter->isUserNotRegistrant())) {
-            if ($searchFilter->isUserOrganizer()) {
-                $builder->andWhere('o.organizer = :organizer');
-            } else {
-                $builder->andWhere('o.organizer != :organizer');
+        if ($searchFilter->isUserOrganizer()) {
+
+            // 'OR' clauses (do not use 'orWhere()')
+            $orClause = ['o.organizer = :user'];
+            if ($searchFilter->isUserRegistrant()) {
+                $orClause[] = ':user MEMBER OF o.registrants';
             }
-            $builder->setParameter('organizer', $relatedUser);
-            if ($searchFilter->isUserRegistrant() XOR $searchFilter->isUserNotRegistrant()) {
-                if ($searchFilter->isUserRegistrant()) {
-                    $part = ':registrant MEMBER OF o.registrants';
-                }
-                if ($searchFilter->isUserNotRegistrant()) {
-                    $part = ':registrant NOT MEMBER OF o.registrants';
-                }
-                if ($searchFilter->isUserOrganizer()) {
-                    $builder->orWhere($part);
-                } else {
-                    $builder->andWhere($part);
-                }
-                $builder->setParameter('registrant', $relatedUser);
+            if ($searchFilter->isUserNotRegistrant()) {
+                $orClause[] = ':user NOT MEMBER OF o.registrants';
+            }
+            $builder->andWhere('(' . join(' OR ', $orClause) . ')');
+        } else {
+
+            // 'AND' clauses
+            $builder->andWhere("o.organizer != :user");
+            if (!$searchFilter->isUserRegistrant()) {
+                $builder->andWhere(":user NOT MEMBER OF o.registrants");
+            }
+            if (!$searchFilter->isUserNotRegistrant()) {
+                $builder->andWhere(":user MEMBER OF o.registrants");
             }
         }
         if ($searchFilter->isFinished()) {
@@ -86,10 +86,12 @@ class OutingRepository extends ServiceEntityRepository {
             $builder->andWhere("UPPER(s.label) != 'FINISHED'");
         }
 
-        // Sorting
+        // State and order
         $builder
+            ->andWhere("(UPPER(s.label) != 'DRAFT' OR o.organizer = :user)")
             ->andWhere("UPPER(s.label) != 'ARCHIVED'")
             ->addOrderBy('o.date', 'ASC');
+        $builder->setParameter('user', $relatedUser);
 
         // Without pagination
         $query = $builder->getQuery();

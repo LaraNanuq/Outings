@@ -274,4 +274,15 @@ class OutingController extends AbstractController {
 
         return $this->redirectToRoute('outing_list');
     }
+
+    /* Validation */
+
+    private function checkOuting($outing) {
+
+    }
+
+    private function checkIsOrganizer($outing, $user) {
+
+    }
+
 }

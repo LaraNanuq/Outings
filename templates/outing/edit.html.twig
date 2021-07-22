@@ -6,18 +6,20 @@
 
 {% block title %}
     {% if (outing.id) %}
-        Modification de {{ outing.name }} | {{ parent() }}
+        Modification de sortie | {{ parent() }}
     {% else %}
         Nouvelle sortie | {{ parent() }}
     {% endif %}
 {% endblock %}
 
 {% block body %}
-    {% if (outing.id) %}
-        <h1 class="h3">Modification de {{ outing.name }}</h1>
-    {% else %}
-        <h1 class="h3">Nouvelle sortie</h1>
+    <h1 class="h3">
+        {% if (outing.id) %}
+            Modification de sortie
+        {% else %}
+            Nouvelle sortie
     {% endif %}
+    </h1>
 
     {{ form_start(outingForm) }}
         {{ form_errors(outingForm) }}
