@@ -31,9 +31,8 @@ class EditOutingFormType extends AbstractType {
                 'label' => 'Nom'
             ])
             ->add('date', DateTimeType::class, [
-                'label' => 'Date et heure',
-                'date_widget' => 'single_text',
-                'time_widget' => 'single_text'
+                'label' => 'Date',
+                'widget' => 'single_text'
             ])
             ->add('registrationClosingDate', DateType::class, [
                 'label' => 'Fin des inscriptions',
