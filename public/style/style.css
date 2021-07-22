@@ -22,12 +22,22 @@ fieldset[disabled] .form-select {
     background-color: #ECECEC;
 }
 
+legend:not(.col-form-label, .form-label) {
+    text-align: center;
+    font-size: medium;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
 .h3 {
     margin-bottom: 1rem;
     text-align: center;
+    font-size: x-large;
+    font-weight: bold;
+    text-transform: uppercase;
 }
 
 .form-control,
 .form-select {
-    font-size: small;
+    font-size: inherit;
 }

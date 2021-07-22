@@ -1,13 +1,13 @@
-{% extends "base.html.twig" %}
+{% extends 'fragment/error.html.twig' %}
 
 {% block title %}
     Accès non autorisé | {{ parent() }}
 {% endblock %}
 
-{% block body %}
-    <h1 class="h3">Accès non autorisé</h1>
+{% block errorTitle %}
+    Accès non autorisé
+{% endblock %}
 
-    <div class="alert alert-danger">
-        L'accès à cette page n'est pas autorisé.
-    </div>
+{% block errorText %}
+    L'accès à cette page n'est pas autorisé.
 {% endblock %}

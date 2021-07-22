@@ -63,6 +63,7 @@ class EditOutingFormType extends AbstractType {
             ])
             ->add('newLocation', EditLocationFormType::class, [
                 'label' => 'Nouveau lieu',
+                'label_attr' => ['style' => 'text-transform: uppercase;'],
                 'mapped' => false
             ]);
 
@@ -120,6 +121,7 @@ class EditOutingFormType extends AbstractType {
         }
         $form->add('location', EntityType::class, [
             'label' => 'Lieu enregistré',
+            'label_attr' => ['style' => 'text-transform: uppercase;'],
             'class' => Location::class,
             'choices' => $locations,
             'choice_label' => function (Location $location) {

@@ -12,11 +12,13 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  * @author Marin Taverniers
  */
 class CancelOutingFormType extends AbstractType {
-    
+
     public function buildForm(FormBuilderInterface $builder, array $options) {
-        $builder->add('cancellationReason', TextareaType::class, [
-            'label' => 'Motif'
-        ]);
+        $builder
+            ->add('cancellationReason', TextareaType::class, [
+                'label' => "Motif d'annulation",
+                'attr' => ['rows' => '5', 'style' => 'resize: none;']
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver) {

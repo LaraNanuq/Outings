@@ -1,26 +1,42 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-    Profil de {{ user.alias }} | {{ parent() }}
+    {{ user.alias }} | {{ parent() }}
 {% endblock %}
 
 {% block body %}
-    <h1 class="h3">Profil de {{ user.alias }}</h1>
+    <h1 class="h3">{{ user.alias }}</h1>
 
-    <div>
-        <ul>
-            <li>Pseudo : {{ user.alias }}</li>
-            <li>Prenom : {{ user.firstName }}</li>
-            <li>Nom : {{ user.lastName }}</li>
-            <li>Telephone : {{ user.phone }}</li>
-            <li>Email : {{ user.email }}</li>
-            <li>Campus : {{ user.campus.name }}</li>
-        </ul>
-    </div>
-
-    {% if (app.user == user) %}
-        <div class="btn-group">
-            <a href="{{ path('user_edit') }}" class="btn btn-sm btn-primary">Modifier</a>
+    <fieldset>
+        <legend>Informations</legend>
+        <div class="row">
+            <label for="first-name" class="col form-label text-secondary text-end">Prénom</label>
+            <span id="first-name" class="col form-label">{{ user.firstName }}</span>
         </div>
-    {% endif %}
+        <div class="row">
+            <label for="last-name" class="col form-label text-secondary text-end">Nom</label>
+            <span id="last-name" class="col form-label">{{ user.lastName }}</span>
+        </div>
+        <div class="row">
+            <label for="email" class="col form-label text-secondary text-end">Email</label>
+            <span id="email" class="col form-label">{{ user.email }}</span>
+        </div>
+        <div class="row">
+            <label for="phone" class="col form-label text-secondary text-end">Téléphone</label>
+            <span id="phone" class="col form-label">{{ user.phone }}</span>
+        </div>
+        <div class="row">
+            <label for="campus" class="col form-label text-secondary text-end">Campus</label>
+            <span id="campus" class="col form-label">{{ user.campus.name }}</span>
+        </div>
+    </fieldset>
+
+    <div class="text-center">
+        <div class="btn-group">
+            {% if (app.user == user) %}
+                <a href="{{ path('user_edit') }}" class="me-1 btn btn-sm btn-primary">Modifier</a>
+            {% endif %}
+            {% include "fragment/home.html.twig" %}
+        </div>
+    </div>
 {% endblock %}

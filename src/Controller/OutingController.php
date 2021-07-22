@@ -132,7 +132,7 @@ class OutingController extends AbstractController {
             }
         }
         return $this->renderForm('outing/edit.html.twig', [
-            'outingForm' => $form,
+            'editForm' => $form,
             'outing' => $outing
         ]);
     }

@@ -13,7 +13,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass = UserRepository::class)
- * @UniqueEntity(fields = {"alias", "email"}, message = "The {{ label }} is already used.")
+ * @UniqueEntity("alias", message = "The alias is already used.")
+ * @UniqueEntity("email", message = "The email is already used.")
  * 
  * @author Marin Taverniers
  */

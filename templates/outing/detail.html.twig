@@ -8,24 +8,84 @@
     <h1 class="h3">{{ outing.name }}</h1>
 
     <fieldset>
-        <div>Description : {{ outing.description }}</div>
-        <div>Date : {{ outing.date|date("d/m/Y - H:i") }}</div>
-        <div>Durée : {{ outing.duration }} minutes</div>
-        <div>Campus : {{ outing.campus.name }}</div>
-        <br />
-        <div>Adresse</div>
-        <div>Lieu : {{ outing.location.name }}</div>
-        <div>Rue : {{ outing.location.street }}</div>
-        <div>Latitude : {{ outing.location.latitude }}</div>
-        <div>Longitude : {{ outing.location.longitude }}</div>
-        <br />
-        <div>Fin des inscriptions : {{ outing.registrationClosingDate|date("d/m/Y") }}</div>
-        <div>Inscrits : {{ outing.registrants|length }} / {{ outing.maxRegistrants }}</div>
-        <br />
-        <div>Statut : {{ outing.state.friendlyName }}</div>
+        <legend>Informations</legend>
+        <div class="row justify-content-center">
+            <div class="col-5">
+                <div class="row">
+                    <label for="name" class="col form-label text-secondary text-end">Nom</label>
+                    <span id="name" class="col form-label">{{ outing.name }}</span>
+                </div>
+                <div class="row">
+                    <label for="date" class="col form-label text-secondary text-end">Date</label>
+                    <span id="date" class="col form-label">{{ outing.date|date('d/m/Y - H:i') }}</span>
+                </div>
+                <div class="row">
+                    <label for="closing-date" class="col form-label text-secondary text-end">Fin des inscriptions</label>
+                    <span id="closing-date" class="col form-label">{{ outing.registrationClosingDate|date('d/m/Y') }}</span>
+                </div>
+                <div class="row">
+                    <label for="duration" class="col form-label text-secondary text-end">Durée (minutes)</label>
+                    <span id="duration" class="col form-label">{{ outing.duration }}</span>
+                </div>
+                <div class="row">
+                    <label for="description" class="col form-label text-secondary text-end">Description</label>
+                    <span id="description" class="col form-label">{{ outing.description }}</span>
+                </div>
+                <div class="row">
+                    <label for="campus" class="col form-label text-secondary text-end">Campus</label>
+                    <span id="campus" class="col form-label">{{ outing.campus.name }}</span>
+                </div>
+                <div class="row">
+                    <label for="organizer" class="col form-label text-secondary text-end">Organisateur</label>
+                    <span id="organizer" class="col form-label">{{ outing.organizer.fullName }}</span>
+                </div>
+            </div>
+
+            <div class="col-5">
+                <div class="row">
+                    <label for="location" class="col form-label text-secondary text-end">Lieu</label>
+                    <span id="location" class="col form-label">{{ outing.location.name }}</span>
+                </div>
+                <div class="row">
+                    <label for="address" class="col form-label text-secondary text-end">Adresse</label>
+                    <span id="address" class="col form-label">
+                        {{ outing.location.street }} <br/>
+                        {{ outing.location.city.postalCode }} {{ outing.location.city.name }}
+                    </span>
+                </div>
+                <div class="row">
+                    <label for="latitude" class="col form-label text-secondary text-end">Latitude</label>
+                    <span id="latitude" class="col form-label">{{ outing.location.latitude }}</span>
+                </div>
+                <div class="row">
+                    <label for="longitude" class="col form-label text-secondary text-end">Longitude</label>
+                    <span id="longitude" class="col form-label">{{ outing.location.longitude }}</span>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+
+    <fieldset>
+        <legend>État</legend>
+        <div class="row">
+            <label for="regitrants" class="col form-label text-secondary text-end">Inscrits / Places</label>
+            <span id="regitrants" class="col form-label">{{ outing.registrants|length }} / {{ outing.maxRegistrants }}</span>
+        </div>
+        <div class="row">
+            <label for="state" class="col form-label text-secondary text-end">État</label>
+            <span id="state" class="col form-label">{{ outing.state.friendlyName }}</span>
+        </div>
         {% if (outing.cancellationReason) %}
-            <div>Motif : {{ outing.cancellationReason }}</div>
+            <div class="row">
+                <label for="cancellation-reason" class="col form-label text-secondary text-end">Motif d'annulation</label>
+                <span id="cancellation-reason" class="col form-label">{{ outing.cancellationReason }}</span>
+            </div>
         {% endif %}
-        {# TODO: tableau avec liste des participants #}
     </fieldset>
+    
+    <div class="text-center">
+        <div class="btn-group">
+            {% include "fragment/home.html.twig" %}
+        </div>
+    </div>
 {% endblock %}

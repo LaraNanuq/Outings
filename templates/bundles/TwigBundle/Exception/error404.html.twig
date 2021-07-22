@@ -1,13 +1,13 @@
-{% extends "base.html.twig" %}
+{% extends 'fragment/error.html.twig' %}
 
 {% block title %}
     Page introuvable | {{ parent() }}
 {% endblock %}
 
-{% block body %}
-    <h1 class="h3">Page introuvable</h1>
+{% block errorTitle %}
+    Page introuvable
+{% endblock %}
 
-    <div class="alert alert-danger">
-        Cette page n'existe pas, a été déplacée ou supprimée.
-    </div>
+{% block errorText %}
+    Cette page n'existe pas ou a été supprimée.
 {% endblock %}

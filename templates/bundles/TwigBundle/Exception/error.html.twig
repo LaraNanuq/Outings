@@ -1,13 +1,13 @@
-{% extends "base.html.twig" %}
+{% extends 'fragment/error.html.twig' %}
 
 {% block title %}
     Erreur | {{ parent() }}
 {% endblock %}
 
-{% block body %}
-    <h1 class="h3">Erreur</h1>
+{% block errorTitle %}
+    Erreur
+{% endblock %}
 
-    <div class="alert alert-danger">
-        Une erreur innatendue s'est produite.
-    </div>
+{% block errorText %}
+    Une erreur innatendue s'est produite.
 {% endblock %}

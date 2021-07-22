@@ -20,8 +20,8 @@
     </head>
 
     <body>
-        <header class="mb-3 border rounded bg-light bg-gradient">
-            {% include ('fragment/nav.html.twig') %}
+        <header>
+            {% include ('fragment/header.html.twig') %}
         </header>
 
         <div>
@@ -43,10 +43,8 @@
             {% endblock %}
         </main>
 
-        <footer class="border rounded p-2 text-center">
-            <div>
-                &copy; {{ "now"|date("Y") }} - PoueTeam
-            </div>
+        <footer>
+            {% include ('fragment/footer.html.twig') %}
         </footer>
     </body>
 </html>

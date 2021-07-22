@@ -14,7 +14,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class EditUserType extends AbstractType {
+class EditUserFormType extends AbstractType {
 
     public function buildForm(FormBuilderInterface $builder, array $options) {
         $builder
@@ -54,7 +54,8 @@ class EditUserType extends AbstractType {
                 'choice_label' => function (Campus $campus) {
                     return $campus->getName();
                 },
-                'disabled' => true
+                'disabled' => true,
+                'mapped' => false
             ]);
     }
 

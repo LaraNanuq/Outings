@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\User;
-use App\Form\EditUserType;
+use App\Form\EditUserFormType;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
@@ -40,7 +40,7 @@ class UserController extends AbstractController {
      */
     public function edit(Request $request, UserPasswordHasherInterface $hasher): Response {
         $user = $this->getUser();
-        $form = $this->createForm(EditUserType::class, $user);
+        $form = $this->createForm(EditUserFormType::class, $user);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $plainPassword = $form->get("plainPassword")->getData();
@@ -56,7 +56,7 @@ class UserController extends AbstractController {
             ]);
         }
         return  $this->renderForm('user/edit.html.twig', [
-            'userForm' => $form
+            'editForm' => $form
         ]);
     }
 

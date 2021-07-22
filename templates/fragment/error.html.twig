@@ -1,0 +1,21 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+    <h1 class="h3">
+        {% block errorTitle %}
+            Erreur
+        {% endblock %}
+    </h1>
+
+    <div class="alert alert-danger">
+        {% block errorText %}
+            Une erreur innatendue s'est produite.
+        {% endblock %}
+    </div>
+
+    <div class="text-center">
+        <div class="btn-group">
+            {% include 'fragment/home.html.twig' %}
+        </div>
+    </div>
+{% endblock %}

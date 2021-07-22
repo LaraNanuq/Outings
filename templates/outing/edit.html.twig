@@ -21,64 +21,73 @@
     {% endif %}
     </h1>
 
-    {{ form_start(outingForm) }}
-        {{ form_errors(outingForm) }}
-
+    {{ form_start(editForm) }}
+        {{ form_errors(editForm) }}
         <div class="row">
             <div class="col d-flex">
                 <fieldset class="w-100">
-                    <legend>Détails</legend>
-                    {{ form_row(outingForm.name) }}
-                    {{ form_row(outingForm.date) }}
-                    {{ form_row(outingForm.registrationClosingDate) }}
-                    {{ form_row(outingForm.maxRegistrants) }}
-                    {{ form_row(outingForm.duration) }}
-                    {{ form_row(outingForm.description) }}
-                    {{ form_row(outingForm.campus) }}
+                    <legend>Informations</legend>
+                    {{ form_row(editForm.name) }}
+                    {{ form_row(editForm.date) }}
+                    {{ form_row(editForm.registrationClosingDate) }}
+                    {{ form_row(editForm.maxRegistrants) }}
+                    {{ form_row(editForm.duration) }}
+                    {{ form_row(editForm.description) }}
+                    {{ form_row(editForm.campus) }}
                 </fieldset>
             </div>
 
             <div class="col d-flex">
                 <fieldset class="w-100">
                     <legend>Lieu</legend>
-                    {{ form_row(outingForm.newLocation.city) }}
+                    {{ form_row(editForm.newLocation.city) }}
 
                     <fieldset id="location-form-group">
                         <div class="text-center">
-                            {{ form_row(outingForm.location) }}
+                            {{ form_row(editForm.location) }}
                         </div>
-                        <div class="form-group row">
-                            <label for="street" class="form-label col-3">Rue</label>
-                            <span id="street" class="text-secondary col"></span>
+                        <div class="row">
+                            <label for="street" class="col-3 form-label text-secondary text-end">Rue</label>
+                            <span id="street" class="col form-label">...</span>
                         </div>
-                        <div class="form-group row">
-                            <label for="latitude" class="form-label col-3">Latitude</label>
-                            <span id="latitude" class="text-secondary col"></span>
+                        <div class="row">
+                            <label for="latitude" class="col-3 form-label text-secondary text-end">Latitude</label>
+                            <span id="latitude" class="col form-label">...</span>
                         </div>
-                        <div class="form-group row">
-                            <label for="longitude" class="form-label col-3">Longitude</label>
-                            <span id="longitude" class="text-secondary col"></span>
+                        <div class="row">
+                            <label for="longitude" class="col-3 form-label text-secondary text-end">Longitude</label>
+                            <span id="longitude" class="col form-label">...</span>
                         </div>
                     </fieldset>
 
-                    {{ form_row(outingForm.isNewLocation) }}
+                    {{ form_row(editForm.isNewLocation) }}
                     <fieldset id="new-location-form-group">
                         <div class="text-center">
-                            {{ form_label(outingForm.newLocation) }}
+                            {{ form_label(editForm.newLocation) }}
                         </div>
-                        {{ form_errors(outingForm.newLocation) }}
-                        {{ form_widget(outingForm.newLocation) }}
+                        {{ form_errors(editForm.newLocation) }}
+                        {{ form_widget(editForm.newLocation) }}
                     </fieldset>
                 </fieldset>
             </div>
         </div>
 
-        <div class="btn-group">
-            {{ form_row(outingForm.save) }}
-            {{ form_row(outingForm.saveAndPublish) }}
-            {% if (outing.id) %}
-                <a href="{{ path('outing_delete', {id: outing.id}) }}" class="mb-3 btn btn-sm btn-danger">Supprimer</a>
-            {% endif %}
+        <div class="text-center">
+            <div class="btn-group">
+                {{ form_row(editForm.save) }}
+                {{ form_row(editForm.saveAndPublish) }}
+                {% if (outing.id) %}
+                    <div class="mb-3">
+                        <a href="{{ path('outing_delete', {id: outing.id}) }}" class=" btn btn-sm btn-danger">Supprimer</a>
+                    </div>
+                {% endif %}
+            </div>
         </div>
-    {{ form_end(outingForm) }}
+            
+        <div class="text-center">
+            <div class="btn-group">
+                {% include "fragment/home.html.twig" %}
+            </div>
+        </div>
+    {{ form_end(editForm) }}
 {% endblock %}

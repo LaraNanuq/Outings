@@ -5,32 +5,37 @@
 {% endblock %}
 
 {% block body %}
-    <h1 class="h3">Connexion</h1>
+    {# <h1 class="h3">Connexion</h1> #}
 
     <form method="post">
-        {% if error %}
-            <div class="alert alert-danger">
-                {{ error.messageKey|trans(error.messageData, 'security') }}
+        <fieldset>
+            <legend>Connexion</legend>
+            {% if error %}
+                <div class="alert alert-danger">
+                    {{ error.messageKey|trans(error.messageData, 'security') }}
+                </div>
+            {% endif %}
+            <div class="mb-3">
+                <label for="alias-or-email" class="form-label">Pseudo ou email</label>
+                <input type="text" value="{{ lastUsername }}" name="alias_or_email" id="alias-or-email" class="form-control" required autofocus>
             </div>
-        {% endif %}
-        <div class="mb-3">
-            <label for="alias-or-email" class="form-label">Pseudo ou email</label>
-            <input type="text" value="{{ lastUsername }}" name="alias_or_email" id="alias-or-email" class="form-control" required autofocus>
-        </div>
-        <div class="mb-3">
-            <label for="password" class="form-label">Mot de passe</label>
-            <input type="password" name="password" id="password" class="form-control" required>
-        </div>
-        <div class="mb-3">
-            <input type="checkbox" name="remember_me" id="remember-me" class="checkbox">
-            <label for="remember-me" class="form-label">Se souvenir de moi</label>
-        </div>
-        <input type="hidden" name="csrf_token" value="{{ csrf_token('authenticate') }}">
+            <div class="mb-3">
+                <label for="password" class="form-label">Mot de passe</label>
+                <input type="password" name="password" id="password" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <input type="checkbox" name="remember_me" id="remember-me" class="checkbox">
+                <label for="remember-me" class="form-label">Se souvenir de moi</label>
+            </div>
+            <input type="hidden" name="csrf_token" value="{{ csrf_token('authenticate') }}">
+        </fieldset>
 
-        <div class="btn-group">
-            <button type="submit" class="btn btn-sm btn-primary">
-                Connexion
-            </button>
+        <div class="text-center">
+            <div class="btn-group">
+                <button type="submit" class="btn btn-sm btn-primary">
+                    Connexion
+                </button>
+            </div>
         </div>
     </form>
 {% endblock %}

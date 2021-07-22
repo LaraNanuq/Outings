@@ -57,22 +57,6 @@ class SearchOutingFormType extends AbstractType {
                 'label' => "Sorties terminées",
                 'required' => false
             ]);
-
-        // Default values on form load
-        /*$builder->addEventListener(
-            FormEvents::PRE_SET_DATA,
-            function (FormEvent $event) {
-                $form = $event->getForm();
-                $search = $event->getData();
-                if (is_null($search)) {
-                    $search = new SearchOutingFilter();
-                    $search->setIsUserOrganizer(true);
-                    $search->setIsUserRegistrant(true);
-                    $search->setIsUserNotRegistrant(true);
-                    $event->setData($search);
-                }
-            }
-        );*/
     }
 
     public function configureOptions(OptionsResolver $resolver) {
