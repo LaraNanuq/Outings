@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Outing;
+use App\Form\CancelOutingFormType;
 use App\Form\EditOutingFormType;
 use App\Form\SearchOutingFormType;
 use App\Repository\OutingRepository;
@@ -163,6 +164,7 @@ class OutingController extends AbstractController {
                     }
 
                     $location = $outing->getLocation();
+                    dump($location);
                     if (!$location->getId()) {
                         $entityManager->persist($location);
                     }
@@ -189,22 +191,91 @@ class OutingController extends AbstractController {
     /**
      * @Route("/cancel/{id}", name = "cancel", requirements = {"id"="\d+"})
      */
-    public function cancel(int $id): Response {
-        return $this->render('outing/cancel.html.twig', [
+    public function cancel(
+        int $id,
+        Request $request,
+        OutingRepository $outingRepository,
+        OutingStateRepository $outingStateRepository,
+        EntityManagerInterface $entityManager
+    ): Response {
+
+        // Check outing, user and outing state
+        $outing = $outingRepository->find($id);
+        if (!$outing) {
+            throw $this->createNotFoundException("La sortie n'existe pas ou a été supprimée.");
+        }
+        if ((!$this->isGranted('ROLE_ADMIN')) && ($this->getUser() !== $outing->getOrganizer())) {
+            throw $this->createAccessDeniedException("La sortie ne peut pas être annulée car vous n'êtes pas son organisateur.");
+        }
+        $states = $outingStateRepository->findBy(['label' => ['OPEN', 'PENDING']]);
+        if (!in_array($outing->getState(), $states)) {
+            $this->addFlash('danger', "La sortie ne peut pas être annulée car elle n'est pas ouverte ou en attente.");
+            return $this->redirectToRoute('outing_list');
+        }
+
+        // Handle form
+        $form = $this->createForm(CancelOutingFormType::class, $outing);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $state = $outingStateRepository->findOneBy(['label' => 'CANCELED']);
+            $outing->setState($state);
+            $entityManager->persist($outing);
+            $entityManager->flush();
+            $this->addFlash('success', 'La sortie a été annulée.');
+            return $this->redirectToRoute('outing_list');
+        }
+        return $this->renderForm('outing/cancel.html.twig', [
+            'cancelForm' => $form,
+            'outing' => $outing
         ]);
     }
 
     /**
      * @Route("/register/{id}", name = "register", requirements = {"id"="\d+"})
      */
-    public function register(int $id): Response {
+    public function register(
+        int $id,
+        OutingRepository $outingRepository,
+        OutingStateRepository $outingStateRepository
+    ): Response {
+        // TODO: Vérifications préalables
+        $outing = $outingRepository->find($id);
+        if (!$outing) {
+            throw $this->createNotFoundException("La sortie n'existe pas ou a été supprimée.");
+        }
+        if (($this->getUser() == $outing->getRegistrants())) {
+            throw $this->createAccessDeniedException("Vous êtes déjà inscrit à cette sortie");
+        }
+        $states = $outingStateRepository->findBy(['label' => ['OPEN', 'PENDING']]);
+        if (!in_array($outing->getState(), $states)) {
+            $this->addFlash('danger', 'La sortie doit être "ouverte" pour pouvoir y participer.');
+        }
+
+
         return $this->redirectToRoute('outing_list');
     }
 
     /**
      * @Route("/unregister/{id}", name = "unregister", requirements = {"id"="\d+"})
      */
-    public function unregister(int $id): Response {
+    public function unregister(
+        int $id,
+        OutingStateRepository $outingStateRepository,
+        OutingRepository $outingRepository
+    ): Response {
+        // TODO: Vérifications préalables
+        $outing = $outingRepository->find($id);
+        if (!$outing) {
+            throw $this->createNotFoundException("La sortie n'existe pas ou a été supprimée.");
+        }
+        if (($this->getUser() !== $outing->getRegistrants())) {
+            throw $this->createAccessDeniedException("Vous ne participez pas à cette sortie.");
+        }
+        $states = $outingStateRepository->findOneBy(['label' => 'OPEN']);
+        if (!in_array($outing->getState(), $states)) {
+            $this->addFlash('danger', 'Désinscription impossible, la sortie a déjà commencé');
+        }
+
         return $this->redirectToRoute('outing_list');
     }
 
@@ -212,11 +283,7 @@ class OutingController extends AbstractController {
      * @Route("/delete/{id}", name = "delete", requirements = {"id"="\d+"})
      */
     public function delete(int $id): Response {
-        $entityManager = $this->getDoctrine()->getManager();
-        $outing = $entityManager->getRepository('App:Outing')->find($id);
-
-        $entityManager->remove($outing);
-        $entityManager->flush();
+        // TODO: Vérifications préalables
 
         return $this->redirectToRoute('outing_list');
     }
