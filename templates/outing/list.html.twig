@@ -85,11 +85,15 @@
                                 {% else %}
                                     <a href="{{ path('outing_detail', {id: outing.id}) }}" class="btn btn-sm btn-secondary">Voir</a>
                                 {% endif %}
+                            {% endif %}
+
+                            {% if ((app.user == outing.organizer) or (is_granted("ROLE_ADMIN"))) %}
                                 {% if (outing.state.label in ["OPEN", "PENDING"]) %}
                                     <a href="{{ path('outing_cancel', {id: outing.id}) }}" class="mx-1 btn btn-sm btn-danger">Annuler</a>
                                 {% endif %}
-
-                            {% else %}
+                            {% endif %}
+                            
+                            {% if (app.user != outing.organizer) %}
                                 <a href="{{ path('outing_detail', {id: outing.id}) }}" class="btn btn-sm btn-secondary">Voir</a>
                                 {% if (app.user in outing.registrants) %}
                                     {% if (outing.state.label in ["OPEN", "PENDING"]) %}

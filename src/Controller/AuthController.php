@@ -31,7 +31,7 @@ class AuthController extends AbstractController {
      * @Route("/logout", name = "logout")
      */
     public function logout(): Response {
-        throw new \LogicException('Intercepted by the logout key on the firewall');
+        throw new \LogicException('Intercepted by the logout key on the firewall.');
     }
 
     /**
