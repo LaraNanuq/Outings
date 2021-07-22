@@ -46,7 +46,8 @@ class EditUserFormType extends AbstractType {
                 'mapped' => false
             ])
             ->add('phone', TelType::class, [
-                'label' => 'Téléphone'
+                'label' => 'Téléphone',
+                'required' => false
             ])
             ->add('campus', EntityType::class, [
                 'label' => 'Campus',
