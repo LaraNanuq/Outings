@@ -1,9 +1,77 @@
 {% extends 'base.html.twig' %}
 
+
+
 {% block title %}
+
     Mon profil | {{ parent() }}
+
+
+    Mon profil | {{ parent() }}
+
+
 {% endblock %}
 
+
+
 {% block body %}
+
     <h1 class="h3">Mon profil</h1>
+
+
+
+
+
+
+    {{ form_start(form) }}
+
+    {{ form_widget(form) }}
+
+    <button class="btn btn-primary" type="submit">Valider</button>
+
+
+
+    {{ form_end(form) }}
+
+
+
+
+    {# <link rel="stylesheet" href="{{asset('css/bootstrap.css')}}"> }#
+
+
+    {#
+
+    <div class="grix xs2 container">
+        <div>Pseudo :</div>
+        <div>{{user.alias}}</div>
+        <div>Nom :</div>
+        <div>{{user.lastName}}</div>
+        <div>Prenom :</div>
+        <div>{{user.firstName}}</div>
+        <div>Telephone :</div>
+        <div>{{user.phone}}</div>
+        <div>Email :</div>
+        <div>{{user.email}}</div>
+        <div>Mot de passe :</div>
+        <div>{{user.password}}</div>
+        <div>Confirmation :</div>
+        <div>{{user.password}}</div>
+    </div>
+        <div class="dropdown">
+        <div>Campus</div>
+        <div>{{user.campus.name}}</div>
+
+        </div>
+        <div class="button telechargement">
+
+
+        </div>
+        <div class="button Enregister">
+
+
+    <div class="button Annuler">
+
+    </div>
+   </div> #}
 {% endblock %}
+
