@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Outing;
+use App\Entity\User;
 use App\Form\CancelOutingFormType;
 use App\Form\EditOutingFormType;
+use App\Form\SearchOutingFilter;
 use App\Form\SearchOutingFormType;
 use App\Repository\OutingRepository;
 use App\Repository\OutingStateRepository;
@@ -18,10 +20,26 @@ use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route("/outing", name = "outing_")
- * 
+ *
  * @author Marin Taverniers
+ * @author Ayelen Dumas
  */
-class OutingController extends AbstractController {
+class OutingController extends AbstractController
+{
+    private EntityManagerInterface $entityManager;
+    private OutingRepository $outingRepository;
+    private OutingStateRepository $outingStateRepository;
+
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        OutingRepository $outingRepository,
+        OutingStateRepository $outingStateRepository
+    )
+    {
+        $this->entityManager = $entityManager;
+        $this->outingRepository = $outingRepository;
+        $this->outingStateRepository = $outingStateRepository;
+    }
 
     /**
      * @Route("/list", name = "list")
@@ -29,23 +47,16 @@ class OutingController extends AbstractController {
     public function list(
         Request $request,
         OutingRepository $outingRepository
-    ): Response {
-
-        /*
-        // Default values
+    ): Response
+    {
         $searchFilter = new SearchOutingFilter();
+
+        // Default values
         $searchFilter->setIsUserOrganizer($request->query->getBoolean('isUserOrganizer', true));
         $searchFilter->setIsUserRegistrant($request->query->getBoolean('isUserRegistrant', true));
         $searchFilter->setIsUserNotRegistrant($request->query->getBoolean('isUserNotRegistrant', true));
-        // TODO: Pagination
-        $searchFilter->setPage($request->query->getInt('page', 1));
-        $searchFilter->setItemsPerPage($request->query->getInt('itemsPerPage', 50));
         $searchForm = $this->createForm(SearchOutingFormType::class, $searchFilter);
-        */
-
-        $searchForm = $this->createForm(SearchOutingFormType::class);
         $searchForm->handleRequest($request);
-        $searchFilter = $searchForm->getData();
         $outings = $outingRepository->findWithSearchFilter($searchFilter, $this->getUser());
         return $this->renderForm('outing/list.html.twig', [
             'searchForm' => $searchForm,
@@ -56,11 +67,11 @@ class OutingController extends AbstractController {
     /**
      * @Route("/{id}", name = "detail", requirements = {"id"="\d+"})
      */
-    public function detail(int $id, OutingRepository $outingRepository): Response {
-        $outing = $outingRepository->find($id);
-        if (!$outing) {
-            throw $this->createNotFoundException("La sortie n'existe pas ou a été supprimée.");
-        }
+    public function detail(int $id): Response
+    {
+        $outing = $this->outingRepository->find($id);
+        $this->validateOutingExists($outing);
+        $this->validateIsOutingPublic($outing);
         return $this->render('outing/detail.html.twig', [
             "outing" => $outing
         ]);
@@ -69,69 +80,29 @@ class OutingController extends AbstractController {
     /**
      * @Route("/create", name = "create")
      */
-    public function create(
-        Request $request,
-        EntityManagerInterface $entityManager,
-        OutingStateRepository $outingStateRepository
-    ): Response {
+    public function create(Request $request): Response
+    {
         $outing = new Outing();
-        $form = $this->createForm(EditOutingFormType::class, $outing)
-            ->add('save', SubmitType::class, [
-                'label' => 'Enregistrer comme brouillon',
-                'attr' => ['class' => 'btn-sm btn-primary']
-            ])
-            ->add('saveAndPublish', SubmitType::class, [
-                'label' => 'Enregistrer et publier',
-                'attr' => ['class' => 'btn-sm btn-success mx-1']
-            ]);
-        $form->handleRequest($request);
-
-        // Do not validate the form on Ajax requests
-        if (!$request->isXmlHttpRequest()) {
-            if ($form->isSubmitted() && $form->isValid()) {
-                $user = $this->getUser();
-                $outing->setOrganizer($user);
-
-                if ($form instanceof Form) {
-                    if ($form->getClickedButton() === $form->get('saveAndPublish')) {
-                        $outing->setState($outingStateRepository->findOneBy(['label' => 'OPEN']));
-                        $successText = 'La sortie a été enregistrée et publiée.';
-                    } else {
-                        $outing->setState($outingStateRepository->findOneBy(['label' => 'DRAFT']));
-                        $successText = 'La sortie a été enregistrée.';
-                    }
-                }
-
-                $location = $outing->getLocation();
-                if (!$location->getId()) {
-                    $entityManager->persist($location);
-                }
-                $entityManager->persist($outing);
-                $entityManager->flush();
-                $this->addFlash('success', $successText);
-                return $this->redirectToRoute('main_home');
-            }
-        }
-        return $this->renderForm('outing/edit.html.twig', [
-            'outingForm' => $form,
-            'outing' => $outing
-        ]);
+        return $this->processEditOutingForm($outing, $request);
     }
 
     /**
      * @Route("/edit/{id}", name = "edit", requirements = {"id"="\d+"})
      */
-    public function edit(
-        int $id,
-        OutingRepository $outingRepository,
-        OutingStateRepository $outingStateRepository,
-        Request $request,
-        EntityManagerInterface $entityManager
-    ): Response {
-        $outing = $outingRepository->find($id);
-        if (!$outing) {
-            throw $this->createNotFoundException("La sortie n'existe pas ou a été supprimée.");
+    public function edit(int $id, Request $request): Response
+    {
+        $outing = $this->outingRepository->find($id);
+        $this->validateOutingExists($outing);
+        $this->validateIsUserOrganizer($this->getUser(), $outing);
+        if (!$this->isOutingDraft($outing)) {
+            $this->addFlash('danger', "La sortie '{$outing->getName()}' a été publiée et n'est plus modifiable.");
+            return $this->redirectToRoute('outing_list');
         }
+        return $this->processEditOutingForm($outing, $request);
+    }
+
+    private function processEditOutingForm(Outing $outing, Request $request): Response
+    {
         $form = $this->createForm(EditOutingFormType::class, $outing)
             ->add('save', SubmitType::class, [
                 'label' => 'Enregistrer comme brouillon',
@@ -139,40 +110,32 @@ class OutingController extends AbstractController {
             ])
             ->add('saveAndPublish', SubmitType::class, [
                 'label' => 'Enregistrer et publier',
-                'attr' => ['class' => 'btn-sm btn-success mx-1']
-            ])
-            ->add('delete', SubmitType::class, [
-                'label' => 'Supprimer',
-                'attr' => ['class' => 'btn-sm btn-danger']
+                'attr' => ['class' => 'mx-1 btn-sm btn-success']
             ]);
         $form->handleRequest($request);
 
-        // Do not validate the form on Ajax requests
+        // Do not handle the submission on Ajax request
         if (!$request->isXmlHttpRequest()) {
             if ($form->isSubmitted() && $form->isValid() && $form instanceof Form) {
-                if ($form->getClickedButton() === $form->get('delete')) {
-                    $successText = 'La sortie a été supprimée.';
-                    // TODO: Suppression via url, avec l'id
-                    $entityManager->remove($outing);
-                } else {
-                    if ($form->getClickedButton() === $form->get('save')) {
-                        $successText = 'La sortie a été enregistrée.';
-                    } else {
-                        // TODO: Publication via url, avec l'id
-                        $outing->setState($outingStateRepository->findOneBy(['label' => 'OPEN']));
-                        $successText = 'La sortie a été enregistrée et publiée.';
-                    }
-
-                    $location = $outing->getLocation();
-                    dump($location);
-                    if (!$location->getId()) {
-                        $entityManager->persist($location);
-                    }
-                    $entityManager->persist($outing);
+                if (!$outing->getId()) {
+                    $user = $this->getUser();
+                    $outing->setOrganizer($user);
                 }
-                $entityManager->flush();
-                $this->addFlash('success', $successText);
-                return $this->redirectToRoute('main_home');
+                if ($form->getClickedButton() === $form->get('save')) {
+                    $this->setOutingState($outing, 'DRAFT');
+                    $text = "La sortie '{$outing->getName()}' a été enregistrée comme brouillon.";
+                } else {
+                    $this->setOutingState($outing, 'OPEN');
+                    $text = "La sortie '{$outing->getName()}' a été enregistrée et publiée.";
+                }
+                $location = $outing->getLocation();
+                if (!$location->getId()) {
+                    $this->entityManager->persist($location);
+                }
+                $this->entityManager->persist($outing);
+                $this->entityManager->flush();
+                $this->addFlash('success', $text);
+                return $this->redirectToRoute('outing_list');
             }
         }
         return $this->renderForm('outing/edit.html.twig', [
@@ -184,44 +147,43 @@ class OutingController extends AbstractController {
     /**
      * @Route("/publish/{id}", name = "publish", requirements = {"id"="\d+"})
      */
-    public function publish(int $id): Response {
+    public function publish(int $id): Response
+    {
+        $outing = $this->outingRepository->find($id);
+        $this->validateOutingExists($outing);
+        $this->validateIsUserOrganizer($this->getUser(), $outing);
+        if (!$this->isOutingDraft($outing)) {
+            $this->addFlash('primary', "La sortie '{$outing->getName()}' est déjà publiée.");
+        } else {
+            $this->setOutingState($outing, 'OPEN');
+            $this->entityManager->persist($outing);
+            $this->entityManager->flush();
+            $this->addFlash('success', "La sortie '{$outing->getName()}' a été publiée.");
+        }
         return $this->redirectToRoute('outing_list');
     }
 
     /**
      * @Route("/cancel/{id}", name = "cancel", requirements = {"id"="\d+"})
      */
-    public function cancel(
-        int $id,
-        Request $request,
-        OutingRepository $outingRepository,
-        OutingStateRepository $outingStateRepository,
-        EntityManagerInterface $entityManager
-    ): Response {
-
-        // Check outing, user and outing state
-        $outing = $outingRepository->find($id);
-        if (!$outing) {
-            throw $this->createNotFoundException("La sortie n'existe pas ou a été supprimée.");
+    public function cancel(int $id, Request $request): Response
+    {
+        $outing = $this->outingRepository->find($id);
+        $this->validateOutingExists($outing);
+        if (!$this->isGranted('ROLE_ADMIN')) {
+            $this->validateIsUserOrganizer($this->getUser(), $outing);
         }
-        if ((!$this->isGranted('ROLE_ADMIN')) && ($this->getUser() !== $outing->getOrganizer())) {
-            throw $this->createAccessDeniedException("La sortie ne peut pas être annulée car vous n'êtes pas son organisateur.");
-        }
-        $states = $outingStateRepository->findBy(['label' => ['OPEN', 'PENDING']]);
-        if (!in_array($outing->getState(), $states)) {
-            $this->addFlash('danger', "La sortie ne peut pas être annulée car elle n'est pas ouverte ou en attente.");
+        if (!$this->isOutingPending($outing)) {
+            $this->addFlash('danger', "La sortie '{$outing->getName()}' a commencé et n'est plus annulable.");
             return $this->redirectToRoute('outing_list');
         }
-
-        // Handle form
         $form = $this->createForm(CancelOutingFormType::class, $outing);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $state = $outingStateRepository->findOneBy(['label' => 'CANCELED']);
-            $outing->setState($state);
-            $entityManager->persist($outing);
-            $entityManager->flush();
-            $this->addFlash('success', 'La sortie a été annulée.');
+            $this->setOutingState($outing, 'CANCELED');
+            $this->entityManager->persist($outing);
+            $this->entityManager->flush();
+            $this->addFlash('success', "La sortie '{$outing->getName()}' a été annulée.");
             return $this->redirectToRoute('outing_list');
         }
         return $this->renderForm('outing/cancel.html.twig', [
@@ -238,20 +200,23 @@ class OutingController extends AbstractController {
         OutingRepository $outingRepository,
         OutingStateRepository $outingStateRepository
     ): Response {
-        // TODO: Vérifications préalables
+        $user = $this->getUser();
         $outing = $outingRepository->find($id);
-        if (!$outing) {
-            throw $this->createNotFoundException("La sortie n'existe pas ou a été supprimée.");
+        $this->validateOutingExists($outing);
+        if (in_array($user, $outing->getRegistrants()->getValues())) {
+            $this->addFlash('primary', "Vous êtes déjà inscrit à la sortie {$outing->getName()}");
+            return $this->redirectToRoute('outing_list');
         }
-        if (($this->getUser() == $outing->getRegistrants())) {
-            throw $this->createAccessDeniedException("Vous êtes déjà inscrit à cette sortie");
-        }
-        $states = $outingStateRepository->findBy(['label' => ['OPEN', 'PENDING']]);
-        if (!in_array($outing->getState(), $states)) {
+        if (!$this->isOutingOpen($outing)) {
             $this->addFlash('danger', 'La sortie doit être "ouverte" pour pouvoir y participer.');
+            return $this->redirectToRoute('outing_list');
         }
+        $outing->addRegistrant($user);
+        $this->entityManager->persist($outing);
+        $this->entityManager->flush();
+        $this->addFlash('success', "Vous êtes inscrit à la sortie {$outing->getName()}");
 
-
+        //
         return $this->redirectToRoute('outing_list');
     }
 
@@ -263,28 +228,91 @@ class OutingController extends AbstractController {
         OutingStateRepository $outingStateRepository,
         OutingRepository $outingRepository
     ): Response {
-        // TODO: Vérifications préalables
+        $user = $this->getUser();
         $outing = $outingRepository->find($id);
-        if (!$outing) {
-            throw $this->createNotFoundException("La sortie n'existe pas ou a été supprimée.");
+        $this->validateOutingExists($outing);
+        if (!in_array($user, $outing->getRegistrants()->getValues())) {
+            $this->addFlash('danger', "Vous ne participez pas à cette sortie");
+            return $this->redirectToRoute('outing_list');
         }
-        if (($this->getUser() !== $outing->getRegistrants())) {
-            throw $this->createAccessDeniedException("Vous ne participez pas à cette sortie.");
-        }
-        $states = $outingStateRepository->findOneBy(['label' => 'OPEN']);
-        if (!in_array($outing->getState(), $states)) {
-            $this->addFlash('danger', 'Désinscription impossible, la sortie a déjà commencé');
+        if (!$this->isOutingPending($outing)) {
+            $this->addFlash('danger', 'La sortie doit être "en attente" pour pouvoir y participer.');
+            return $this->redirectToRoute('outing_list');
         }
 
+        $outing->removeRegistrant($user);
+        $this->entityManager->persist($outing);
+        $this->entityManager->flush();
+        $this->addFlash('success', "Vous vous êtes désinscrit à la sortie {$outing->getName()}");
         return $this->redirectToRoute('outing_list');
     }
 
     /**
      * @Route("/delete/{id}", name = "delete", requirements = {"id"="\d+"})
      */
-    public function delete(int $id): Response {
-        // TODO: Vérifications préalables
-
+    public function delete(int $id): Response
+    {
+        $outing = $this->outingRepository->find($id);
+        $this->validateOutingExists($outing);
+        $this->validateIsUserOrganizer($this->getUser(), $outing);
+        if (!$this->isOutingDraft($outing)) {
+            $this->addFlash('danger', "La sortie '{$outing->getName()}' a été publiée et n'est plus supprimable.");
+        } else {
+            $this->entityManager->remove($outing);
+            $this->entityManager->flush();
+            $this->addFlash('success', "La sortie '{$outing->getName()}' a été supprimée.");
+        }
         return $this->redirectToRoute('outing_list');
+    }
+
+    /* Service */
+
+    private function setOutingState(Outing &$outing, string $label)
+    {
+        $state = $this->outingStateRepository->findOneBy(['label' => $label]);
+        $outing->setState($state);
+    }
+
+    private function isOutingDraft(Outing $outing): bool
+    {
+        return (strtoupper($outing->getState()->getLabel()) === 'DRAFT');
+    }
+
+    private function isOutingPublic(Outing $outing): bool
+    {
+        return (!in_array(strtoupper($outing->getState()->getLabel()), ['DRAFT', 'ARCHIVED']));
+    }
+
+    private function isOutingOpen(Outing $outing): bool
+    {
+        return (strtoupper($outing->getState()->getLabel() === 'OPEN'));
+    }
+
+    private function isOutingPending(Outing $outing): bool
+    {
+        return (in_array(strtoupper($outing->getState()->getLabel()), ['OPEN', 'PENDING']));
+    }
+
+    /* Validation exceptions */
+
+    private function validateOutingExists(?Outing $outing): void
+    {
+        if (!$outing) {
+            throw $this->createNotFoundException("La sortie n'existe pas ou a été supprimée.");
+        }
+    }
+
+    private function validateIsUserOrganizer(User $user, Outing $outing): void
+    {
+        if ($user !== $outing->getOrganizer()) {
+            throw $this->createAccessDeniedException("La sortie ne peut être gérée que par son organisateur.");
+        }
+    }
+
+    private function validateIsOutingPublic(Outing $outing): void
+    {
+        if (!$this->isOutingPublic($outing)) {
+            throw $this->createAccessDeniedException("La sortie n'a pas encore été publiée ou a été archivée.");
+        }
     }
 }
