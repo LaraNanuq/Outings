@@ -35,7 +35,7 @@ class EditUserFormType extends AbstractType {
                     'label' => 'Mot de passe'
                 ],
                 'second_options' => [
-                    'label' => 'Confirmation du mot de passe'
+                    'label' => 'Confirmation'
                 ],
                 'type' => PasswordType::class,
                 'invalid_message' => 'The password fields does not match.',

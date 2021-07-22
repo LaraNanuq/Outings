@@ -29,7 +29,7 @@ class Location {
      *      max = 50,
      *      maxMessage = "The name is too long (maximum {{ limit }} characters)."
      * )
-     * @Assert\Regex(pattern = "/^[-' \w]*$/", message = "The name contains illegal characters.")
+     * @Assert\Regex(pattern = "/^[-' \w\p{L}]*$/u", message = "The name contains illegal characters.")
      */
     private $name;
 
@@ -64,7 +64,7 @@ class Location {
      *      max = 50,
      *      maxMessage = "The street is too long (maximum {{ limit }} characters)."
      * )
-     * @Assert\Regex(pattern = "/^[-' \w]*$/", message = "The street contains illegal characters.")
+     * @Assert\Regex(pattern = "/^[-' \w\p{L}]*$/u", message = "The street contains illegal characters.")
      */
     private $street;
 

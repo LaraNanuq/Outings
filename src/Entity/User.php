@@ -47,7 +47,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
      *      max = 50,
      *      maxMessage = "The last name is too long (maximum {{ limit }} characters)."
      * )
-     * @Assert\Regex(pattern = "/^[-' a-zA-Z]*$/", message = "The last name contains illegal characters.")
+     * @Assert\Regex(pattern = "/^[-' a-zA-Z\p{L}]*$/u", message = "The last name contains illegal characters.")
      */
     private $lastName;
 
@@ -58,7 +58,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
      *      max = 50,
      *      maxMessage = "The first name is too long (maximum {{ limit }} characters)."
      * )
-     * @Assert\Regex(pattern = "/^[-' a-zA-Z]*$/", message = "The first name contains illegal characters.")
+     * @Assert\Regex(pattern = "/^[-' a-zA-Z\p{L}]*$/u", message = "The first name contains illegal characters.")
      */
     private $firstName;
 
