@@ -12,6 +12,9 @@ use Symfony\Component\Form\Extension\Core\Type\SearchType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * @author Marin Taverniers
+ */
 class SearchOutingFormType extends AbstractType {
 
     public function buildForm(FormBuilderInterface $builder, array $options) {
@@ -40,7 +43,7 @@ class SearchOutingFormType extends AbstractType {
                 'required' => false
             ])
 
-            // TODO: Au moins une case cochée ?
+            // TODO: Au moins une case cochée
             ->add('isUserOrganizer', CheckboxType::class, [
                 'label' => "Sorties que j'organise",
                 'required' => false
@@ -67,7 +70,7 @@ class SearchOutingFormType extends AbstractType {
         ]);
     }
 
-    // Remove prefix for parameters
+    // Remove prefix for query parameters
     public function getBlockPrefix() {
         return '';
     }

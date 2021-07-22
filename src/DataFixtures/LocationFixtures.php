@@ -21,7 +21,7 @@ class LocationFixtures extends Fixture implements DependentFixtureInterface {
         $location1->setCity($this->getReference(CityFixtures::class . '1'));
         $manager->persist($location1);
         $this->addReference(self::class . '1', $location1);
-        
+
         $location2 = new Location();
         $location2->setName('Pont neuf');
         $location2->setLatitude('52.4821521');

@@ -14,6 +14,9 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
  * @method User|null findOneBy(array $criteria, array $orderBy = null)
  * @method User[]    findAll()
  * @method User[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * 
+ * @author Ayelen Dumas
+ * @author Marin Taverniers
  */
 class UserRepository extends ServiceEntityRepository implements UserLoaderInterface {
 

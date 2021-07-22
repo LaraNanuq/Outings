@@ -2,26 +2,31 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
+use App\Form\EditUserFormType;
 use App\Repository\UserRepository;
+use App\Service\UserService;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Entity\User;
-use App\Form\EditUserFormType;
-use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * @Route("/user", name = "user_")
+ * 
+ * @author Daisy Greenway
+ * @author Marin Taverniers
  */
 class UserController extends AbstractController {
     private EntityManagerInterface $entityManager;
     private UserRepository $userRepository;
+    private UserService $userService;
 
-    public function __construct(EntityManagerInterface $entityManager, UserRepository $userRepository) {
+    public function __construct(EntityManagerInterface $entityManager, UserRepository $userRepository, UserService $userService) {
         $this->entityManager = $entityManager;
         $this->userRepository = $userRepository;
+        $this->userService = $userService;
     }
 
     /**
@@ -38,15 +43,14 @@ class UserController extends AbstractController {
     /**
      * @Route("/edit", name = "edit")
      */
-    public function edit(Request $request, UserPasswordHasherInterface $hasher): Response {
+    public function edit(Request $request): Response {
         $user = $this->getUser();
         $form = $this->createForm(EditUserFormType::class, $user);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $plainPassword = $form->get("plainPassword")->getData();
+            $plainPassword = $form->get('plainPassword')->getData();
             if ($plainPassword) {
-                $password = $hasher->hashPassword($user, $plainPassword);
-                $user->setPassword($password);
+                $this->userService->setPassword($user, $plainPassword);
             }
             $this->entityManager->persist($user);
             $this->entityManager->flush();

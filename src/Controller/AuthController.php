@@ -9,6 +9,9 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 /**
  * @Route("/auth", name = "auth_")
+ * 
+ * @author Ayelen Dumas
+ * @author Marin Taverniers
  */
 class AuthController extends AbstractController {
 

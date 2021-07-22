@@ -8,6 +8,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route("/", name = "main_")
+ * 
+ * @author Marin Taverniers
  */
 class MainController extends AbstractController {
 
