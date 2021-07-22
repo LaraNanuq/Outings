@@ -5,34 +5,49 @@
 {% endblock %}
 
 {% block body %}
-    <h1 class="h3">{{ outing.name }}</h1>
+<h1 class="h3">{{ outing.name }}</h1>
 
-    <fieldset>
-        <div>Description : {{ outing.description }}</div>
-        <div>Date : {{ outing.date|date("d/m/Y - H:i") }}</div>
-        <div>Durée : {{ outing.duration }} minutes</div>
-        <div>Campus : {{ outing.campus.name }}</div>
-        <div>Adresse</div>
-        <div>Lieu : {{ outing.location.name }}</div>
-        <div>Rue : {{ outing.location.street }}</div>
-        <div>Latitude : {{ outing.location.latitude }}</div>
-        <div>Longitude : {{ outing.location.longitude }}</div>
-        <div>Statut : {{ outing.state.friendlyName }}</div>
-        <div>Fin des inscriptions : {{ outing.registrationClosingDate|date("d/m/Y") }}</div>
-        <div>Inscrits : {{ outing.registrants|length }} / {{ outing.maxRegistrants }}</div>
-        {# TODO: tableau avec liste des participants #}
-    </fieldset>
-    
-    {% if (app.user == outing.organizer) %}
-        <div class="btn-group">
-            <a href="{{ path('outing_edit', {id: outing.id}) }}" class="btn btn-sm btn-primary">Modifier</a>
+<fieldset>
+    <div>Description : {{ outing.description }}</div>
+    <div>Date : {{ outing.date|date("d/m/Y - H:i") }}</div>
+    <div>Durée : {{ outing.duration }} minutes</div>
+    <div>Campus : {{ outing.campus.name }}</div>
+    <div>Adresse</div>
+    <div>Lieu : {{ outing.location.name }}</div>
+    <div>Rue : {{ outing.location.street }}</div>
+    <div>Latitude : {{ outing.location.latitude }}</div>
+    <div>Longitude : {{ outing.location.longitude }}</div>
+    <div>Statut : {{ outing.state.friendlyName }}</div>
+    <div>Fin des inscriptions : {{ outing.registrationClosingDate|date("d/m/Y") }}</div>
+    <div>Inscrits : {{ outing.registrants|length }} / {{ outing.maxRegistrants }}</div>
+    {# TODO: tableau avec liste des participants #}
+</fieldset>
 
-            {% if (outing.state.label in ["DRAFT", "PENDING"]) %}
-                <form method="POST" action="{{ path('outing_delete', {id: outing.id}) }}"/>
-                <input type="hidden" name="_method" value="DELETE">
-                <button class="btn btn-sm btn-primary">Supprimer</button>
-            {% endif %}
+{% if (app.user == outing.organizer) %}
+    <div class="btn-group">
+        <a href="{{ path('outing_edit', {id: outing.id}) }}" class="btn btn-sm btn-primary">Modifier</a>
 
-        </div>
-    {% endif %}
-{% endblock %}
+        {% if (outing.state.label in ["DRAFT", "PENDING"]) %}
+            <form method="POST" action="{{ path('outing_delete', {id: outing.id}) }}"/>
+            <input type="hidden" name="_method" value="DELETE">
+            <button class="btn btn-sm btn-primary">Supprimer</button>
+        {% endif %}
+    </div>
+{% endif %}
+
+        {% if (app.user in outing.registrants) %}
+           {% for registrant in outing.registrants %}
+                <table class="table table-bordered table-striped table-secondary table-sm align-middle text-center my-3">
+                    <tr>
+                        <th scope="col">Pseudo</th>
+                        <th scope="col">Nom</th>
+                    </tr>
+                    <tr>
+                        <td><a href="{{ path('user_detail', {id: registrant.id}) }}">{{ registrant.alias }}</a></td>
+                        <td>{{ registrant.fullName }} </td>
+            {% endfor %}
+        {% else %}
+            <div>Aucun participants</div>
+        {% endif %}
+    </tr>
+    {% endblock %}

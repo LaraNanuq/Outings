@@ -216,7 +216,6 @@ class OutingController extends AbstractController
         $this->entityManager->flush();
         $this->addFlash('success', "Vous êtes inscrit à la sortie {$outing->getName()}");
 
-        //
         return $this->redirectToRoute('outing_list');
     }
 
@@ -244,6 +243,7 @@ class OutingController extends AbstractController
         $this->entityManager->persist($outing);
         $this->entityManager->flush();
         $this->addFlash('success', "Vous vous êtes désinscrit à la sortie {$outing->getName()}");
+
         return $this->redirectToRoute('outing_list');
     }
 
