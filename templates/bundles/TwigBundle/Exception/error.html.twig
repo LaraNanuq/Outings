@@ -8,6 +8,6 @@
     Erreur
 {% endblock %}
 
-{% block errorText %}
-    Une erreur innatendue s'est produite.
+{% block errorMessage %}
+    Une erreur innatendue s'est produite (code ({{ exception.statusCode }})).
 {% endblock %}

@@ -8,9 +8,12 @@
     </h1>
 
     <div class="alert alert-danger">
-        {% block errorText %}
-            Une erreur innatendue s'est produite.
+        {% block errorMessage %}
+            {# Error #}
         {% endblock %}
+
+        <br/><br/>
+        {{ exception.message }}
     </div>
 
     <div class="text-center">
