@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\JoinTable;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -250,14 +251,14 @@ class Outing {
         return $this->registrants;
     }
 
-    public function addRegistrant(User $registrant): self {
+    public function addRegistrant(UserInterface $registrant): self {
         if (!$this->registrants->contains($registrant)) {
             $this->registrants[] = $registrant;
         }
         return $this;
     }
 
-    public function removeRegistrant(User $registrant): self {
+    public function removeRegistrant(UserInterface $registrant): self {
         $this->registrants->removeElement($registrant);
         return $this;
     }

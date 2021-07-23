@@ -19,6 +19,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface {
     }
 
     public function load(ObjectManager $manager) {
+
         $admin = new User();
         $admin->setAlias('admin');
         $admin->setLastName('Doe');

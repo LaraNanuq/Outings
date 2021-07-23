@@ -84,23 +84,23 @@
                             {% set isUserOrganizer = (app.user == outing.organizer) %}
                             {% set isUserRegistrant = (app.user in outing.registrants) %}
 
-                            {% if (isOutingPublic) %}
-                                <a href="{{ path('outing_detail', {id: outing.id}) }}" class="btn btn-sm btn-secondary">Voir</a>
-                            {% endif %}
-
                             {% if ((isUserOrganizer) and (isOutingPrivate)) %}
                                 <a href="{{ path('outing_edit', {id: outing.id}) }}" class="btn btn-sm btn-primary">Modifier</a>
                                 <a href="{{ path('outing_publish', {id: outing.id}) }}" class="mx-1 btn btn-sm btn-success">Publier</a>
                             {% endif %}
 
-                            {% if (((is_granted('ROLE_ADMIN')) or (isUserOrganizer)) and (isOutingUpcoming)) %}
-                                <a href="{{ path('outing_cancel', {id: outing.id}) }}" class="mx-1 btn btn-sm btn-danger">Annuler</a>
-                            {% endif %}
+                            {% if (isOutingPublic) %}
+                                <a href="{{ path('outing_detail', {id: outing.id}) }}" class="btn btn-sm btn-secondary">Voir</a>
 
-                            {% if ((isOutingOpenForRegistration) and (not (isUserRegistrant))) %}
-                                <a href="{{ path('outing_register', {id: outing.id}) }}" class="btn btn-sm btn-success">S'inscrire</a>
-                            {% elseif ((isOutingUpcoming) and (isUserRegistrant)) %}
-                                <a href="{{ path('outing_unregister', {id: outing.id}) }}" class="btn btn-sm btn-danger">Se désister</a>
+                                {% if (((is_granted('ROLE_ADMIN')) or (isUserOrganizer)) and (isOutingUpcoming)) %}
+                                    <a href="{{ path('outing_cancel', {id: outing.id}) }}" class="mx-1 btn btn-sm btn-danger">Annuler</a>
+                                {% endif %}
+
+                                {% if ((not (isUserRegistrant)) and (isOutingOpenForRegistration)) %}
+                                    <a href="{{ path('outing_register', {id: outing.id}) }}" class="btn btn-sm btn-success">S'inscrire</a>
+                                {% elseif ((isUserRegistrant) and (isOutingUpcoming)) %}
+                                    <a href="{{ path('outing_unregister', {id: outing.id}) }}" class="btn btn-sm btn-danger">Se désister</a>
+                                {% endif %}
                             {% endif %}
                         </div>
                     </td>

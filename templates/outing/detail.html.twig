@@ -82,6 +82,27 @@
             </div>
         {% endif %}
     </fieldset>
+
+    {% if (outing.registrants) %}
+        <table class="table table-bordered table-striped table-secondary table-sm align-middle text-center my-3">
+            <tr>
+                <th scope="col">Pseudo</th>
+                <th scope="col">Nom</th>
+            </tr>
+            {% for registrant in outing.registrants %}
+                <tr>
+                    <td>
+                        <a href="{{ path('user_detail', {id: registrant.id}) }}">{{ registrant.alias }}</a>
+                    </td>
+                    <td>{{ registrant.fullName }} </td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <div class="alert alert-danger">
+            Aucun participant n'a été trouvé.
+        </div>
+    {% endif %}
     
     <div class="text-center">
         <div class="btn-group">

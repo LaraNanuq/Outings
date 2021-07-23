@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\Outing;
-use App\Entity\User;
 use App\Form\CancelOutingFormType;
 use App\Form\EditOutingFormType;
 use App\Form\SearchOutingFilter;
@@ -20,7 +19,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route("/outing", name = "outing_")
- * 
+ *
  * @author Marin Taverniers
  * @author Ayelen Dumas
  */
@@ -180,6 +179,7 @@ class OutingController extends AbstractController {
     public function cancel(int $id, Request $request): Response {
         $outing = $this->outingRepository->find($id);
         $this->validateOutingExists($outing);
+        $this->validateIsOutingPublic($outing);
         if (!$this->isGranted('ROLE_ADMIN')) {
             $this->validateIsUserOrganizer($outing);
         }
@@ -209,7 +209,20 @@ class OutingController extends AbstractController {
      * @Route("/register/{id}", name = "register", requirements = {"id"="\d+"})
      */
     public function register(int $id): Response {
-        // TODO: Vérifications préalables, avec fonctions de service créées en dessous
+        $outing = $this->outingRepository->find($id);
+        $this->validateOutingExists($outing);
+        $this->validateIsOutingPublic($outing);
+        $user = $this->getUser();
+        if (in_array($user, $outing->getRegistrants()->getValues())) {
+            $this->addFlash('primary', "Vous êtes déjà inscrit(e) à la sortie '{$outing->getName()}'.");
+        } else if (!$this->outingService->isOutingOpenForRegistration($outing)) {
+            $this->addFlash('danger', "La sortie '{$outing->getName()}' n'est plus ouverte à l'inscription.");
+        } else {
+            $outing->addRegistrant($user);
+            $this->entityManager->persist($outing);
+            $this->entityManager->flush();
+            $this->addFlash('success', "Vous avez été inscrit(e) à la sortie '{$outing->getName()}'.");
+        }
         return $this->redirectToRoute('outing_list');
     }
 
@@ -217,7 +230,20 @@ class OutingController extends AbstractController {
      * @Route("/unregister/{id}", name = "unregister", requirements = {"id"="\d+"})
      */
     public function unregister(int $id): Response {
-        // TODO: Vérifications préalables, avec fonctions de service créées en dessous
+        $outing = $this->outingRepository->find($id);
+        $this->validateOutingExists($outing);
+        $this->validateIsOutingPublic($outing);
+        $user = $this->getUser();
+        if (!in_array($user, $outing->getRegistrants()->getValues())) {
+            $this->addFlash('danger', "Vous n'êtes pas inscrit(e) à la sortie '{$outing->getName()}'.");
+        } else if (!$this->outingService->isOutingUpcoming($outing)) {
+            $this->addFlash('danger', "La sortie '{$outing->getName()}' n'est plus ouverte à la désinscription.");
+        } else {
+            $outing->removeRegistrant($user);
+            $this->entityManager->persist($outing);
+            $this->entityManager->flush();
+            $this->addFlash('success', "Vous avez été désinscrit(e) de la sortie '{$outing->getName()}'.");
+        }
         return $this->redirectToRoute('outing_list');
     }
 
