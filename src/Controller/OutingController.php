@@ -19,7 +19,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route("/outing", name = "outing_")
- *
+ * 
  * @author Marin Taverniers
  * @author Ayelen Dumas
  */
