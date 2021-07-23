@@ -213,10 +213,10 @@ class OutingController extends AbstractController {
         $this->validateOutingExists($outing);
         $this->validateIsOutingPublic($outing);
         $user = $this->getUser();
-        if (in_array($user, $outing->getRegistrants()->getValues())) {
+        if (!$this->outingService->isOutingOpenForRegistration($outing)) {
+            $this->addFlash('danger', "La sortie '{$outing->getName()}' n'est plus ouverte aux inscriptions.");
+        } else if (in_array($user, $outing->getRegistrants()->getValues())) {
             $this->addFlash('primary', "Vous êtes déjà inscrit(e) à la sortie '{$outing->getName()}'.");
-        } else if (!$this->outingService->isOutingOpenForRegistration($outing)) {
-            $this->addFlash('danger', "La sortie '{$outing->getName()}' n'est plus ouverte à l'inscription.");
         } else {
             $outing->addRegistrant($user);
             $this->entityManager->persist($outing);
@@ -234,10 +234,10 @@ class OutingController extends AbstractController {
         $this->validateOutingExists($outing);
         $this->validateIsOutingPublic($outing);
         $user = $this->getUser();
-        if (!in_array($user, $outing->getRegistrants()->getValues())) {
+        if (!$this->outingService->isOutingUpcoming($outing)) {
+            $this->addFlash('danger', "La sortie '{$outing->getName()}' n'est plus ouverte aux désinscriptions.");
+        } else if (!in_array($user, $outing->getRegistrants()->getValues())) {
             $this->addFlash('danger', "Vous n'êtes pas inscrit(e) à la sortie '{$outing->getName()}'.");
-        } else if (!$this->outingService->isOutingUpcoming($outing)) {
-            $this->addFlash('danger', "La sortie '{$outing->getName()}' n'est plus ouverte à la désinscription.");
         } else {
             $outing->removeRegistrant($user);
             $this->entityManager->persist($outing);

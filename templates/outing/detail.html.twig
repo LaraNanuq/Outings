@@ -83,24 +83,29 @@
         {% endif %}
     </fieldset>
 
-    {% if (outing.registrants) %}
-        <table class="table table-bordered table-striped table-secondary table-sm align-middle text-center my-3">
-            <tr>
-                <th scope="col">Pseudo</th>
-                <th scope="col">Nom</th>
-            </tr>
-            {% for registrant in outing.registrants %}
-                <tr>
-                    <td>
-                        <a href="{{ path('user_detail', {id: registrant.id}) }}">{{ registrant.alias }}</a>
-                    </td>
-                    <td>{{ registrant.fullName }} </td>
-                </tr>
-            {% endfor %}
-        </table>
+    <legend>Inscrits</legend>
+    {% if (outing.registrants|length > 0) %}
+        <div class="row justify-content-center">
+            <div class="col-6">
+                <table class="mb-3 table table-bordered table-striped table-secondary table-sm align-middle text-center">
+                    <tr>
+                        <th scope="col">Pseudo</th>
+                        <th scope="col">Nom</th>
+                    </tr>
+                    {% for registrant in outing.registrants %}
+                        <tr>
+                            <td>
+                                <a href="{{ path('user_detail', {id: registrant.id}) }}">{{ registrant.alias }}</a>
+                            </td>
+                            <td>{{ registrant.fullName }} </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
     {% else %}
         <div class="alert alert-danger">
-            Aucun participant n'a été trouvé.
+            Aucun inscrit n'a été trouvé.
         </div>
     {% endif %}
     

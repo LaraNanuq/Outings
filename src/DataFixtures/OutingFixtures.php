@@ -52,17 +52,17 @@ class OutingFixtures extends Fixture implements DependentFixtureInterface {
         $manager->persist($outing2);
 
         $outing3 = new Outing();
-        $outing3->setName('Vélo');
-        $outing3->setDescription("Le vélo c'est chouette.");
+        $outing3->setName('Cyclisme');
+        $outing3->setDescription("Le cyclisme c'est chouette.");
         $outing3->setDate(new DateTime('now +6 month'));
         $outing3->setDuration(60);
-        $outing3->setRegistrationClosingDate(new DateTime('now -1 month'));
+        $outing3->setRegistrationClosingDate(new DateTime('now +3 month'));
         $outing3->setMaxRegistrants(25);
         $user = $this->getReference(UserFixtures::class . '4');
         $outing3->setOrganizer($user);
         $outing3->setCampus($user->getCampus());
         $outing3->setLocation($this->getReference(LocationFixtures::class . '3'));
-        $outing3->setState($this->outingStateRepository->findOneBy(['label' => 'PENDING']));
+        $outing3->setState($this->outingStateRepository->findOneBy(['label' => 'DRAFT']));
         $manager->persist($outing3);
 
         $manager->flush();

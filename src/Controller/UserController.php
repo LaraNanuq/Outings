@@ -23,7 +23,11 @@ class UserController extends AbstractController {
     private UserRepository $userRepository;
     private UserService $userService;
 
-    public function __construct(EntityManagerInterface $entityManager, UserRepository $userRepository, UserService $userService) {
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        UserRepository $userRepository,
+        UserService $userService
+    ) {
         $this->entityManager = $entityManager;
         $this->userRepository = $userRepository;
         $this->userService = $userService;
