@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Campus;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
@@ -12,7 +13,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
  * @author Marin Taverniers
  */
 class UserFixtures extends Fixture implements DependentFixtureInterface {
-    private $passwordHasher;
+    private UserPasswordHasherInterface $passwordHasher;
 
     public function __construct(UserPasswordHasherInterface $passwordHasher) {
         $this->passwordHasher = $passwordHasher;
@@ -26,7 +27,10 @@ class UserFixtures extends Fixture implements DependentFixtureInterface {
         $admin->setEmail('admin@outings.com');
         $admin->setPassword($this->passwordHasher->hashPassword($admin, 'admin'));
         $admin->setRoles(['ROLE_ADMIN']);
-        $admin->setCampus($this->getReference(CampusFixtures::class . '1'));
+        $campus = $this->getReference(CampusFixtures::class . '1');
+        if ($campus instanceof Campus) {
+            $admin->setCampus($campus);
+        }
         $manager->persist($admin);
         $this->addReference(self::class . '1', $admin);
 
@@ -37,7 +41,10 @@ class UserFixtures extends Fixture implements DependentFixtureInterface {
         $user1->setEmail('user1@gmail.com');
         $user1->setPassword($this->passwordHasher->hashPassword($user1, 'user1'));
         $user1->setRoles(['ROLE_USER']);
-        $user1->setCampus($this->getReference(CampusFixtures::class . '2'));
+        $campus = $this->getReference(CampusFixtures::class . '2');
+        if ($campus instanceof Campus) {
+            $user1->setCampus($campus);
+        }
         $manager->persist($user1);
         $this->addReference(self::class . '2', $user1);
 
@@ -48,7 +55,10 @@ class UserFixtures extends Fixture implements DependentFixtureInterface {
         $user2->setEmail('user2@gmail.com');
         $user2->setPassword($this->passwordHasher->hashPassword($user2, 'user2'));
         $user2->setRoles(['ROLE_USER']);
-        $user2->setCampus($this->getReference(CampusFixtures::class . '3'));
+        $campus = $this->getReference(CampusFixtures::class . '3');
+        if ($campus instanceof Campus) {
+            $user2->setCampus($campus);
+        }
         $manager->persist($user2);
         $this->addReference(self::class . '3', $user2);
 
@@ -59,7 +69,10 @@ class UserFixtures extends Fixture implements DependentFixtureInterface {
         $user3->setEmail('user3@gmail.com');
         $user3->setPassword($this->passwordHasher->hashPassword($user3, 'user3'));
         $user3->setRoles(['ROLE_USER']);
-        $user3->setCampus($this->getReference(CampusFixtures::class . '1'));
+        $campus = $this->getReference(CampusFixtures::class . '1');
+        if ($campus instanceof Campus) {
+            $user3->setCampus($campus);
+        }
         $manager->persist($user3);
         $this->addReference(self::class . '4', $user3);
 
@@ -70,7 +83,10 @@ class UserFixtures extends Fixture implements DependentFixtureInterface {
         $disabled->setEmail('disabled@gmail.com');
         $disabled->setPassword($this->passwordHasher->hashPassword($disabled, 'disabled'));
         $disabled->setRoles(['ROLE_USER_DISABLED']);
-        $disabled->setCampus($this->getReference(CampusFixtures::class . '2'));
+        $campus = $this->getReference(CampusFixtures::class . '2');
+        if ($campus instanceof Campus) {
+            $disabled->setCampus($campus);
+        }
         $manager->persist($disabled);
         $this->addReference(self::class . '5', $disabled);
 

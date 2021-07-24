@@ -3,9 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\Outing;
+use App\Entity\SearchOutingFilter;
 use App\Form\CancelOutingFormType;
 use App\Form\EditOutingFormType;
-use App\Form\SearchOutingFilter;
 use App\Form\SearchOutingFormType;
 use App\Repository\OutingRepository;
 use App\Service\OutingService;

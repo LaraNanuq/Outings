@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Form;
+namespace App\Entity;
 
-use App\Entity\Campus;
 use DateTimeInterface;
 
 /**

@@ -22,7 +22,7 @@ class OutingService {
         $this->outingStateRepository = $outingStateRepository;
     }
 
-    public function setOutingState(Outing &$outing, string $label): void {
+    public function setOutingState(Outing $outing, string $label): void {
         $state = $this->outingStateRepository->findOneBy(['label' => $label]);
         if ($state) {
             $outing->setState($state);

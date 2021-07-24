@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use LogicException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -34,7 +35,7 @@ class AuthController extends AbstractController {
      * @Route("/logout", name = "logout")
      */
     public function logout(): Response {
-        throw new \LogicException('Intercepted by the logout key on the firewall.');
+        throw new LogicException('Intercepted by the logout key on the firewall.');
     }
 
     /**

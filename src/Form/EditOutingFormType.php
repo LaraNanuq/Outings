@@ -75,13 +75,12 @@ class EditOutingFormType extends AbstractType {
                 $outing = $event->getData();
                 $location = $outing->getLocation();
 
-                // Edit
-                if ($location && $location instanceof Location) {
+                if (($location) && ($location instanceof Location)) {
+                    // Edit
                     $city = $location->getCity();
                     $form->get('newLocation')->get('city')->setData($city);
-
-                    // Create
                 } else {
+                    // Create
                     $city = null;
                 }
                 $this->addSavedLocationField($form, $city);
@@ -134,7 +133,7 @@ class EditOutingFormType extends AbstractType {
                     'longitude' => $location->getLongitude()
                 ];
             },
-            'setter' => function (Outing &$outing, ?Location $location, FormInterface $field): void {
+            'setter' => function (Outing $outing, ?Location $location, FormInterface $field): void {
                 $form = $field->getParent();
                 $isNewLocation = $form->get('isNewLocation')->getData();
                 if ($isNewLocation) {

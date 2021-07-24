@@ -51,7 +51,7 @@ class UserController extends AbstractController {
         $user = $this->getUser();
         $form = $this->createForm(EditUserFormType::class, $user);
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
+        if (($form->isSubmitted()) && ($form->isValid()) && ($user instanceof User)) {
             $plainPassword = $form->get('plainPassword')->getData();
             if ($plainPassword) {
                 $this->userService->setPassword($user, $plainPassword);

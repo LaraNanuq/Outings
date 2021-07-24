@@ -4,10 +4,13 @@ namespace App\Repository;
 
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use function get_class;
 
 /**
  * @method User|null find($id, $lockMode = null, $lockVersion = null)
@@ -26,21 +29,25 @@ class UserRepository extends ServiceEntityRepository implements UserLoaderInterf
 
     /**
      * Used to upgrade (rehash) the user's password automatically over time.
+     * @throws ORMException
      */
     public function upgradePassword(PasswordAuthenticatedUserInterface $user, string $newHashedPassword): void {
         if (!$user instanceof User) {
-            throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', \get_class($user)));
+            throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', get_class($user)));
         }
         $user->setPassword($newHashedPassword);
         $this->_em->persist($user);
         $this->_em->flush();
     }
 
-    public function loadUserByIdentifier(string $aliasOrEmail): ?User {
+    /**
+     * @throws NonUniqueResultException
+     */
+    public function loadUserByIdentifier(string $identifier): ?User {
         $query = $this->createQueryBuilder('u')
             ->andWhere('u.alias = :aliasOrEmail')
             ->orWhere('u.email = :aliasOrEmail')
-            ->setParameter('aliasOrEmail', $aliasOrEmail)
+            ->setParameter('aliasOrEmail', $identifier)
             ->getQuery();
         return $query->getOneOrNullResult();
     }

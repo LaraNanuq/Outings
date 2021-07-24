@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Location;
 use App\Entity\Outing;
 use App\Entity\User;
 use App\Repository\OutingStateRepository;
@@ -14,15 +15,13 @@ use Doctrine\Persistence\ObjectManager;
  * @author Marin Taverniers
  */
 class OutingFixtures extends Fixture implements DependentFixtureInterface {
-    private $outingStateRepository;
+    private OutingStateRepository $outingStateRepository;
 
     public function __construct(OutingStateRepository $outingStateRepository) {
         $this->outingStateRepository = $outingStateRepository;
     }
 
     public function load(ObjectManager $manager) {
-        /* @var $user User */
-
         $outing1 = new Outing();
         $outing1->setName('Ski alpin');
         $outing1->setDescription("Le ski alpin c'est chouette.");
@@ -31,9 +30,14 @@ class OutingFixtures extends Fixture implements DependentFixtureInterface {
         $outing1->setRegistrationClosingDate(new DateTime('now +6 month'));
         $outing1->setMaxRegistrants(100);
         $user = $this->getReference(UserFixtures::class . '2');
-        $outing1->setOrganizer($user);
+        if ($user instanceof User) {
+            $outing1->setOrganizer($user);
+        }
         $outing1->setCampus($user->getCampus());
-        $outing1->setLocation($this->getReference(LocationFixtures::class . '1'));
+        $location = $this->getReference(LocationFixtures::class . '1');
+        if ($location instanceof Location) {
+            $outing1->setLocation($location);
+        }
         $outing1->setState($this->outingStateRepository->findOneBy(['label' => 'OPEN']));
         $manager->persist($outing1);
 
@@ -45,9 +49,14 @@ class OutingFixtures extends Fixture implements DependentFixtureInterface {
         $outing2->setRegistrationClosingDate(new DateTime('now -10 day'));
         $outing2->setMaxRegistrants(50);
         $user = $this->getReference(UserFixtures::class . '3');
-        $outing2->setOrganizer($user);
+        if ($user instanceof User) {
+            $outing2->setOrganizer($user);
+        }
         $outing2->setCampus($user->getCampus());
-        $outing2->setLocation($this->getReference(LocationFixtures::class . '2'));
+        $location = $this->getReference(LocationFixtures::class . '2');
+        if ($location instanceof Location) {
+            $outing2->setLocation($location);
+        }
         $outing2->setState($this->outingStateRepository->findOneBy(['label' => 'FINISHED']));
         $manager->persist($outing2);
 
@@ -59,9 +68,14 @@ class OutingFixtures extends Fixture implements DependentFixtureInterface {
         $outing3->setRegistrationClosingDate(new DateTime('now +3 month'));
         $outing3->setMaxRegistrants(25);
         $user = $this->getReference(UserFixtures::class . '4');
-        $outing3->setOrganizer($user);
+        if ($user instanceof User) {
+            $outing3->setOrganizer($user);
+        }
         $outing3->setCampus($user->getCampus());
-        $outing3->setLocation($this->getReference(LocationFixtures::class . '3'));
+        $location = $this->getReference(LocationFixtures::class . '3');
+        if ($location instanceof Location) {
+            $outing3->setLocation($location);
+        }
         $outing3->setState($this->outingStateRepository->findOneBy(['label' => 'DRAFT']));
         $manager->persist($outing3);
 

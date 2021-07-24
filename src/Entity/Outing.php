@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\OutingRepository;
+use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -166,11 +167,11 @@ class Outing {
         return $this;
     }
 
-    public function getDate(): ?\DateTimeInterface {
+    public function getDate(): ?DateTimeInterface {
         return $this->date;
     }
 
-    public function setDate(?\DateTimeInterface $date): self {
+    public function setDate(?DateTimeInterface $date): self {
         $this->date = $date;
         return $this;
     }
@@ -184,11 +185,11 @@ class Outing {
         return $this;
     }
 
-    public function getRegistrationClosingDate(): ?\DateTimeInterface {
+    public function getRegistrationClosingDate(): ?DateTimeInterface {
         return $this->registrationClosingDate;
     }
 
-    public function setRegistrationClosingDate(?\DateTimeInterface $registrationClosingDate): self {
+    public function setRegistrationClosingDate(?DateTimeInterface $registrationClosingDate): self {
         $this->registrationClosingDate = $registrationClosingDate;
         return $this;
     }
@@ -215,7 +216,7 @@ class Outing {
         return $this->organizer;
     }
 
-    public function setOrganizer(?User $organizer): self {
+    public function setOrganizer(?UserInterface $organizer): self {
         $this->organizer = $organizer;
         return $this;
     }

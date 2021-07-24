@@ -3,11 +3,11 @@
 namespace App\Repository;
 
 use App\Entity\Outing;
-use App\Entity\User;
-use App\Form\SearchOutingFilter;
+use App\Entity\SearchOutingFilter;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @method Outing|null find($id, $lockMode = null, $lockVersion = null)
@@ -23,7 +23,7 @@ class OutingRepository extends ServiceEntityRepository {
         parent::__construct($registry, Outing::class);
     }
 
-    public function findWithSearchFilter(SearchOutingFilter $searchFilter, User $relatedUser) {
+    public function findWithSearchFilter(SearchOutingFilter $searchFilter, UserInterface $relatedUser) {
         $builder = $this
             ->createQueryBuilder('o')
             ->addSelect('u')

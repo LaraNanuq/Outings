@@ -16,7 +16,7 @@ class UserService {
         $this->passwordHasher = $passwordHasher;
     }
 
-    public function setPassword(User &$user, string $plainPassword) {
+    public function setPassword(User $user, string $plainPassword) {
         $password = $this->passwordHasher->hashPassword($user, $plainPassword);
         $user->setPassword($password);
     }
