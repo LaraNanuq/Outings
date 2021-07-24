@@ -281,7 +281,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
 
     /**
      * Returning a salt is only needed, if you are not using a modern
-     * hashing algorithm (e.g. bcrypt or sodium) in your security.yaml.
+     * hashing algorithm in your security.yaml.
      */
     public function getSalt(): ?string {
         return null;

@@ -5,7 +5,7 @@
 import { Ajax } from "../util/Ajax.js";
 import { Document } from "../util/Document.js";
 
-let edit = (function () {
+(function () {
     let streetText;
     let latitudeText;
     let longitudeText;
@@ -35,7 +35,7 @@ let edit = (function () {
         let cityInput = document.querySelector("#edit_outing_form_newLocation_city");
         cityInput.addEventListener("change", function () {
             newLocationCheckbox.disabled = true;
-            // Do not disable the field or the form group, to prevent form submission while loading
+            // Do not disable the field, or the form group, to prevent form submission while loading
             savedLocationInput.innerHTML = "<option value>- CHARGEMENT -</option>";
             resetSavedLocationTexts();
 
