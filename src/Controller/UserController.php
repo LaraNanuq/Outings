@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route("/user", name = "user_")
- * 
+ *
  * @author Daisy Greenway
  * @author Marin Taverniers
  */
@@ -63,7 +63,7 @@ class UserController extends AbstractController {
                 'id' => $user->getId()
             ]);
         }
-        return  $this->renderForm('user/edit.html.twig', [
+        return $this->renderForm('user/edit.html.twig', [
             'editForm' => $form
         ]);
     }

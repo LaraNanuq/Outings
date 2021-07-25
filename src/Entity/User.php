@@ -15,7 +15,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity(repositoryClass = UserRepository::class)
  * @UniqueEntity("alias", message = "The alias is already used.")
  * @UniqueEntity("email", message = "The email is already used.")
- * 
+ *
  * @author Marin Taverniers
  */
 class User implements UserInterface, PasswordAuthenticatedUserInterface {
@@ -269,7 +269,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
      * A visual identifier that represents this user.
      */
     public function getUserIdentifier(): string {
-        return (string) $this->email;
+        return (string)$this->email;
     }
 
     /**

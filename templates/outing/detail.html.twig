@@ -20,8 +20,12 @@
                     <span id="date" class="col form-label">{{ outing.date|date('d/m/Y - H:i') }}</span>
                 </div>
                 <div class="row">
-                    <label for="closing-date" class="col form-label text-secondary text-end">Fin des inscriptions</label>
-                    <span id="closing-date" class="col form-label">{{ outing.registrationClosingDate|date('d/m/Y') }}</span>
+                    <label for="closing-date" class="col form-label text-secondary text-end">
+                        Fin des inscriptions
+                    </label>
+                    <span id="closing-date" class="col form-label">
+                        {{ outing.registrationClosingDate|date('d/m/Y') }}
+                    </span>
                 </div>
                 <div class="row">
                     <label for="duration" class="col form-label text-secondary text-end">Durée (minutes)</label>
@@ -69,7 +73,9 @@
         <legend>État</legend>
         <div class="row">
             <label for="registrants" class="col form-label text-secondary text-end">Inscrits / Places</label>
-            <span id="registrants" class="col form-label">{{ outing.registrants|length }} / {{ outing.maxRegistrants }}</span>
+            <span id="registrants" class="col form-label">
+                {{ outing.registrants|length }} / {{ outing.maxRegistrants }}
+            </span>
         </div>
         <div class="row">
             <label for="state" class="col form-label text-secondary text-end">État</label>
@@ -77,7 +83,9 @@
         </div>
         {% if (outing.cancellationReason) %}
             <div class="row">
-                <label for="cancellation-reason" class="col form-label text-secondary text-end">Motif d'annulation</label>
+                <label for="cancellation-reason" class="col form-label text-secondary text-end">
+                    Motif d'annulation
+                </label>
                 <span id="cancellation-reason" class="col form-label">{{ outing.cancellationReason }}</span>
             </div>
         {% endif %}
@@ -108,7 +116,7 @@
             Aucun inscrit n'a été trouvé.
         </div>
     {% endif %}
-    
+
     <div class="text-center">
         <div class="btn-group">
             {% include "fragment/home.html.twig" %}

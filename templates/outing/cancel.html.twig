@@ -35,16 +35,16 @@
     </fieldset>
 
     {{ form_start(cancelForm) }}
-        <fieldset>
-            {{ form_errors(cancelForm) }}
-            {{ form_widget(cancelForm) }}
-        </fieldset>
+    <fieldset>
+        {{ form_errors(cancelForm) }}
+        {{ form_widget(cancelForm) }}
+    </fieldset>
 
-        <div class="text-center">
-            <div class="btn-group">
-                <button type="submit" class="me-1 btn btn-sm btn-danger">Valider</button>
-                {% include "fragment/home.html.twig" %}
-            </div>
+    <div class="text-center">
+        <div class="btn-group">
+            <button type="submit" class="me-1 btn btn-sm btn-danger">Valider</button>
+            {% include "fragment/home.html.twig" %}
         </div>
+    </div>
     {{ form_end(cancelForm) }}
 {% endblock %}

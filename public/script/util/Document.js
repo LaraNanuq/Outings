@@ -2,7 +2,7 @@
  * @author Marin Taverniers
  */
 
-export { Document };
+export {Document};
 
 class Document {
     static onReady(callback) {

@@ -8,7 +8,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route("/dashboard", name = "dashboard_")
- * 
+ *
  * @author Marin Taverniers
  */
 class DashboardController extends AbstractController {

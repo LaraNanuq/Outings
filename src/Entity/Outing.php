@@ -13,7 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass = OutingRepository::class)
- * 
+ *
  * @author Marin Taverniers
  */
 class Outing {

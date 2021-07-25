@@ -2,7 +2,7 @@
  * @author Marin Taverniers
  */
 
-export { Ajax };
+export {Ajax};
 
 class Ajax {
     static getText(url, method, body) {
@@ -14,8 +14,8 @@ class Ajax {
     }
 
     static get(url, method, body, isJson = false) {
-        let headers = { "X-Requested-With": "XMLHttpRequest" }; // Needed for Symfony controllers
-        let options = { method: method, headers: headers, body: body };
+        let headers = {"X-Requested-With": "XMLHttpRequest"}; // Needed for Symfony controllers
+        let options = {method: method, headers: headers, body: body};
         return fetch(url, options)
             .then((response) => {
                 if (response.ok || response.status === 422) {

@@ -15,33 +15,33 @@
     <fieldset>
         <legend>Filtres</legend>
         {{ form_start(searchForm) }}
-            {{ form_errors(searchForm) }}
-            <div class="row align-items-center">
-                <div class="col">
-                    {{ form_row(searchForm.campus) }}
-                    {{ form_row(searchForm.name) }}
-                    <div class="row">
-                        <div class="col">
-                            {{ form_row(searchForm.minDate) }}
-                        </div>
-                        <div class="col">
-                            {{ form_row(searchForm.maxDate) }}
-                        </div>
+        {{ form_errors(searchForm) }}
+        <div class="row align-items-center">
+            <div class="col">
+                {{ form_row(searchForm.campus) }}
+                {{ form_row(searchForm.name) }}
+                <div class="row">
+                    <div class="col">
+                        {{ form_row(searchForm.minDate) }}
+                    </div>
+                    <div class="col">
+                        {{ form_row(searchForm.maxDate) }}
                     </div>
                 </div>
-                <div class="col">
-                    {{ form_row(searchForm.isUserOrganizer) }}
-                    {{ form_row(searchForm.isUserRegistrant) }}
-                    {{ form_row(searchForm.isUserNotRegistrant) }}
-                    {{ form_row(searchForm.isFinished) }}
-                </div>
             </div>
+            <div class="col">
+                {{ form_row(searchForm.isUserOrganizer) }}
+                {{ form_row(searchForm.isUserRegistrant) }}
+                {{ form_row(searchForm.isUserNotRegistrant) }}
+                {{ form_row(searchForm.isFinished) }}
+            </div>
+        </div>
 
-            <div class="text-end">
-                <div class="btn-group">
-                    <button type="submit" class="btn btn-sm btn-secondary">Rechercher</button>
-                </div>
+        <div class="text-end">
+            <div class="btn-group">
+                <button type="submit" class="btn btn-sm btn-secondary">Rechercher</button>
             </div>
+        </div>
         {{ form_end(searchForm) }}
     </fieldset>
 
@@ -86,21 +86,39 @@
                             {% set isUserRegistrant = (app.user in outing.registrants) %}
 
                             {% if ((isUserOrganizer) and (isOutingPrivate)) %}
-                                <a href="{{ path('outing_edit', {id: outing.id}) }}" class="btn btn-sm btn-primary">Modifier</a>
-                                <a href="{{ path('outing_publish', {id: outing.id}) }}" class="ms-1 btn btn-sm btn-success">Publier</a>
+                                <a href="{{ path('outing_edit', {id: outing.id}) }}"
+                                   class="btn btn-sm btn-primary">
+                                    Modifier
+                                </a>
+                                <a href="{{ path('outing_publish', {id: outing.id}) }}"
+                                   class="ms-1 btn btn-sm btn-success">
+                                    Publier
+                                </a>
                             {% endif %}
 
                             {% if (isOutingPublic) %}
-                                <a href="{{ path('outing_detail', {id: outing.id}) }}" class="btn btn-sm btn-secondary">Voir</a>
+                                <a href="{{ path('outing_detail', {id: outing.id}) }}"
+                                   class="btn btn-sm btn-secondary">
+                                    Voir
+                                </a>
 
                                 {% if (((is_granted('ROLE_ADMIN')) or (isUserOrganizer)) and (isOutingUpcoming)) %}
-                                    <a href="{{ path('outing_cancel', {id: outing.id}) }}" class="ms-1 btn btn-sm btn-danger">Annuler</a>
+                                    <a href="{{ path('outing_cancel', {id: outing.id}) }}"
+                                       class="ms-1 btn btn-sm btn-danger">
+                                        Annuler
+                                    </a>
                                 {% endif %}
 
                                 {% if ((isOutingOpenForRegistration) and (not (isUserRegistrant))) %}
-                                    <a href="{{ path('outing_register', {id: outing.id}) }}" class="ms-1 btn btn-sm btn-success">S'inscrire</a>
+                                    <a href="{{ path('outing_register', {id: outing.id}) }}"
+                                       class="ms-1 btn btn-sm btn-success">
+                                        S'inscrire
+                                    </a>
                                 {% elseif ((isOutingUpcoming) and (isUserRegistrant)) %}
-                                    <a href="{{ path('outing_unregister', {id: outing.id}) }}" class="ms-1 btn btn-sm btn-primary">Se désinscrire</a>
+                                    <a href="{{ path('outing_unregister', {id: outing.id}) }}"
+                                       class="ms-1 btn btn-sm btn-primary">
+                                        Se désinscrire
+                                    </a>
                                 {% endif %}
                             {% endif %}
                         </div>

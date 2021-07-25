@@ -2,8 +2,8 @@
  * @author Marin Taverniers
  */
 
-import { Ajax } from "../util/Ajax.js";
-import { Document } from "../util/Document.js";
+import {Ajax} from "../util/Ajax.js";
+import {Document} from "../util/Document.js";
 
 (function () {
     let streetText;

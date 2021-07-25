@@ -10,7 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass = CampusRepository::class)
- * 
+ *
  * @author Marin Taverniers
  */
 class Campus {
