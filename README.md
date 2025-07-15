@@ -6,4 +6,4 @@ An application to manage outings, developed during our training.
 
 - Ayelen DUMAS
 - Daisy GREENWAY
-- Marin TAVERNIERS
+- Lara NANUQ
